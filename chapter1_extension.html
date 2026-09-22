@@ -1,0 +1,900 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Hello, Destiny — Chapter 1 Extension</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
+  <style>
+    :root {
+      color-scheme: dark;
+      --desk: #171310;
+      --desk-2: #211c16;
+      --line: rgba(233, 222, 201, .14);
+      --desk-text: #dcd4c3;
+      --desk-muted: #9a9080;
+      --amber-bright: #d9a054;
+      --green: #8fbe92;
+      --paper: #f8f3e7;
+      --paper-2: #f1eada;
+      --ink: #372f23;
+      --ink-soft: #5c5344;
+      --amber: #a56e28;
+      --paper-edge: rgba(55, 45, 32, .16);
+    }
+
+    * { box-sizing: border-box }
+    html { scroll-behavior: smooth }
+
+    body {
+      margin: 0;
+      padding: 0 20px 64px;
+      background: var(--desk);
+      color: var(--desk-text);
+      font-family: "Newsreader", Georgia, serif;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    ::selection { background: #a56e28; color: #f8f3e7 }
+    .mono { font-family: "JetBrains Mono", monospace }
+
+    /* ---------- masthead ---------- */
+    .shell { max-width: 1180px; margin: 0 auto }
+
+    .mast {
+      display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
+      gap: 16px 28px; padding-block: 44px 20px;
+    }
+
+    .brand-code {
+      font-family: "JetBrains Mono", monospace;
+      font-size: clamp(17px, 2.6vw, 22px);
+      font-weight: 600; color: var(--desk-text); letter-spacing: .01em;
+    }
+    .brand-code .kw { color: var(--amber-bright) }
+    .brand-code .str { color: var(--green) }
+
+    .btn {
+      font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .14em;
+      border-radius: 4px; cursor: pointer; padding: 9px 14px;
+      transition: background .15s ease, color .15s ease, border-color .15s ease;
+    }
+    .btn-dark {
+      background: transparent; color: var(--desk-text);
+      border: 1px solid rgba(233, 222, 201, .3);
+    }
+    .btn-dark:hover { background: var(--paper); border-color: var(--paper); color: var(--ink) }
+
+    /* ---------- tabs ---------- */
+    .tabs {
+      position: sticky; top: 0; z-index: 30;
+      margin-inline: -20px; padding-inline: 20px;
+      display: flex; gap: 4px; align-items: center;
+      background: rgba(23, 19, 16, .94);
+      border-bottom: 1px solid var(--line);
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none }
+
+    .tab {
+      flex: 0 0 auto;
+      font-family: "JetBrains Mono", monospace; font-size: 11.5px; font-weight: 500;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--desk-muted); text-decoration: none;
+      padding: 13px 13px 11px; border-bottom: 2px solid transparent;
+      white-space: nowrap;
+    }
+    .tab:hover { color: var(--desk-text) }
+    .tab.active { color: var(--desk-text); border-bottom-color: var(--amber-bright) }
+    .tab .tno { color: var(--amber-bright); margin-right: 6px; font-weight: 600 }
+
+    /* ---------- chapter head ---------- */
+    .chapter { scroll-margin-top: 64px; padding-top: 44px }
+
+    .ch-head {
+      display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
+      gap: 14px 28px; margin-bottom: 22px;
+    }
+
+    .ch-eyebrow {
+      font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .22em; color: var(--amber-bright);
+      display: block; margin-bottom: 10px;
+    }
+
+    .ch-title {
+      margin: 0;
+      font-family: "Fraunces", Georgia, serif; font-weight: 600;
+      font-size: clamp(26px, 3.6vw, 34px); line-height: 1.15; color: var(--paper);
+      text-wrap: balance;
+    }
+
+    .ch-meta {
+      display: block; margin-top: 8px;
+      font-family: "JetBrains Mono", monospace; font-size: 11.5px;
+      color: var(--desk-muted); letter-spacing: .04em;
+    }
+
+    /* ---------- pages grid ---------- */
+    .pages { display: grid; grid-template-columns: 1fr; gap: 22px; align-items: start }
+    @media (min-width:900px) { .pages { grid-template-columns: repeat(2, 1fr) } }
+
+    .page {
+      background: linear-gradient(180deg, var(--paper), var(--paper-2));
+      border: 1px solid var(--paper-edge);
+      border-radius: 6px;
+      padding: 24px 26px 16px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, .32);
+      color: var(--ink);
+    }
+
+    .page-top {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; margin-bottom: 12px;
+    }
+
+    .eyebrow {
+      font-family: "JetBrains Mono", monospace; font-size: 10.5px; font-weight: 500;
+      text-transform: uppercase; letter-spacing: .2em; color: var(--amber);
+    }
+
+    .sec-title {
+      margin: 2px 0 14px;
+      font-family: "JetBrains Mono", monospace; font-weight: 600; font-size: 14.5px;
+      text-transform: uppercase; letter-spacing: .13em; line-height: 1.7; color: var(--ink);
+      text-wrap: balance;
+    }
+
+    .page-body p {
+      margin: 0; font-size: 16.5px; line-height: 1.68; color: var(--ink);
+      font-family: "Newsreader", Georgia, serif;
+    }
+    .page-body p + p { margin-top: 13px }
+    .page-body p:first-child::first-letter {
+      font-family: "Fraunces", Georgia, serif; font-weight: 600;
+      float: left; font-size: 3.05em; line-height: .86;
+      padding: 2px 9px 0 0; color: var(--amber);
+    }
+
+    .folio {
+      margin-top: 18px; padding-top: 10px;
+      border-top: 1px dashed rgba(55, 45, 32, .22);
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-family: "JetBrains Mono", monospace; font-size: 11px;
+      letter-spacing: .14em; color: var(--amber);
+    }
+    .folio .sec-ref { text-transform: uppercase; letter-spacing: .16em }
+
+    /* ---------- opening page (image + text) ---------- */
+    .opening-page {
+      background: linear-gradient(180deg, var(--paper), var(--paper-2));
+      border: 1px solid var(--paper-edge);
+      border-radius: 6px;
+      padding: 0;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, .4);
+      color: var(--ink);
+      overflow: hidden;
+      margin-bottom: 26px;
+    }
+
+    .opening-page .opening-image {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #e8dfcc;
+      min-height: 180px;
+      padding: 20px 0;
+    }
+
+    .opening-page .opening-image img {
+      width: 100%;
+      max-width: 760px;
+      max-height: 460px;
+      object-fit: contain;
+      display: block;
+      border-radius: 4px;
+      box-shadow: 0 8px 24px rgba(55, 45, 32, 0.2);
+    }
+
+    .opening-page .opening-image .img-placeholder {
+      padding: 60px 20px;
+      text-align: center;
+      color: var(--ink-soft);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      border: 2px dashed rgba(55, 45, 32, .25);
+      margin: 20px;
+      border-radius: 4px;
+    }
+
+    .opening-page .opening-body {
+      padding: 24px 26px 16px;
+    }
+
+    .opening-page .opening-body .eyebrow {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .opening-page .opening-body .sec-title {
+      font-size: 15px;
+    }
+
+    .opening-page .opening-body p {
+      margin: 0;
+      font-size: 16.5px;
+      line-height: 1.68;
+      color: var(--ink);
+      font-family: "Newsreader", Georgia, serif;
+    }
+
+    .opening-page .opening-body p + p { margin-top: 13px }
+
+    .opening-page .opening-body p:first-child::first-letter {
+      font-family: "Fraunces", Georgia, serif; font-weight: 600;
+      float: left; font-size: 3.05em; line-height: .86;
+      padding: 2px 9px 0 0; color: var(--amber);
+    }
+
+    /* ---------- footer / toast ---------- */
+    .foot {
+      margin-top: 56px; padding-top: 22px;
+      border-top: 1px solid var(--line);
+      font-size: 14.5px; font-style: italic; color: var(--desk-muted);
+      text-align: center; line-height: 1.7;
+    }
+
+    .toast {
+      position: fixed; left: 50%; bottom: 26px; transform: translate(-50%, 14px);
+      background: #242a20; border: 1px solid #3e5c3a; color: #cfe3c9;
+      font-family: "JetBrains Mono", monospace; font-size: 12px; letter-spacing: .06em;
+      padding: 11px 18px; border-radius: 6px;
+      opacity: 0; pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+      z-index: 50; max-width: calc(100vw - 32px);
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0) }
+
+    :focus-visible { outline: 2px solid var(--amber-bright); outline-offset: 2px }
+
+    @media (prefers-reduced-motion:reduce) {
+      html { scroll-behavior: auto }
+      .btn, .toast { transition: none }
+    }
+
+    /* mobile bottom nav */
+    .mobile-bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--desk);
+      border-top: 1px solid var(--line);
+      z-index: 100;
+      padding: 10px 16px;
+      padding-bottom: calc(10px + env(safe-area-inset-bottom));
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .mobile-bottom-nav button {
+      background: var(--paper-2); color: var(--ink);
+      border: none; border-radius: 4px;
+      padding: 12px 10px;
+      font-family: var(--mono, monospace); font-size: 11.5px; font-weight: 700;
+      flex: 1; text-transform: uppercase; letter-spacing: .05em;
+      cursor: pointer;
+    }
+    .mobile-bottom-nav button:disabled { opacity: 0.5 }
+
+    .mobile-fullscreen-page {
+      position: fixed !important;
+      top: 0 !important; left: 0 !important; right: 0 !important;
+      bottom: 60px !important;
+      z-index: 99 !important;
+      margin: 0 !important; border-radius: 0 !important;
+      overflow-y: auto !important;
+      padding-bottom: 40px !important;
+    }
+
+    @media (max-width: 768px) {
+      .mobile-bottom-nav { display: flex }
+      body { padding-bottom: 70px }
+    }
+
+    @media (max-width:560px) {
+      .mast { padding-block: 30px 14px }
+      .page { padding: 20px 20px 14px }
+      .page-body p { font-size: 16px }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+
+    <header class="mast">
+      <div>
+        <span class="brand-code"><span class="kw">printf</span>(<span class="str">&ldquo;Hello, Destiny&rdquo;</span>);</span>
+      </div>
+      <a href="index.html#contents" class="btn btn-dark" style="text-decoration:none;">&#8592; Back to Contents</a>
+    </header>
+
+    <nav class="tabs" id="tabs" aria-label="Chapter 1 sub-chapters">
+      <a class="tab" href="#ch11"><span class="tno">1.1</span>Welcome</a>
+      <a class="tab" href="#ch12"><span class="tno">1.2</span>Semicolon</a>
+      <a class="tab" href="#ch13"><span class="tno">1.3</span>Hostel Nights</a>
+      <a class="tab" href="#ch14"><span class="tno">1.4</span>Struggles</a>
+    </nav>
+
+    <main>
+
+      <!-- ==================== CHAPTER 1 · SUB-CHAPTER 1.1 ==================== -->
+      <section class="chapter" id="ch11" data-ch="1.1" data-title="Welcome to the Matrix" data-range="1.1.1&ndash;1.1.6" data-pages="03&ndash;09">
+
+        <!-- ===== Opening page: 1.1 Welcome to the Matrix ===== -->
+        <div class="opening-page">
+          <div class="opening-image">
+            <img src="images/1.1.png" alt="Welcome to the Matrix">
+          </div>
+          <div class="opening-body">
+            <span class="eyebrow">Chapter 1 &middot; The First Commit</span>
+            <h3 class="sec-title">1.1 Welcome to the Matrix</h3>
+            <p>The journey into the world of engineering begins with the iconic "Hello, World!" program. For many, it's their first taste of coding &mdash; a small step that feels monumental. The satisfaction of seeing those words appear on the screen is unmatched, marking the start of a transformative journey. Each keystroke is a leap into the unknown, where curiosity meets creativity.</p>
+            <p>For me, the first "Hello, World!" was both exciting and nerve-wracking. It ran perfectly on the third attempt after battling a missing semicolon. Those magical moments gave me the confidence to dive deeper. Adjusting to college life was overwhelming &mdash; new faces, a packed schedule, and the pressure to prove myself. But the first success in coding made it clear: this was going to be an adventure worth taking.</p>
+            <div class="folio"><span class="sec-ref">1.1</span><span>03</span></div>
+          </div>
+        </div>
+
+        <div class="ch-head">
+          <div>
+            <span class="ch-eyebrow">Chapter 1 &mdash; The First Commit &middot; Sub-chapter 1.1</span>
+            <h2 class="ch-title">More doors into the Matrix</h2>
+            <span class="ch-meta">New pages 1.1.1&ndash;1.1.6 &middot; lands on book pages 04&ndash;09 &middot; continues 1.1 Welcome to the Matrix</span>
+          </div>
+        </div>
+
+        <div class="pages">
+
+          <article class="page" data-sec="1.1.1">
+            <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span></div>
+            <h3 class="sec-title">1.1.1 The Setup Battle</h3>
+            <div class="page-body">
+              <p>Engineering did not begin with a program for me. It began with an installation. Before writing a single line, I had to bring a compiler onto a laptop that was older than my admission letter. The download page asked for system requirements; my laptop answered with a fan noise and a long pause. What the brochure called a twenty-minute setup took me three evenings.</p>
+              <p>I fought it alone at first, the way beginners do, as if asking for help cancels your engineering license. Finally a senior friend guided me over a call, and I still remember his calm voice: install this, tick that, ignore the scary warning. When the first compile finally returned zero errors, I felt less like a student and more like a system administrator. My mother heard about the achievement twice.</p>
+              <p>Years later I watched companies pay professionals just to set up environments for teams, and I smiled. The first hidden subject of engineering is setup, and nobody awards marks for it. But the student who learns to configure tools early stops fearing every new software that follows. The war I fought in week one now saves me hours in every project, every job, every machine.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">1.1.1</span><span>04</span></div>
+          </article>
+
+          <article class="page" data-sec="1.1.2">
+            <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span></div>
+            <h3 class="sec-title">1.1.2 The Lab First Light</h3>
+            <div class="page-body">
+              <p>Theory classes introduced me to subjects; the lab introduced me to reality. My first practical session had rows of computers, a lab assistant armed with an attendance register, and a strict rule that machine numbers were permanent addresses. I got machine fourteen, and for one full year it was my seat, my identity and occasionally my enemy.</p>
+              <p>The first task looked easy on the slides and behaved differently on the screen. The compiler lived behind a blue screen, and its keys were passed around like passwords: compile with one combination, run with another, view output with a third. My neighbour finished in ten minutes and left. I stayed back, pressed wrong keys bravely, and learnt the lab's first law: asking the person beside you costs nothing and saves an hour.</p>
+              <p>That lab taught me the gap between knowing and doing, a gap no syllabus ever lists. You can read a topic five times and still freeze at the keyboard. The cure is only screen time. By the end of the semester, machine fourteen and I had an understanding, and the lab had quietly become my favourite period of the week.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">1.1.2</span><span>05</span></div>
+          </article>
+
+          <article class="page" data-sec="1.1.3">
+            <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span></div>
+            <h3 class="sec-title">1.1.3 The Orientation Speech</h3>
+            <div class="page-body">
+              <p>First day, big auditorium, full dress code panic. The orientation speaker stood taller than the microphone and informed us that these four years would decide everything. Slides followed with placement statistics, corporate names and one borrowed line about being the future of the nation. Six hundred students sat straighter and made private promises.</p>
+              <p>A senior standing near the exit leaned over and whispered the honest review: nobody remembers this speech by second year. We nodded solemnly and, being obedient students, forgot almost all of it by lunch. Almost. One line survived in me, the quiet one buried between the statistics &mdash; keep your curiosity alive, because the degree is only a receipt for what you actually learnt.</p>
+              <p>The orientation sold us a straight road. Engineering, I soon discovered, is a maze with a scenic route. The speech is not a syllabus; it is a starting gun, and it fires whether you are ready or not. My advice to every first-day student: enjoy the auditorium, take the photo, remember the one line that matters, and let the maze teach you the rest.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">1.1.3</span><span>06</span></div>
+          </article>
+
+          <article class="page" data-sec="1.1.4">
+            <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span></div>
+            <h3 class="sec-title">1.1.4 The Typing Problem</h3>
+            <div class="page-body">
+              <p>Nobody warns you that programming needs a second skill: typing. In the early labs I typed with two fingers, eyes fixed on the keyboard like it owed me money. The logic of a twenty-line program arrived in five minutes; typing it took forty. The computer sat there patiently, judging my index fingers.</p>
+              <p>A classmate typed properly, without looking, and I felt a jealousy I did not know how to spell. So I trained at night, fifteen minutes of typing games on a borrowed laptop, strictly boring, secretly satisfying. Within a month my fingers had memorised the keyboard, and programs started flowing at the speed of thought instead of the speed of hunt-and-peck.</p>
+              <p>It remains the least glamorous skill I ever built and one of the most profitable. Small invisible skills compound quietly while you chase the big visible ones. These days my typing is faster than my thinking, which creates its own comedy &mdash; but I would still tell every first-year the same thing: learn the keyboard early. Your ideas are waiting behind your fingers.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">1.1.4</span><span>07</span></div>
+          </article>
+
+          <article class="page" data-sec="1.1.5">
+            <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span></div>
+            <h3 class="sec-title">1.1.5 The First Search</h3>
+            <div class="page-body">
+              <p>My first solo battle with an error happened at home, with no senior in reach. The compiler had thrown a message I could not pronounce, let alone fix. In desperation I typed the exact error into a search engine &mdash; and discovered something that changed my student life: the internet already had my exact problem, solved years ago, by thousands of people who had suffered identically.</p>
+              <p>That night I understood that beginner errors are a shared human experience, not personal failures. Forums carried the same story in different accents: question, wrong answers, argument, then finally one calm reply that fixed everything. I also learnt its dangers early &mdash; the first fix I copied blindly broke two more things and taught me to read before pasting.</p>
+              <p>Knowing how to ask the internet is a full subject with no textbook, no attendance and permanent career value. Search well, verify twice, adapt to your case. That one night turned the lonely experience of being stuck into a conversation with the whole world's programmers, and I have never coded alone since, no matter how empty the room.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">1.1.5</span><span>08</span></div>
+          </article>
+
+          <article class="page" data-sec="1.1.6">
+            <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span></div>
+            <h3 class="sec-title">1.1.6 The Language War</h3>
+            <div class="page-body">
+              <p>Every first year fights one corridor war: which language is the best? C supporters quoted speed. Python supporters quoted simplicity. I joined the debates with zero knowledge and full volume, defending a language I had known for eleven days, which is roughly when experts begin their strongest opinions.</p>
+              <p>Our teacher ended the war with one sentence that I still repeat to juniors: the language is a vehicle, the logic is the passenger. If the passenger is strong, any vehicle will do; if the passenger is weak, every vehicle breaks down. She said first year is for building the passenger, not for worshipping the vehicle, and the class went quiet in the good way.</p>
+              <p>I stopped collecting languages and started collecting logic. Years later, when work demanded a new language, the switch took days, not years, exactly as she had promised. The language war still rages on the internet today with the same passion and the same noise. I read the threads now like old war photos, from a peaceful country called Fundamentals.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">1.1.6</span><span>09</span></div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ==================== CHAPTER 1 · SUB-CHAPTER 1.2 ==================== -->
+      <section class="chapter" id="ch12" data-ch="1.2" data-title="The Semicolon Saga" data-range="1.2.1&ndash;1.2.6" data-pages="10&ndash;15">
+
+        <!-- ===== Opening page: 1.2 The Semicolon Saga ===== -->
+        <div class="opening-page">
+          <div class="opening-image">
+            <img src="images/1.2.png" alt="Chapter 1.2">
+          </div>
+          <div class="opening-body">
+            <span class="eyebrow">Chapter 1 &middot; The First Commit</span>
+            <h3 class="sec-title">1.2 The Semicolon Saga</h3>
+            <p>It starts innocently &mdash; a forgotten semicolon. Yet that tiny mark becomes our shared villain. As students dive deeper into programming, they meet its quirks firsthand. Missing semicolons turn into hours of frustration, then laughter. Debugging feels like solving a mystery with cryptic clues. In the hunt for that one missing symbol, strangers become teammates.</p>
+            <p>Balancing everything felt like walking a tightrope &mdash; five subjects, endless labs, and that strict 75% attendance rule. My CGPA was around 7.8 &mdash; not perfect, but it pushed me to keep going.</p>
+            <p>Then came the hostel nights. That's where the real memories were made. Maggi at midnight, random dance breaks, coding that turned into laughing fits. Even our biggest coding fails somehow became stories we'd tell later. And my roommates? They knew nothing about code, but they'd still lean over my shoulder at 2 a.m. and ask, "Does this look right?"</p>
+            <div class="folio"><span class="sec-ref">1.2</span><span>04</span></div>
+          </div>
+        </div>
+
+        <div class="ch-head">
+          <div>
+            <span class="ch-eyebrow">Chapter 1 &mdash; The First Commit &middot; Sub-chapter 1.2</span>
+            <h2 class="ch-title">More bugs worth meeting</h2>
+            <span class="ch-meta">New pages 1.2.1&ndash;1.2.6 &middot; lands on book pages 10&ndash;15 &middot; continues 1.2 The Semicolon Saga</span>
+          </div>
+        </div>
+
+        <div class="pages">
+
+          <article class="page" data-sec="1.2.1">
+            <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span></div>
+            <h3 class="sec-title">1.2.1 The Silent Killer</h3>
+            <div class="page-body">
+              <p>Semicolons at least scream when they are missing. Braces commit a quieter crime. My first encounter with a missing closing brace produced an error pointing at a line forty lines away from the actual crime scene, and I interrogated that innocent line for an hour like a bad detective.</p>
+              <p>The compiler was not lying; it was just literal. It reports where it got confused, not where you went wrong, and confusion usually travels. A senior watched me struggle, laughed kindly, and gave me the rule that runs my debugging life even now: when the error makes no sense, stop reading the error line and start reading above it. The truth is usually a few steps uphill.</p>
+              <p>That night taught me something bigger than syntax. In code, as in life, the visible symptom and the root cause live at different addresses. Since then, whenever a problem looks absurd, I look one level up instead of blaming the line in front of me. Braces taught me root cause analysis before any management book did.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">1.2.1</span><span>10</span></div>
+          </article>
+
+          <article class="page" data-sec="1.2.2">
+            <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span></div>
+            <h3 class="sec-title">1.2.2 The Yes-Man Program</h3>
+            <div class="page-body">
+              <p>One character separates assignment from comparison, and my program met that character closely. I wrote the condition with a single equals sign, so every check came out true, every time. The program agreed with everything like a nervous yes-man, and I trusted it completely for two days.</p>
+              <p>A friend glanced at my screen for ten seconds and pointed at the little symbol. No crash, no drama, no error message &mdash; just wrong logic running confidently. That is the most dangerous species of bug: the one that does not stop the program, only quietly steers it. I felt foolish for a day and grateful for a year.</p>
+              <p>Since then I test my conditions with values that should fail, not only values that should pass. A program that says yes to everything is worse than a program that refuses to run. Crashes are honest teachers; silent wrongness is a polite liar. Our class group still remembers that bug by its nickname, and I still check my equals signs twice.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">1.2.2</span><span>11</span></div>
+          </article>
+
+          <article class="page" data-sec="1.2.3">
+            <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span></div>
+            <h3 class="sec-title">1.2.3 The Infinite Loop</h3>
+            <div class="page-body">
+              <p>In my second week, I wrote my first infinite loop and froze a lab computer in public. The fan roared like a takeoff, the screen refused every click, and machine fourteen died with dignity. The lab assistant walked over slowly &mdash; the walk of a man who has seen this exact crime many times and enjoys it a little.</p>
+              <p>The restart cost five minutes and most of my reputation. Then he looked at my code and said gently, the loop has no exit; your condition never becomes false. One missing increment. One line. My loop was running hard and going nowhere, which the whole class agreed was also a fair description of our semester.</p>
+              <p>I have respected exit conditions ever since, in code and outside it. Every system that runs forever without a stopping rule eventually freezes something &mdash; a laptop, a battery, a person. Now, before I trust any process, I ask the small professional question: what exactly makes this stop? Loops taught me that. Machine fourteen was a cheap price for the lesson.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">1.2.3</span><span>12</span></div>
+          </article>
+
+          <article class="page" data-sec="1.2.4">
+            <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span></div>
+            <h3 class="sec-title">1.2.4 The Stranger in the Photo</h3>
+            <div class="page-body">
+              <p>My array had ten items, and I printed eleven values. Nine were correct and one was complete nonsense &mdash; like a class photo where ten students stand and one stranger photobombs from the side. The output looked drunk, and I had written it fully sober.</p>
+              <p>The evening's discovery was humiliating and historic: counting starts at zero. Indexes run from zero to nine, and my respectful loop from one to ten had stepped outside the house. The teacher's explanation stayed with me forever: computers count from the starting point, not from the first step. Once zero-based thinking entered my head, loops, ranges and even question paper options all made sudden sense.</p>
+              <p>The deeper lesson is that bugs love boundaries. The edge of an array, the end of a loop, the last row of a table &mdash; limits are where mistakes gather like dust. Now I check my edges first and my centre later. The stranger in the photo was the best teacher of boundaries I ever had, and he never even gave his name.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">1.2.4</span><span>13</span></div>
+          </article>
+
+          <article class="page" data-sec="1.2.5">
+            <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span></div>
+            <h3 class="sec-title">1.2.5 The Crime Scene Cleanup</h3>
+            <div class="page-body">
+              <p>Before I ever met a proper debugger, my investigation tool was the print statement. Suspicious value? Print it. Loop behaving oddly? Print everything. My programs sprouted print lines like grass after the first rain, and slowly the truth surfaced from the flood of numbers.</p>
+              <p>Then came the submission I forgot to clean. The teacher opened my file to find fourteen diagnostic prints still shouting inside my neat little program. Her comment has entered our friend-group history: good that you debugged; now clean the crime scene. The class laughed. The lesson landed permanently: craft includes cleanup.</p>
+              <p>I use proper debuggers today, but I still print when things get mysterious, because watching values live is honest work. The difference is that now the prints come out before the submission, every time. Debugging taught me to find the truth; cleaning up taught me to respect the reader. Both together are what people later call professionalism.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">1.2.5</span><span>14</span></div>
+          </article>
+
+          <article class="page" data-sec="1.2.6">
+            <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span></div>
+            <h3 class="sec-title">1.2.6 The Bug Diary</h3>
+            <div class="page-body">
+              <p>After a month of small battles, a pattern insulted me: my bugs were repeating. The same three mistakes kept returning in new costumes &mdash; different programs, same crimes. So I started a diary, one page per bug: what broke, why it broke, what fixed it, and one line of wisdom for future me. Writing about my own stupidity felt silly for exactly one week.</p>
+              <p>Then the diary started paying interest. Patterns rose to the surface: code written after midnight always needed a morning review, copy-pasted code carried old bugs into new homes, and every rushed program hid one assumption I never wrote down. My mistake list turned into a personal syllabus, customised by my own repeated behaviour.</p>
+              <p>That diary later became interview stories, then teaching material for juniors, then the reason my debugging got faster &mdash; I had seen this criminal before. Mistakes only become lessons when they are recorded; otherwise they just become memories with shame attached. Your worst bugs are your best syllabus, if you keep the receipts.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">1.2.6</span><span>15</span></div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ==================== CHAPTER 1 · SUB-CHAPTER 1.3 ==================== -->
+      <section class="chapter" id="ch13" data-ch="1.3" data-title="Hostel Midnights" data-range="1.3.1&ndash;1.3.6" data-pages="16&ndash;21">
+
+        <!-- ===== Opening page: 1.3 Foundations of the Journey ===== -->
+        <div class="opening-page">
+          <div class="opening-image">
+            <img src="images/1.3.png" alt="Chapter 1.3">
+          </div>
+          <div class="opening-body">
+            <span class="eyebrow">Chapter 1 &middot; The First Commit</span>
+            <h3 class="sec-title">1.3 Foundations of the Journey</h3>
+            <p>Engineering wasn't just about academics &mdash; it was about learning to navigate life. The college lab became a second home, buzzing with energy. Whether sharing laughs over failed attempts or celebrating small wins, these moments laid the foundation for my journey as a coder.</p>
+            <p>Pair programming sessions evolved into brainstorming marathons, where wild ideas took shape. The transformation from hesitant beginners to confident problem solvers was as rewarding as it was challenging.</p>
+            <p>Looking back, those first months were tough but transformative. I learned to juggle coursework, embrace failures, and appreciate the little victories. And amidst the struggles, the friendships I built became the real highlight of my first year.</p>
+            <div class="folio"><span class="sec-ref">1.3</span><span>05</span></div>
+          </div>
+        </div>
+
+        <div class="ch-head">
+          <div>
+            <span class="ch-eyebrow">Chapter 1 &mdash; The First Commit &middot; Sub-chapter 1.3</span>
+            <h2 class="ch-title">The hostel nights continue</h2>
+            <span class="ch-meta">New pages 1.3.1&ndash;1.3.6 &middot; lands on book pages 16&ndash;21 &middot; continues 1.3 Hostel Midnights</span>
+          </div>
+        </div>
+
+        <div class="pages">
+
+          <article class="page" data-sec="1.3.1">
+            <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span></div>
+            <h3 class="sec-title">1.3.1 The Extension Board Parliament</h3>
+            <div class="page-body">
+              <p>A hostel room runs on a simple constitution: one wall socket, four laptops, zero negotiation. The extension board was our parliament, and whoever held the switch held power. Charging rights were decided by deadline, not by friendship, which is the only fair system ever invented in that room.</p>
+              <p>Unwritten laws evolved over semesters. A battery at eight percent was a legal emergency. Borrowed chargers created a small insurance economy where all debts were repaid in snacks. And the friend who unplugged someone mid-download owed a chai, no court needed. We thought we were just surviving; we were actually running resource allocation with real stakes.</p>
+              <p>Years later, in team meetings, I watch bandwidth, budgets and attention being divided, and I recognise the same politics we ran from one crowded socket. Scarcity builds systems faster than textbooks do. The extension board never got a formal name, but it was my first experience of governance, negotiation and the eternal truth that the last charger is never free.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">1.3.1</span><span>16</span></div>
+          </article>
+
+          <article class="page" data-sec="1.3.2">
+            <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span></div>
+            <h3 class="sec-title">1.3.2 The Torchlight Deadline</h3>
+            <div class="page-body">
+              <p>Hostel electricity had a personal rivalry with our submissions. One night the lights died at eleven, with the report half-printed and the confidence fully dead. Somewhere outside, the generator could be heard sleeping peacefully, off duty, unbothered by our deadline.</p>
+              <p>What followed became hostel legend. One friend held a torch like a stage light while I formatted the last pages. Another negotiated with the warden's office for printer access using skills I can only describe as diplomatic. We submitted at 9:58 in the morning, with ten minutes of deadline and zero percent of energy remaining in any human involved.</p>
+              <p>That night taught me what deadlines actually test. Not knowledge &mdash; knowledge was ready by ten o'clock. Deadlines test the calm of a team when the plan collapses. Engineers are not people who avoid chaos; we are people who learnt to work politely inside it. And always, always keep a torch near the door. Literally, and otherwise.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">1.3.2</span><span>17</span></div>
+          </article>
+
+          <article class="page" data-sec="1.3.3">
+            <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span></div>
+            <h3 class="sec-title">1.3.3 The Signal Corner</h3>
+            <div class="page-body">
+              <p>Hostel WiFi in those days was a shy creature. It lived in exactly one corner of one corridor, and it worked only for the worthy. We discovered this through collective scientific experiments, mapping signal strength like sailors charting a dangerous sea, and the map was passed down to juniors like treasure.</p>
+              <p>On submission nights that corner looked like a railway platform during holidays. Six boys standing in a row, laptops balanced on railings, all patiently downloading the same ten-kilobyte form. Strangers became comrades within minutes. The corner even had etiquette: heavy downloads by night, small uploads by day, and absolute silence for whoever had one bar left.</p>
+              <p>We laugh about it now, but that corner quietly taught priorities. With limited signal, you learn fast which task truly needs the internet and which can wait offline. Even today I draft offline first and go online only to submit. The shyness of that WiFi built a habit that every slow network since has thanked me for.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">1.3.3</span><span>18</span></div>
+          </article>
+
+          <article class="page" data-sec="1.3.4">
+            <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span></div>
+            <h3 class="sec-title">1.3.4 The 2 A.M. Draft</h3>
+            <div class="page-body">
+              <p>Ideas keep no office hours. One night, at 1:50 a.m., a project idea arrived in my head fully formed, arguing its own case with unusual confidence. Sleep offered a reasonable counter-proposal. The idea won, as ideas usually do at that hour.</p>
+              <p>I coded till the birds started, and in the morning I opened my laptop to find a stranger's work: variable names like x2 and temp1, no comments, and much of the supposed genius missing. But the skeleton was real, and the enthusiasm was documented. I rebuilt it properly by evening, and that version survived for years.</p>
+              <p>That night wrote a rule I still follow: capture ideas immediately, build them properly later. Nights are for drafts; mornings are for engineering. The habit of writing every idea into my phone at any hour, without judging it, has earned me more over the years than any heroic all-nighter ever did. The idea was right. Its timing was terrible. Both things are often true.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">1.3.4</span><span>19</span></div>
+          </article>
+
+          <article class="page" data-sec="1.3.5">
+            <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span></div>
+            <h3 class="sec-title">1.3.5 Room 204 Pvt. Ltd.</h3>
+            <div class="page-body">
+              <p>Some nights, room 204 stopped being a room. Four mattresses pushed against the walls, four laptops arranged in a circle, one whiteboard that was actually the door with a marker, and one project due at an hour we preferred not to discuss.</p>
+              <p>We divided ourselves like a small company: one on logic, one on design, one on testing, one on food logistics &mdash; a role we defended fiercely. Decisions happened at the door-whiteboard; disputes were settled by whoever could argue while typing; and somehow this chaotic structure produced working software by sunrise, twice.</p>
+              <p>Much later, inside actual companies with actual furniture, I kept recognising the feeling. No funding, one deadline, shared belief &mdash; that is a startup, and ours was incorporated on two mattresses. Room 204 taught me how a team breathes under pressure, and no management lecture has ever explained it better than that circle of laptops did.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">1.3.5</span><span>20</span></div>
+          </article>
+
+          <article class="page" data-sec="1.3.6">
+            <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span></div>
+            <h3 class="sec-title">1.3.6 The Midnight Chai Run</h3>
+            <div class="page-body">
+              <p>Behind the hostel lived a tea stall whose hours matched our troubles exactly. It opened when logic closed. Its midnight chai tasted like victory on good nights, like consolation on bad ones, and like routine on most &mdash; but somehow it always tasted correct.</p>
+              <p>The walk itself was the medicine. Five minutes outside the building, sky doing nothing impressive overhead, and conversations cooling down from code to life at a steady rate. Our biggest decisions &mdash; which project to attempt, which event to join, which risk to take &mdash; were never actually decided at the desk. They were decided between the second sip and the third.</p>
+              <p>Every builder needs a decompression ritual, and ours cost eight rupees. The stall saved more hours than it charged for, because a stuck mind returns from a walk with the answer already sitting in it. Even today my best decisions arrive while walking, not while staring at a screen. The chai was never really the point. The pause was.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">1.3.6</span><span>21</span></div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ==================== CHAPTER 1 · SUB-CHAPTER 1.4 ==================== -->
+      <section class="chapter" id="ch14" data-ch="1.4" data-title="The First-Year Struggles" data-range="1.4.1&ndash;1.4.6" data-pages="22&ndash;27">
+
+        <!-- ===== Opening page: 1.4 The First-Year Struggles ===== -->
+        <div class="opening-page">
+          
+          <div class="opening-body">
+            <span class="eyebrow">Chapter 1 &middot; The First Commit</span>
+            <h3 class="sec-title">1.4 The First-Year Struggles</h3>
+            <p>First Programming Competition: Joining coding competitions, students face technical glitches, last-minute panics, and the thrill of working under pressure. The adrenaline rush of solving a problem just in time is unforgettable.</p>
+            <p>The Cheat Sheet Chronicles: Ingenious attempts to fit an entire semester's knowledge onto a single page result in cheat sheets resembling modern art. Margins overflow with tiny text, formulas, and diagrams that only their creators can decipher.</p>
+            <p>I remember pulling an all-nighter for a math test while debugging code for my practical exam the next day. My attendance hovered around 75%, and every class missed felt like another layer of guilt. Yet, the struggle was worth it when results showed slow but steady improvement in both understanding and grades.</p>
+            <div class="folio"><span class="sec-ref">1.4</span><span>07</span></div>
+          </div>
+        </div>
+
+        <div class="ch-head">
+          <div>
+            <span class="ch-eyebrow">Chapter 1 &mdash; The First Commit &middot; Sub-chapter 1.4</span>
+            <h2 class="ch-title">Where the year tested us</h2>
+            <span class="ch-meta">New pages 1.4.1&ndash;1.4.6 &middot; lands on book pages 22&ndash;27 &middot; continues 1.4 The First-Year Struggles</span>
+          </div>
+        </div>
+
+        <div class="pages">
+
+          <article class="page" data-sec="1.4.1">
+            <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span></div>
+            <h3 class="sec-title">1.4.1 The First Failed Test</h3>
+            <div class="page-body">
+              <p>My first class test of engineering returned a number I had never seen in school. I had walked in confident, having attended most lectures and understood most of those, which I had quietly mistaken for preparation. The marks came back low enough to be typed in red, and the topper's sheet travelled through the class like a festival announcement I was not invited to.</p>
+              <p>For two days I managed a full drama: the paper folded into eight parts, a face arranged into calm, and a plan never to mention it again. Then my teacher kept me back after class, and instead of the scolding I had rehearsed answers for, she asked one question &mdash; did you practise, or did you only read? I had only read. Reading, she said, is watching somebody else swim. The test asks you to enter the water.</p>
+              <p>I failed that test and quietly passed a bigger one. From that week on, every subject got practice &mdash; solved problems on rough paper, even when the reading felt complete. The next test climbed, the one after it felt steady, and the red number slowly turned into my favourite story for juniors. A failed test measures one day, not one student. The ones who fail early and honestly usually end up explaining the subject better than the ones who never stumbled.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">1.4.1</span><span>22</span></div>
+          </article>
+
+          <article class="page" data-sec="1.4.2">
+            <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span></div>
+            <h3 class="sec-title">1.4.2 The Homesick Fortnight</h3>
+            <div class="page-body">
+              <p>No subject lists homesickness in the syllabus, yet it was the heaviest course of my first year. It arrived in week three, right on schedule: the excitement of a new city finished, the hostel food repeating itself, and the phone suddenly holding more power than any laptop I owned. One voice from home could repair my entire day, and one missed call could quietly break it.</p>
+              <p>I fought it the way hostellers usually do &mdash; silently, and badly. Then a senior caught me staring at my phone for the tenth time in an hour and handed me the line that fixed my year: call home daily if you must, but build a second home here too, one friend at a time. Home is not a place you leave behind; it is a place you learn to carry, and friendship is how the bag stays light.</p>
+              <p>So I did the small brave things. I ate at the same table every evening, joined the games behind the hostel, and let the campus slowly learn my name. The calls home continued, but their tone changed &mdash; complaints became stories, and stories became plans. By the end of the semester I had two homes and felt like a traitor to neither. Missing home is not weakness; it is proof you come from somewhere worth missing. And the cure is never distance. The cure is people.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">1.4.2</span><span>23</span></div>
+          </article>
+
+          <article class="page" data-sec="1.4.3">
+            <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span></div>
+            <h3 class="sec-title">1.4.3 The Comparison Trap</h3>
+            <div class="page-body">
+              <p>The front bench of my class held a boy who solved problems faster than our teacher could write them. For one full month I raced him silently &mdash; his marks against mine, his speed against mine &mdash; and lost every single day. Programming, which I had entered loving, slowly began to feel like a race I was losing in public, twice a week.</p>
+              <p>The trap broke one evening in the library, when I finally asked him how he had learnt so much so early. He laughed and showed me his old notebooks: two full years of school-day coding, pages thick with practice. He was not ahead of me. He had simply started before me. That night I understood the unfair maths of comparison &mdash; I had been measuring my chapter one against somebody's chapter ten.</p>
+              <p>So I changed the opponent. Every week I raced only one person: the previous week's version of me. Slightly faster, slightly clearer, slightly braver with doubts. The pressure lifted, and strangely, the progress accelerated. Comparison is a trap because it always borrows the wrong ruler. Stand beside better people for inspiration if you like, but race only yesterday's you. That is the one race you can actually win, and it compounds quietly for four years.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">1.4.3</span><span>24</span></div>
+          </article>
+
+          <article class="page" data-sec="1.4.4">
+            <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span></div>
+            <h3 class="sec-title">1.4.4 The Empty Pocket Month</h3>
+            <div class="page-body">
+              <p>Every first year runs an unofficial course in economics, and the syllabus is one graph: pocket money rises bravely on the first, crashes by the twentieth, and the month continues anyway. My hardest stretch arrived in the second semester, when one miscalculated transfer left me with coins and eleven days to survive. I will not pretend I managed it with grace.</p>
+              <p>What followed was a small masterclass in friendship. One friend discovered my situation without a word from me and began losing every argument about who would pay for chai. The mess uncle opened an unofficial account. Somebody's data pack became shared property after dinner. I ate, studied, laughed and submitted every practical that month without a single rupee of my own &mdash; carried entirely by people who never once made it feel like charity.</p>
+              <p>Two lessons stayed with me permanently. Money problems shrink when shared and swell when hidden; the pride is expensive, not the empty pocket. And I began tracking every rupee after that month, a habit that later grew into real budgeting sense. But the deeper lesson was about people: the friend who quietly pays for your chai in a hard month will remember it for years, and so will you. Wealth, in first year, was rarely measured in rupees.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">1.4.4</span><span>25</span></div>
+          </article>
+
+          <article class="page" data-sec="1.4.5">
+            <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span></div>
+            <h3 class="sec-title">1.4.5 The Seventy-Five Percent War</h3>
+            <div class="page-body">
+              <p>Attendance in our college answered to one holy number: seventy-five percent. Below it, exams turn into paperwork wars. I learnt this law the expensive way when one skipped week &mdash; a mix of laziness and one genuine fever &mdash; dropped me dangerously close to the border. The notice board listed defaulters like charges in a case, and my roll number sat there, freshly printed, in bold.</p>
+              <p>The recovery operation that followed deserved a better cause. Extra classes attended with the seriousness of a pilgrim. Leave applications written in handwriting I did not know I owned. A medical certificate from the shop near the gate, dated with great care and greater guilt. The economics were brutal: one careless week cost a month of repair, and the repair taught more discipline than the lectures ever had.</p>
+              <p>The lesson outlived the crisis. Attendance was never really about sitting in a room; it is a contract with your own momentum. Miss too many days and the subject moves on, the teacher moves on, and worst of all, your own confidence moves on without you. I finished that year safely above the line and never visited the border again. Seventy-five percent looks like an enemy at eighteen. It is actually a guard rail, placed exactly where students like me were about to drive off the road.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">1.4.5</span><span>26</span></div>
+          </article>
+
+          <article class="page" data-sec="1.4.6">
+            <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span></div>
+            <h3 class="sec-title">1.4.6 The Quiet Comeback</h3>
+            <div class="page-body">
+              <p>Struggles rarely end with a victory scene. Mine ended on an ordinary Tuesday, when I solved a pointer problem on the board without my knees shaking, and nobody in the room was more surprised than me. No announcement, no applause &mdash; just a quiet signal from somewhere inside that the year had finally turned and the sinking had stopped.</p>
+              <p>Looking back, the comeback was never one event. It was a stack of small repayments: the failed test retried, the friends accumulated, the comparison retired, the rupees tracked, the attendance rebuilt. Each fix looked tiny on the day it happened. Stacked across months, they became a different student standing in the same shoes. That is the mathematics nobody prints in the syllabus &mdash; struggles do not disappear. They get out-earned, one small win at a time.</p>
+              <p>If you are reading this from inside your own hard month, I can only report what the year taught me: the middle always feels permanent, and it never is. Keep the small promises to yourself, accept the chai your friends buy quietly, and let the year do its slow work. The student who survives first year is not the one who never struggled. It is the one who kept showing up while struggling &mdash; and that, in the end, is the only entrance exam that matters.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">1.4.6</span><span>27</span></div>
+          </article>
+
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      The book still ends with &ldquo;To Be Continued . . . .&rdquo; &mdash; these pages slot in before it.<br>
+      Written to match the original voice: simple English, no emojis, a little Hinglish where it belongs.
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script>
+      (function () {
+        "use strict";
+        var toast = document.getElementById("toast");
+        var toastTimer = null;
+        function showToast(msg) {
+          toast.textContent = msg;
+          toast.classList.add("show");
+          clearTimeout(toastTimer);
+          toastTimer = setTimeout(function () { toast.classList.remove("show"); }, 2000);
+        }
+
+        document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+        document.addEventListener('copy', function(e) { e.preventDefault(); });
+
+        // Mobile reading bottom nav
+        var pages = Array.prototype.slice.call(document.querySelectorAll(".page"));
+        var currentPageIndex = 0;
+        var isFullScreen = false;
+        var isScrolling = false;
+        var scrollTimeout = null;
+
+        var navHtml = '<div class="mobile-bottom-nav">' +
+          '<button id="btnPrevPage">Back Page</button>' +
+          '<button id="btnFullScreen">Full Screen</button>' +
+          '<button id="btnNextPage">Next Page</button>' +
+        '</div>';
+        document.body.insertAdjacentHTML('beforeend', navHtml);
+
+        var btnPrev = document.getElementById("btnPrevPage");
+        var btnNext = document.getElementById("btnNextPage");
+        var btnFull = document.getElementById("btnFullScreen");
+
+        function updateNav() {
+          btnPrev.disabled = currentPageIndex <= 0;
+          btnNext.disabled = currentPageIndex >= pages.length - 1;
+        }
+
+        function syncCurrentPage() {
+          if (isFullScreen || isScrolling || pages.length === 0) return;
+          var minDiff = Infinity;
+          var bestIdx = 0;
+          pages.forEach(function(p, i) {
+            var rect = p.getBoundingClientRect();
+            var diff = Math.abs(rect.top);
+            if (diff < minDiff) { minDiff = diff; bestIdx = i; }
+          });
+          currentPageIndex = bestIdx;
+          updateNav();
+        }
+
+        window.addEventListener('scroll', function() { syncCurrentPage(); });
+
+        btnPrev.addEventListener("click", function() {
+          if (currentPageIndex > 0) {
+            if (isFullScreen) {
+              pages[currentPageIndex].style.display = 'none';
+              pages[currentPageIndex].classList.remove('mobile-fullscreen-page');
+            }
+            currentPageIndex--;
+            if (isFullScreen) {
+              pages[currentPageIndex].style.display = '';
+              pages[currentPageIndex].classList.add('mobile-fullscreen-page');
+              pages[currentPageIndex].scrollTop = 0;
+            } else {
+              isScrolling = true;
+              pages[currentPageIndex].scrollIntoView({behavior: "smooth", block: "start"});
+              clearTimeout(scrollTimeout);
+              scrollTimeout = setTimeout(function(){ isScrolling = false; syncCurrentPage(); }, 800);
+            }
+            updateNav();
+          }
+        });
+
+        btnNext.addEventListener("click", function() {
+          if (currentPageIndex < pages.length - 1) {
+            if (isFullScreen) {
+              pages[currentPageIndex].style.display = 'none';
+              pages[currentPageIndex].classList.remove('mobile-fullscreen-page');
+            }
+            currentPageIndex++;
+            if (isFullScreen) {
+              pages[currentPageIndex].style.display = '';
+              pages[currentPageIndex].classList.add('mobile-fullscreen-page');
+              pages[currentPageIndex].scrollTop = 0;
+            } else {
+              isScrolling = true;
+              pages[currentPageIndex].scrollIntoView({behavior: "smooth", block: "start"});
+              clearTimeout(scrollTimeout);
+              scrollTimeout = setTimeout(function(){ isScrolling = false; syncCurrentPage(); }, 800);
+            }
+            updateNav();
+          }
+        });
+
+        btnFull.addEventListener("click", function() {
+          isFullScreen = !isFullScreen;
+          if (isFullScreen) {
+            btnFull.textContent = "Exit Full";
+            pages.forEach(function(p, i) {
+              if (i !== currentPageIndex) p.style.display = 'none';
+              else {
+                p.style.display = '';
+                p.classList.add('mobile-fullscreen-page');
+                p.scrollTop = 0;
+              }
+            });
+            document.body.style.overflow = 'hidden';
+          } else {
+            btnFull.textContent = "Full Screen";
+            pages.forEach(function(p) {
+              p.style.display = '';
+              p.classList.remove('mobile-fullscreen-page');
+            });
+            document.body.style.overflow = '';
+            pages[currentPageIndex].scrollIntoView({block: "start"});
+          }
+        });
+        syncCurrentPage();
+
+        // tabs scrollspy
+        var tabs = document.querySelectorAll(".tab");
+        function setActive(id) {
+          tabs.forEach(function (t) {
+            t.classList.toggle("active", t.getAttribute("href") === "#" + id);
+          });
+        }
+        if ("IntersectionObserver" in window) {
+          var spy = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              if (e.isIntersecting) setActive(e.target.id);
+            });
+          }, { rootMargin: "-35% 0px -55% 0px", threshold: 0 });
+          document.querySelectorAll(".chapter").forEach(function (s) { spy.observe(s); });
+        }
+        tabs.forEach(function (t) {
+          t.addEventListener("click", function (ev) {
+            ev.preventDefault();
+            var target = document.querySelector(t.getAttribute("href"));
+            if (target) {
+              var smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+              target.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
+            }
+          });
+        });
+      })();
+    </script>
+
+  </div>
+
+  <!-- Next Chapter Navigation -->
+  <div style="text-align:center; padding: 40px 20px 60px; background: var(--desk);">
+    <p style="color: var(--desk-muted); font-family: var(--mono, monospace); font-size: 13px; margin-bottom: 16px; letter-spacing: .08em; text-transform: uppercase;">You&rsquo;ve finished Chapter 1</p>
+    <a href="chapter2_extension.html" style="display:inline-block; background: var(--amber, #c8922a); color: #1a1208; font-family: var(--mono, monospace); font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; padding: 14px 32px; border-radius: 6px; text-decoration: none; transition: opacity .2s;">Next: Chapter 2 &rarr;</a>
+  </div>
+
+  <script>
+    if (localStorage.getItem("cwd_unlocked") !== "1") {
+      alert("Please purchase the book to read this chapter.");
+      window.location.href = "index.html#get";
+    }
+  </script>
+</body>
+
+</html>

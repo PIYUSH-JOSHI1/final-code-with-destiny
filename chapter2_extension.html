@@ -1,0 +1,901 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Hello, Destiny — Chapter 2 Extension</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
+  <style>
+    :root {
+      color-scheme: dark;
+      --desk: #171310;
+      --desk-2: #211c16;
+      --line: rgba(233, 222, 201, .14);
+      --desk-text: #dcd4c3;
+      --desk-muted: #9a9080;
+      --amber-bright: #d9a054;
+      --green: #8fbe92;
+      --paper: #f8f3e7;
+      --paper-2: #f1eada;
+      --ink: #372f23;
+      --ink-soft: #5c5344;
+      --amber: #a56e28;
+      --paper-edge: rgba(55, 45, 32, .16);
+    }
+
+    * { box-sizing: border-box }
+    html { scroll-behavior: smooth }
+
+    body {
+      margin: 0;
+      padding: 0 20px 64px;
+      background: var(--desk);
+      color: var(--desk-text);
+      font-family: "Newsreader", Georgia, serif;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    ::selection { background: #a56e28; color: #f8f3e7 }
+    .mono { font-family: "JetBrains Mono", monospace }
+
+    /* ---------- masthead ---------- */
+    .shell { max-width: 1180px; margin: 0 auto }
+
+    .mast {
+      display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
+      gap: 16px 28px; padding-block: 44px 20px;
+    }
+
+    .brand-code {
+      font-family: "JetBrains Mono", monospace;
+      font-size: clamp(17px, 2.6vw, 22px);
+      font-weight: 600; color: var(--desk-text); letter-spacing: .01em;
+    }
+    .brand-code .kw { color: var(--amber-bright) }
+    .brand-code .str { color: var(--green) }
+
+    .btn {
+      font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .14em;
+      border-radius: 4px; cursor: pointer; padding: 9px 14px;
+      transition: background .15s ease, color .15s ease, border-color .15s ease;
+    }
+    .btn-dark {
+      background: transparent; color: var(--desk-text);
+      border: 1px solid rgba(233, 222, 201, .3);
+    }
+    .btn-dark:hover { background: var(--paper); border-color: var(--paper); color: var(--ink) }
+
+    /* ---------- tabs ---------- */
+    .tabs {
+      position: sticky; top: 0; z-index: 30;
+      margin-inline: -20px; padding-inline: 20px;
+      display: flex; gap: 4px; align-items: center;
+      background: rgba(23, 19, 16, .94);
+      border-bottom: 1px solid var(--line);
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none }
+
+    .tab {
+      flex: 0 0 auto;
+      font-family: "JetBrains Mono", monospace; font-size: 11.5px; font-weight: 500;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--desk-muted); text-decoration: none;
+      padding: 13px 13px 11px; border-bottom: 2px solid transparent;
+      white-space: nowrap;
+    }
+    .tab:hover { color: var(--desk-text) }
+    .tab.active { color: var(--desk-text); border-bottom-color: var(--amber-bright) }
+    .tab .tno { color: var(--amber-bright); margin-right: 6px; font-weight: 600 }
+
+    /* ---------- chapter head ---------- */
+    .chapter { scroll-margin-top: 64px; padding-top: 44px }
+
+    .ch-head {
+      display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
+      gap: 14px 28px; margin-bottom: 22px;
+    }
+
+    .ch-eyebrow {
+      font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .22em; color: var(--amber-bright);
+      display: block; margin-bottom: 10px;
+    }
+
+    .ch-title {
+      margin: 0;
+      font-family: "Fraunces", Georgia, serif; font-weight: 600;
+      font-size: clamp(26px, 3.6vw, 34px); line-height: 1.15; color: var(--paper);
+      text-wrap: balance;
+    }
+
+    .ch-meta {
+      display: block; margin-top: 8px;
+      font-family: "JetBrains Mono", monospace; font-size: 11.5px;
+      color: var(--desk-muted); letter-spacing: .04em;
+    }
+
+    /* ---------- pages grid ---------- */
+    .pages { display: grid; grid-template-columns: 1fr; gap: 22px; align-items: start }
+    @media (min-width:900px) { .pages { grid-template-columns: repeat(2, 1fr) } }
+
+    .page {
+      background: linear-gradient(180deg, var(--paper), var(--paper-2));
+      border: 1px solid var(--paper-edge);
+      border-radius: 6px;
+      padding: 24px 26px 16px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, .32);
+      color: var(--ink);
+    }
+
+    .page-top {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; margin-bottom: 12px;
+    }
+
+    .eyebrow {
+      font-family: "JetBrains Mono", monospace; font-size: 10.5px; font-weight: 500;
+      text-transform: uppercase; letter-spacing: .2em; color: var(--amber);
+    }
+
+    .sec-title {
+      margin: 2px 0 14px;
+      font-family: "JetBrains Mono", monospace; font-weight: 600; font-size: 14.5px;
+      text-transform: uppercase; letter-spacing: .13em; line-height: 1.7; color: var(--ink);
+      text-wrap: balance;
+    }
+
+    .page-body p {
+      margin: 0; font-size: 16.5px; line-height: 1.68; color: var(--ink);
+      font-family: "Newsreader", Georgia, serif;
+    }
+    .page-body p + p { margin-top: 13px }
+    .page-body p:first-child::first-letter {
+      font-family: "Fraunces", Georgia, serif; font-weight: 600;
+      float: left; font-size: 3.05em; line-height: .86;
+      padding: 2px 9px 0 0; color: var(--amber);
+    }
+
+    .folio {
+      margin-top: 18px; padding-top: 10px;
+      border-top: 1px dashed rgba(55, 45, 32, .22);
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-family: "JetBrains Mono", monospace; font-size: 11px;
+      letter-spacing: .14em; color: var(--amber);
+    }
+    .folio .sec-ref { text-transform: uppercase; letter-spacing: .16em }
+
+    /* ---------- opening page (image + text) ---------- */
+    .opening-page {
+      background: linear-gradient(180deg, var(--paper), var(--paper-2));
+      border: 1px solid var(--paper-edge);
+      border-radius: 6px;
+      padding: 0;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, .4);
+      color: var(--ink);
+      overflow: hidden;
+      margin-bottom: 26px;
+    }
+
+    .opening-page .opening-image {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #e8dfcc;
+      min-height: 180px;
+      padding: 20px 0;
+    }
+
+    .opening-page .opening-image img {
+      width: 100%;
+      max-width: 760px;
+      max-height: 460px;
+      object-fit: contain;
+      display: block;
+      border-radius: 4px;
+      box-shadow: 0 8px 24px rgba(55, 45, 32, 0.2);
+    }
+
+    .opening-page .opening-image .img-placeholder {
+      padding: 60px 20px;
+      text-align: center;
+      color: var(--ink-soft);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      border: 2px dashed rgba(55, 45, 32, .25);
+      margin: 20px;
+      border-radius: 4px;
+    }
+
+    .opening-page .opening-body {
+      padding: 24px 26px 16px;
+    }
+
+    .opening-page .opening-body .eyebrow {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .opening-page .opening-body .sec-title {
+      font-size: 15px;
+    }
+
+    .opening-page .opening-body p {
+      margin: 0;
+      font-size: 16.5px;
+      line-height: 1.68;
+      color: var(--ink);
+      font-family: "Newsreader", Georgia, serif;
+    }
+
+    .opening-page .opening-body p + p { margin-top: 13px }
+
+    .opening-page .opening-body p:first-child::first-letter {
+      font-family: "Fraunces", Georgia, serif; font-weight: 600;
+      float: left; font-size: 3.05em; line-height: .86;
+      padding: 2px 9px 0 0; color: var(--amber);
+    }
+
+    /* ---------- footer / toast ---------- */
+    .foot {
+      margin-top: 56px; padding-top: 22px;
+      border-top: 1px solid var(--line);
+      font-size: 14.5px; font-style: italic; color: var(--desk-muted);
+      text-align: center; line-height: 1.7;
+    }
+
+    .toast {
+      position: fixed; left: 50%; bottom: 26px; transform: translate(-50%, 14px);
+      background: #242a20; border: 1px solid #3e5c3a; color: #cfe3c9;
+      font-family: "JetBrains Mono", monospace; font-size: 12px; letter-spacing: .06em;
+      padding: 11px 18px; border-radius: 6px;
+      opacity: 0; pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+      z-index: 50; max-width: calc(100vw - 32px);
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0) }
+
+    :focus-visible { outline: 2px solid var(--amber-bright); outline-offset: 2px }
+
+    @media (prefers-reduced-motion:reduce) {
+      html { scroll-behavior: auto }
+      .btn, .toast { transition: none }
+    }
+
+    /* mobile bottom nav */
+    .mobile-bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--desk);
+      border-top: 1px solid var(--line);
+      z-index: 100;
+      padding: 10px 16px;
+      padding-bottom: calc(10px + env(safe-area-inset-bottom));
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .mobile-bottom-nav button {
+      background: var(--paper-2); color: var(--ink);
+      border: none; border-radius: 4px;
+      padding: 12px 10px;
+      font-family: var(--mono, monospace); font-size: 11.5px; font-weight: 700;
+      flex: 1; text-transform: uppercase; letter-spacing: .05em;
+      cursor: pointer;
+    }
+    .mobile-bottom-nav button:disabled { opacity: 0.5 }
+
+    .mobile-fullscreen-page {
+      position: fixed !important;
+      top: 0 !important; left: 0 !important; right: 0 !important;
+      bottom: 60px !important;
+      z-index: 99 !important;
+      margin: 0 !important; border-radius: 0 !important;
+      overflow-y: auto !important;
+      padding-bottom: 40px !important;
+    }
+
+    @media (max-width: 768px) {
+      .mobile-bottom-nav { display: flex }
+      body { padding-bottom: 70px }
+    }
+
+    @media (max-width:560px) {
+      .mast { padding-block: 30px 14px }
+      .page { padding: 20px 20px 14px }
+      .page-body p { font-size: 16px }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+
+    <header class="mast">
+      <div>
+        <span class="brand-code"><span class="kw">printf</span>(<span class="str">&ldquo;Hello, Destiny&rdquo;</span>);</span>
+      </div>
+      <a href="index.html#contents" class="btn btn-dark" style="text-decoration:none;">&#8592; Back to Contents</a>
+    </header>
+
+    <nav class="tabs" id="tabs" aria-label="Chapter 2 sub-chapters">
+      <a class="tab" href="#ch21"><span class="tno">2.1</span>All-Nighters</a>
+      <a class="tab" href="#ch22"><span class="tno">2.2</span>Everywhere</a>
+      <a class="tab" href="#ch23"><span class="tno">2.3</span>Chaos</a>
+      <a class="tab" href="#ch24"><span class="tno">2.4</span>Last-Minute</a>
+    </nav>
+
+    <main>
+
+      <!-- ==================== CHAPTER 2 · SUB-CHAPTER 2.1 ==================== -->
+      <section class="chapter" id="ch21" data-ch="2.1" data-title="All-Nighters & Submissions" data-range="2.1.1&ndash;2.1.6" data-pages="28&ndash;33">
+
+        <!-- ===== Opening page: 2.1 All-Nighters & Submissions ===== -->
+        <div class="opening-page">
+          <div class="opening-image">
+            <img src="images/2.1.png" alt="Chapter 2.1">
+          </div>
+          <div class="opening-body">
+            <span class="eyebrow">Chapter 2 &middot; Chaos, Cramming &amp; Creativity</span>
+            <h3 class="sec-title">2.1 All-Nighters &amp; Submissions</h3>
+            <p>The real chaos begins the night before a 12 p.m. deadline. Phones buzz nonstop, everyone's scrambling, asking, "Has anyone finished TAE-3?" Panic unites us all.</p>
+            <p>Texts fly: "Anyone done with TAE-3?" "I'm still on page one!" "Did you even start?" TAE 1, 2, or 3, they all forced us into this same last-minute rush. In those late-night scrambles, we weren't competing. We were just trying to make it, together.</p>
+            <p>Then, like a hero in pajamas, that one friend who finished early emerges. For a few hours, they're our king and savior. We huddle around their laptop, copying formulas, begging for explanations. They share not with pride, but with quiet grace, knowing next time roles may reverse. Years later, we won't recall the grades. We'll remember the shared panic, the relieved sigh at 11:57 a.m., and the friend who saved us all.</p>
+            <div class="folio"><span class="sec-ref">2.1</span><span>10</span></div>
+          </div>
+        </div>
+
+        <div class="ch-head">
+          <div>
+            <span class="ch-eyebrow">Chapter 2 &mdash; Chaos, Cramming &amp; Creativity &middot; Sub-chapter 2.1</span>
+            <h2 class="ch-title">The nights before the deadline</h2>
+            <span class="ch-meta">New pages 2.1.1&ndash;2.1.6 &middot; lands on book pages 28&ndash;33 &middot; continues 2.1 All-Nighters &amp; Submissions</span>
+          </div>
+        </div>
+
+        <div class="pages">
+
+          <article class="page" data-sec="2.1.1">
+            <div class="page-top"><span class="eyebrow">Chapter 2 &middot; Chaos, Cramming &amp; Creativity</span></div>
+            <h3 class="sec-title">2.1.1 The Seven-Day Plan</h3>
+            <div class="page-body">
+              <p>Every submission began with a plan, and every plan began with the same sentence: this time I will start early. I wrote the schedule in my diary with ruler-drawn boxes &mdash; research on Monday, writing on Tuesday, printing on Wednesday, buffer days after that. The plan looked so responsible that I felt proud of it for six days. Then I counted, and the deadline was no longer a date on the calendar. It was a countdown.</p>
+              <p>The last night arrived with full drama. I spread my notes on the desk like a general preparing for war, made one strong chai for courage, and opened the laptop at nine. Ten pages were due by morning. The diary, with its beautiful boxes and honest intentions, had produced exactly one page and a good title. The title was excellent, actually. Even today I defend it in front of people who wrote all ten pages.</p>
+              <p>Years later I still smile at the seven-day plan, but I no longer call it failure. That plan taught me how my mind negotiates with time: it always promises future-me more discipline than present-me actually owns. So I changed the trick. I began setting myself fake deadlines five days early and hiding the real date like an exam answer. The habit still runs every project I take. The plan was never the problem. Trusting the plan was.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">2.1.1</span><span>28</span></div>
+          </article>
+
+          <article class="page" data-sec="2.1.2">
+            <div class="page-top"><span class="eyebrow">Chapter 2 &middot; Chaos, Cramming &amp; Creativity</span></div>
+            <h3 class="sec-title">2.1.2 The Group Chat Storm</h3>
+            <div class="page-body">
+              <p>TAE-1, TAE-2, TAE-3 &mdash; the names still carry a small thunder. On submission nights our class group turned into a live news channel. Anyone done with TAE-3? I am still on page one. Bhai, did you even start? Three questions, sent by six people at once, and the panic multiplied with every buzz of the phone. We were not competing with each other. We were drowning together, loudly, in plain text.</p>
+              <p>The best part was the instant parliament that formed at midnight. Somebody shared a format. Somebody shared an old sample. Somebody who actually understood the topic recorded long voice notes that nobody played at full volume, in case the warden's footsteps came closer. Screenshots travelled like emergency rations. By two in the morning that group had produced more cooperation than one full semester of classroom team projects had managed.</p>
+              <p>Those chats are my favourite archaeology now. Scroll up in any old group and you find the night we all nearly failed together &mdash; and did not. Panic has a strange chemistry: it dissolves ego faster than friendship ever could. I asked doubts I would have been too proud to ask in daylight, and somebody answered at 2 a.m. without a single joke. Engineering taught me many subjects. The group chat taught me the most useful one: how to need people without shame.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">2.1.2</span><span>29</span></div>
+          </article>
+
+          <article class="page" data-sec="2.1.3">
+            <div class="page-top"><span class="eyebrow">Chapter 2 &middot; Chaos, Cramming &amp; Creativity</span></div>
+            <h3 class="sec-title">2.1.3 The Hero in Pajamas</h3>
+            <div class="page-body">
+              <p>Every submission night produced exactly one hero, and he was always in pajamas. The friend who, for reasons still unknown to science, had finished early. He posted one calm line in the group &mdash; mine is done, call if you need &mdash; and for a few hours he became the most important person in the whole batch. Kings have ruled with less grace and more paperwork.</p>
+              <p>We huddled around his laptop copying formulas, and the surprising part was his patience. He explained every borrowed line without a trace of pride, as if he already knew that next month the roles would reverse and he would be the one begging. That is the unwritten contract of engineering submissions: today's hero is tomorrow's beggar. Everybody signs it on the first day, and nobody ever reads the fine print.</p>
+              <p>In second year the crown finally reached me. I finished early once, posted my one calm line, and spent the whole night explaining the same concept eleven times to eleven desperate friends. I was exhausted and strangely happy. That night I understood what our heroes had been quietly practising all along: teaching under pressure, at midnight, to people too tired to pretend they understood. No viva ever tested me as hard. No viva ever taught me as much.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">2.1.3</span><span>30</span></div>
+          </article>
+
+          <article class="page" data-sec="2.1.4">
+            <div class="page-top"><span class="eyebrow">Chapter 2 &middot; Chaos, Cramming &amp; Creativity</span></div>
+            <h3 class="sec-title">2.1.4 The Printer Wars</h3>
+            <div class="page-body">
+              <p>The hostel had one working printer, and on submission mornings it became the most contested border in the country. By six a.m. a queue stood outside its owner's room, reports in hand, each of us holding exactly one chance of getting printed before the nine o'clock deadline. The machine jammed with the confidence of a government office. We waited anyway, because hope is free and A4 sheets are not.</p>
+              <p>The queue had its own constitution. Whoever was printing the last page of a fifty-page report earned respect. Whoever was printing the first page of a fifty-page report earned sympathy and a faster turn. Paper was borrowed and repaid in biscuits. Once, mid-jam, four engineers performed emergency surgery on that poor machine with a hairpin, and when it finally coughed out the page, we clapped like it had just landed a plane.</p>
+              <p>I own better printers today and trust none of them the way I trusted that hostel monster. It taught me the hidden syllabus of submission week: finishing the report is only half the job. The other half is the queue, the paper, the jam and the walk to class. Deadlines are never defeated by good content alone. They are defeated by logistics, biscuits and one well-timed clap.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">2.1.4</span><span>31</span></div>
+          </article>
+
+          <article class="page" data-sec="2.1.5">
+            <div class="page-top"><span class="eyebrow">Chapter 2 &middot; Chaos, Cramming &amp; Creativity</span></div>
+            <h3 class="sec-title">2.1.5 The 3 A.M. Wall</h3>
+            <div class="page-body">
+              <p>Every all-nighter has a wall, and the wall always arrived at three in the morning. By then the chai had stopped working, the jokes had turned stupid, and one friend was laughing at a sentence that was not funny. We called it the three a.m. brain. It still types, but it no longer thinks. Any code written after that hour was basically fan fiction.</p>
+              <p>We learnt to respect the wall the hard way, and then we outsmarted it with shameless simplicity: naps in shifts. Twenty minutes each, one person guarding the alarm like a security guard at a museum. The one who slept woke up fresh and typed like a hero. The one who guarded produced the night's stupidest paragraph and took his turn next. We wrote better work with less pride and more sleep.</p>
+              <p>That wall taught me the most expensive lesson of my four years: endurance is not about staying awake. It is about managing energy. In every deadline since, when the work turns heroic, I remember the shifts. Sleep is not the enemy of the deadline; stupid decisions are. The engineers who survive all-nighters are not the ones who refuse to rest. They are the ones who rest in shifts and return with a working brain.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">2.1.5</span><span>32</span></div>
+          </article>
+
+          <article class="page" data-sec="2.1.6">
+            <div class="page-top"><span class="eyebrow">Chapter 2 &middot; Chaos, Cramming &amp; Creativity</span></div>
+            <h3 class="sec-title">2.1.6 The Green Tick</h3>
+            <div class="page-body">
+              <p>The submission portal had one religion, and the god was a green tick. Uploaded successfully &mdash; two words that could heal an entire night. At 11:40 the batch refreshed the page together, forty students, one server, zero faith. The server always chose those exact minutes to become slow, as if it too had spent its semester submitting late and needed the drama.</p>
+              <p>I still remember my first green tick. My hands were shaking, and the file had been renamed four times in pure panic &mdash; final, final2, final_FINAL, final_final_true &mdash; before the upload bar began crawling like it was walking to college on foot. Then the tick appeared, and we screamed in the corridor at midnight, quietly. Results took weeks to arrive. The tick arrived instantly, and it forgave everything.</p>
+              <p>People assume engineers fear deadlines. Not true. We fear the forty minutes before them, and we live for the tick after them. That small green mark is the only honest medal of student life: it does not ask for your marks, your attendance or your confidence. It asks one question &mdash; did you make it or not? Years from now I may forget every grade I earned. I will not forget the tick.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">2.1.6</span><span>33</span></div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ==================== CHAPTER 2 · SUB-CHAPTER 2.2 ==================== -->
+      <section class="chapter" id="ch22" data-ch="2.2" data-title="Coding Everywhere" data-range="2.2.1&ndash;2.2.6" data-pages="34&ndash;39">
+
+        <!-- ===== Opening page: 2.2 Coding Everywhere ===== -->
+        <div class="opening-page">
+          <div class="opening-image">
+            <img src="images/2.2.png" alt="Chapter 2.2">
+          </div>
+          <div class="opening-body">
+            <span class="eyebrow">Chapter 3 &middot; The Great Code Adventure</span>
+            <h3 class="sec-title">2.2 Coding Everywhere</h3>
+            <p>Real engineering life wasn't lived in classrooms &mdash; it was coded in claimed corners of the campus. From cafeteria tables and quiet staircases to shady spots under old trees, these unofficial labs turned boring benches into launchpads and forgotten library nooks into secret think tanks. This is where collaboration sparked without a schedule, and procrastination often ignited our most creative breakthroughs.</p>
+            <p>Whether we were building a silly robot at 2 a.m. in a cluttered hostel room, or huddled together on the open campus lawn under a blanket of stars, our best creations were born from beautiful chaos.</p>
+            <p>In those messy, laughter-filled moments, we didn't just code &mdash; we wrote memories, forged friendships, and sketched the story of who we were becoming.</p>
+            <div class="folio"><span class="sec-ref">2.2</span><span>09</span></div>
+          </div>
+        </div>
+
+        <div class="ch-head">
+          <div>
+            <span class="ch-eyebrow">Chapter 2 &mdash; Chaos, Cramming &amp; Creativity &middot; Sub-chapter 2.2</span>
+            <h2 class="ch-title">Every corner became a desk</h2>
+            <span class="ch-meta">New pages 2.2.1&ndash;2.2.6 &middot; lands on book pages 34&ndash;39 &middot; continues 2.2 Coding Everywhere</span>
+          </div>
+        </div>
+
+        <div class="pages">
+
+          <article class="page" data-sec="2.2.1">
+            <div class="page-top"><span class="eyebrow">Chapter 2 &middot; Chaos, Cramming &amp; Creativity</span></div>
+            <h3 class="sec-title">2.2.1 The Canteen Classroom</h3>
+            <div class="page-body">
+              <p>The lab had timings; the canteen had none. Our table near the window slowly became an unofficial campus of its own &mdash; one laptop, three plates of samosas, and a compiler running between the ketchup and the notes. The waiter stopped asking what we wanted. He asked what we were building today. We took that as a promotion. Officially we were eating. Unofficially, development was in full swing, funded entirely by samosas.</p>
+              <p>Serious work happened there more often than in the lab, and I eventually understood why. The lab watched you with an assistant and a register; the canteen only fed you. Fear was off the menu, and ideas arrived with the tea. Half our mini projects were designed on tissue paper, and at least two of those tissues survived long enough to become real features.</p>
+              <p>People imagine coding needs silence, a desk and perfect lighting. My best half-hour of coding ever happened next to a frying pan, with oil smoke drifting across the screen. Comfort is not a place; it is a mood. When the team laughs easily and the food is warm, the code behaves too. Every engineer should find a canteen table of their own and defend it gently.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">2.2.1</span><span>34</span></div>
+          </article>
+
+          <article class="page" data-sec="2.2.2">
+            <div class="page-top"><span class="eyebrow">Chapter 2 &middot; Chaos, Cramming &amp; Creativity</span></div>
+            <h3 class="sec-title">2.2.2 The Staircase Cabin</h3>
+            <div class="page-body">
+              <p>Between the third floor and the fourth, our college kept its most productive office: a staircase landing with one window, one breeze and a permanent do-not-disturb sign written in nothing at all. Just six concrete steps, a wall to lean the laptop against, and a corner quiet enough for logic to speak. We called it the cabin, half as a joke and half with respect.</p>
+              <p>The cabin had a waiting list that nobody ever wrote down. One friend would be writing a practical on the second step, another revising on the fourth, and a junior would hover hopefully with a doubt he was too shy to ask in class. Questions asked on stairs get honest answers, because gravity does something to ego: everyone is literally at a different level, and nobody minds.</p>
+              <p>I still take calls on staircases when offices get too loud. Some part of that landing is installed in me permanently: work does not need a room, it needs a corner you trust. Titles, cabins and conference rooms came later in life; the staircase taught me first that a good workspace is any place where your mind stops performing and starts working. The rent was zero, and the view of the corridor beat any glass office I have sat in since.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">2.2.2</span><span>35</span></div>
+          </article>
+
+          <article class="page" data-sec="2.2.3">
+            <div class="page-top"><span class="eyebrow">Chapter 2 &middot; Chaos, Cramming &amp; Creativity</span></div>
+            <h3 class="sec-title">2.2.3 The Train Build</h3>
+            <div class="page-body">
+              <p>Every long vacation train ride carried a passenger with a laptop and misplaced priorities: me. Somewhere between two stations, with my bag as a table and a stranger uncle judging my screen, I wrote the first version of a project that later won a college prize. The coach rattled, the network appeared and vanished at every tunnel, and the code somehow kept growing.</p>
+              <p>Coding on a train teaches a syllabus no lab can offer. You write with one hand because the other is holding the laptop during a jerk. You test logic without internet, so it must actually work offline. You explain your project to the curious uncle twice, and the second explanation is always clearer. Passengers asked the best questions: simple, direct, and impossible to answer with jargon.</p>
+              <p>That build became my quiet proof that environment is an excuse. If code could grow on a shaking berth between Borivali and Surat, it could grow anywhere I stopped pretending to need perfect conditions. Now, whenever I catch myself waiting for the perfect desk, the perfect mood, the perfect machine, I remember the train. The idea does not wait for you to be seated.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">2.2.3</span><span>36</span></div>
+          </article>
+
+          <article class="page" data-sec="2.2.4">
+            <div class="page-top"><span class="eyebrow">Chapter 2 &middot; Chaos, Cramming &amp; Creativity</span></div>
+            <h3 class="sec-title">2.2.4 The Phone-Only Week</h3>
+            <div class="page-body">
+              <p>In second year, my laptop died a dramatic death &mdash; one spark, one smell, one funeral &mdash; and repairs took a week. Exams were close, and the practical file needed typing. So I did what desperate engineers do: I coded on my phone, thumbs racing on a keyboard meant for forwards and good morning messages, not for loops and brackets. The autocorrect fought me like a rival.</p>
+              <p>Something unexpected happened in that week. With a tiny screen, there is no space for clever code, so I wrote the smallest version of everything. Short functions. Clear names. One idea per line. When the laptop returned and I copied the phone code onto the big screen, the teacher's comment was that my style had improved. The smallest screen taught the cleanest habit.</p>
+              <p>I have respected constraints ever since. Big screens hide sloppy habits; small screens expose them like a mirror. Now, when a design feels bloated, I imagine reading it on that phone keyboard, thumb by painful thumb. If it survives that test, it is simple enough to ship. My dead laptop cost a week. The week paid me back with a style.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">2.2.4</span><span>37</span></div>
+          </article>
+
+          <article class="page" data-sec="2.2.5">
+            <div class="page-top"><span class="eyebrow">Chapter 2 &middot; Chaos, Cramming &amp; Creativity</span></div>
+            <h3 class="sec-title">2.2.5 The Silent Sprint</h3>
+            <div class="page-body">
+              <p>The library had one sacred rule &mdash; silence &mdash; and one group that refused to abandon it: us. We had a group submission due and a library slot booked, so we invented the silent sprint: six people, one table, zero spoken words. Everything travelled by notebook paper, passed under the table like secret school notes. A frown meant error. An arrow meant explain again.</p>
+              <p>Halfway through, the comedy peaked: our most talkative teammate, banned from speech for two hours, discovered handwriting. His notes got longer and politer than his voice ever was. By the end, the paper trail on our table looked like a small postal service, and we finished the submission with better focus than any loud session had ever produced. Silence, it turns out, is a team member too.</p>
+              <p>The silent sprint returns in my life every busy season. When talk becomes noise, I switch to writing &mdash; short messages, clear bullets, no meeting. Words spent talking are loud; words spent writing stay and work. Six students breaking a rule politely taught me a management system that no company has improved upon yet: write more, say less, and pass the paper.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">2.2.5</span><span>38</span></div>
+          </article>
+
+          <article class="page" data-sec="2.2.6">
+            <div class="page-top"><span class="eyebrow">Chapter 2 &middot; Chaos, Cramming &amp; Creativity</span></div>
+            <h3 class="sec-title">2.2.6 The Portable Office</h3>
+            <div class="page-body">
+              <p>By final year, my laptop bag had become part of my body. It sat next to me at weddings, waited outside exam halls, and once attended a family dinner where I promised to leave in five minutes three separate times. Any flat surface was a desk: a wall, a knee, a stack of newspapers, an uncle's shoulder &mdash; that last one only in emergencies.</p>
+              <p>But the real change was not the bag. It was the belief underneath it: that work travels with you, so you had better carry something worth doing. Waiting for a bus became a chapter of notes. Waiting for friends became a draft. Idle time, which once meant boredom, quietly turned into inventory. Engineers of my batch carried either a laptop or a notebook, never nothing.</p>
+              <p>People ask where I did my best work, expecting the name of a lab or a company. The honest answer is everywhere &mdash; a canteen, a staircase, a train berth, a phone screen, a silent table. Coding stopped being a place I went and became a thing I carried. That is what my four years really built: not just programs, but a portable office between my ears.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">2.2.6</span><span>39</span></div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ==================== CHAPTER 2 · SUB-CHAPTER 2.3 ==================== -->
+      <section class="chapter" id="ch23" data-ch="2.3" data-title="Beautiful Chaos" data-range="2.3.1&ndash;2.3.6" data-pages="40&ndash;45">
+
+        <!-- ===== Opening page: 2.3 Beautiful Chaos ===== -->
+        <div class="opening-page">
+          <div class="opening-image">
+            <img src="images/2.3.png" alt="Chapter 2.3">
+          </div>
+          <div class="opening-body">
+            <span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span>
+            <h3 class="sec-title">2.3 Beautiful Chaos</h3>
+            <p>Hackathons are where engineering students truly transform. The first time I walked into a hackathon hall, it felt like entering a different universe. Bright screens lit up the dark hall, teams whispered intensely, and organizers shouted last-minute instructions. Everyone carried laptops like warriors and ideas like weapons.</p>
+            <p>My team and I rushed to claim a table. We didn't even know what problem to solve yet, but the energy around us pushed us to think fast. Within an hour, we had scribbled half-baked designs, argued over unnecessary features, and laughed at our ambitious ideas.</p>
+            <p>By midnight, the real battle began. Maggie, chips, and cold drinks became our fuel. Our eyes burned, but our excitement kept us awake. That night taught me that hackathons were less about winning and more about learning, adapting, and surviving.</p>
+            <div class="folio"><span class="sec-ref">2.3</span><span>13</span></div>
+          </div>
+        </div>
+
+        <div class="ch-head">
+          <div>
+            <span class="ch-eyebrow">Chapter 2 &mdash; Chaos, Cramming &amp; Creativity &middot; Sub-chapter 2.3</span>
+            <h2 class="ch-title">Where the mess turned magical</h2>
+            <span class="ch-meta">New pages 2.3.1&ndash;2.3.6 &middot; lands on book pages 40&ndash;45 &middot; continues 2.3 Beautiful Chaos</span>
+          </div>
+        </div>
+
+        <div class="pages">
+
+          <article class="page" data-sec="2.3.1">
+            <div class="page-top"><span class="eyebrow">Chapter 2 &middot; Chaos, Cramming &amp; Creativity</span></div>
+            <h3 class="sec-title">2.3.1 The Robot That Served No One</h3>
+            <div class="page-body">
+              <p>One semester, four of us pooled our pocket money and built a robot that served absolutely no purpose. It walked two steps, turned left, waved one plastic arm, and stopped. That was the entire feature list. We presented it at the college exhibition with the confidence of a company launching a flagship product. Visitors asked what it does. We said, with pride: it does that.</p>
+              <p>Behind the silliness, the robot taught more than my serious projects did. A motor that ran backwards taught me polarity. A wire that worked only when held at an angle taught me about loose connections. A battery that died at noon taught me power budgets. No textbook had made these lessons stick; one ridiculous machine welded them into memory in a single weekend.</p>
+              <p>That robot became a campus legend, and the legend outlived every serious project I made. Years later, in interviews, it was the silly robot I described with shining eyes, and interviewers smiled and leaned in. Here is the secret nobody tells students: useless projects are not wasted time. They are the playground where skills grow teeth. Build something useless once. You will never fear a real problem again.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">2.3.1</span><span>40</span></div>
+          </article>
+
+          <article class="page" data-sec="2.3.2">
+            <div class="page-top"><span class="eyebrow">Chapter 2 &middot; Chaos, Cramming &amp; Creativity</span></div>
+            <h3 class="sec-title">2.3.2 The Lawn Under the Stars</h3>
+            <div class="page-body">
+              <p>Our campus had a wide open lawn that the timetable never mentioned, and on clear nights it became our discussion hall. Four friends, one blanket, one laptop with a dying battery, and a sky doing its usual free decoration. There we argued about projects, mocked our own code, and once designed an entire app on the back of a tiffin wrapper.</p>
+              <p>Ideas behaved differently on that lawn. In the classroom, ideas wore uniforms and sat in rows; on the grass, they ran around barefoot. The boldest feature of our final-year project was born from a joke told at 10 p.m. under the stars, and by morning it had survived three rounds of laughter and one round of serious doubt. That is how we knew it was good.</p>
+              <p>The security guard on his round became part of the ritual. He would stop, look at our glowing screen, shake his head at the madness, and walk on smiling. I think of that lawn whenever a meeting room feels too serious. Take the discussion outside, literally or otherwise. Some ideas are shy in buildings and wild in the open air. Grass is cheaper than brainstorming software.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">2.3.2</span><span>41</span></div>
+          </article>
+
+          <article class="page" data-sec="2.3.3">
+            <div class="page-top"><span class="eyebrow">Chapter 2 &middot; Chaos, Cramming &amp; Creativity</span></div>
+            <h3 class="sec-title">2.3.3 The Demo That Died Laughing</h3>
+            <div class="page-body">
+              <p>The class demo was ready. Twelve slides of confidence, one working feature, and a teacher with raised eyebrows. I clicked run, and the program chose that exact moment to announce its rebellion: the screen filled with an error so long it needed scrolling. Forty students watched my dignity scroll past like the credits of a sad film. In the last bench, my teammate laughed first, and it spread like weather.</p>
+              <p>Then something beautiful happened. Instead of hiding, I turned to the class and read the error dramatically, like poetry. The room roared. The teacher, fighting a smile, said: explain what went wrong, then. That unplanned autopsy was better than my planned slides &mdash; I traced the fault live, fixed it in four minutes, and the demo ended in actual applause. For an error message, mind you.</p>
+              <p>I learnt the strangest lesson of my degree that day: laughter is a debugging tool. Panic narrows the mind into a corridor; laughter opens the windows. Ever since, when something breaks at the worst moment, I take one breath and make one honest joke first. The room relaxes, the mind restarts, and the fix arrives faster. Our worst demo became our best story, retold at every batch reunion.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">2.3.3</span><span>42</span></div>
+          </article>
+
+          <article class="page" data-sec="2.3.4">
+            <div class="page-top"><span class="eyebrow">Chapter 2 &middot; Chaos, Cramming &amp; Creativity</span></div>
+            <h3 class="sec-title">2.3.4 The Map of Wires</h3>
+            <div class="page-body">
+              <p>My hostel desk in third year deserved its own museum. Two laptops, one half-finished project, seven cables of unknown duty, four empty chai glasses in an archaeological row, and notes stuck to the wall like feathers after a pillow fight. Somewhere under it all, allegedly, was a table. My mother saw one photo and lit a diya. For my peace, I presume.</p>
+              <p>Then came the week I could not find my charger, my register, or my last three ideas, all buried in the same avalanche. I declared Operation Cleanup and discovered a disturbing truth: I could not throw anything away. Every dead cable had a story, every scribble was almost genius. My roommate watched the drama from his immaculate desk and said one sentence: chaos is fine, but homeless chaos is not.</p>
+              <p>We built the compromise that still runs my life today: chaos with a map. Piles allowed, but each pile named. Wires allowed, but bagged by species. One sacred square of the desk kept permanently empty, for whatever the day throws. My desk still looks like a storm, but it is a storm with addresses now. Beautiful chaos, it turns out, needs a filing system to stay beautiful.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">2.3.4</span><span>43</span></div>
+          </article>
+
+          <article class="page" data-sec="2.3.5">
+            <div class="page-top"><span class="eyebrow">Chapter 2 &middot; Chaos, Cramming &amp; Creativity</span></div>
+            <h3 class="sec-title">2.3.5 The Joke in the Code</h3>
+            <div class="page-body">
+              <p>Our class had a tradition nobody taught us: hiding jokes inside programs. A variable named after the mess uncle. An error message that said, please do not do this to me. A loading screen that printed ha ha, wait. The code was ordinary; the comedy was ours. Teachers who read carefully never knew whether to deduct marks or award them. Mostly they deducted.</p>
+              <p>The surprising part came years later. Opening old projects felt like meeting old friends, because the jokes were still sitting there, waiting. Code reviews in my first job praised my error messages for being clear and human, and I never told anyone where that education happened: in a hostel, at midnight, writing punchlines into if-else blocks for an audience of four.</p>
+              <p>Behind the fun was a serious discovery: you write better for a reader you like. Dry code is written for machines; humorous code is written for the next human, who might be future you in a bad mood. So name things kindly, leave a light comment where the logic twists, and let the work carry some warmth. Programs are read a hundred times after being written once. Make the reading kind.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">2.3.5</span><span>44</span></div>
+          </article>
+
+          <article class="page" data-sec="2.3.6">
+            <div class="page-top"><span class="eyebrow">Chapter 2 &middot; Chaos, Cramming &amp; Creativity</span></div>
+            <h3 class="sec-title">2.3.6 The Order Inside Chaos</h3>
+            <div class="page-body">
+              <p>People praise systems, plans and clean processes. My four years taught me to praise something else: productive chaos. Every good thing I built began as a mess &mdash; a joke on a lawn, a robot with no purpose, an error read aloud like poetry. The mess was not a failure of planning. It was the raw material that planning later refined.</p>
+              <p>I learnt to make room for it deliberately. One evening a week became unscheduled on purpose: no agenda, no goal, just the team and whatever idea wandered in. Half those evenings produced nothing but laughter, which was already something. The other half produced our strangest and best features. Order gives you what you asked for; chaos occasionally gives you what you needed.</p>
+              <p>So if your student life looks like a beautiful disaster &mdash; plans collapsing, projects silly, desks stormy, demos dying loudly &mdash; do not rush to fix all of it. Keep one foot in the mess. That is where the memories and the odd ideas live. Structure will come with age; it comes for everyone. The chaos years are the only ones that cannot be ordered later. Enjoy the storm while it is yours.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">2.3.6</span><span>45</span></div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ==================== CHAPTER 2 · SUB-CHAPTER 2.4 ==================== -->
+      <section class="chapter" id="ch24" data-ch="2.4" data-title="Last-Minute Engineer Life" data-range="2.4.1&ndash;2.4.6" data-pages="46&ndash;51">
+
+        <!-- ===== Opening page: 2.4 Last-Minute Engineer Life ===== -->
+        <div class="opening-page">
+          
+          <div class="opening-body">
+            <span class="eyebrow">Chapter 3 &middot; The Great Code Adventure</span>
+            <h3 class="sec-title">2.4 Last-Minute Engineer Life</h3>
+            <p>In engineering, we all become experts in last-minute jugaad. I studied one whole day before the first exam &mdash; and then it was just three hours of panicked cramming for every paper after that. Sounds totally mad, no? But it's 100% true.</p>
+            <p>That's the classic engineer chaos where panic becomes bonding, and deadlines turn classmates into co-conspirators. Because in the end, it's all about that legendary last moment. That "ratta maarrr" energy was our fuel &mdash; cramming pages, sharing notes, running on chai and chaos, with that anthem in our heads: Patak patak ke&hellip; rattaaaa maarrrr!</p>
+            <p>But exams were just the warm-up. The real drama unfolded with end-sem submissions. Picture this: five files, each 25 pages, all due just before finals &mdash; and all of us starting them the night before! We turned into a WhatsApp detective squad, begging for page photos, copying like pros, typing like maniacs &mdash; all while trying to "study" for the next day's paper.</p>
+            <div class="folio"><span class="sec-ref">2.4</span><span>11</span></div>
+          </div>
+        </div>
+
+        <div class="ch-head">
+          <div>
+            <span class="ch-eyebrow">Chapter 2 &mdash; Chaos, Cramming &amp; Creativity &middot; Sub-chapter 2.4</span>
+            <h2 class="ch-title">Life at the last minute</h2>
+            <span class="ch-meta">New pages 2.4.1&ndash;2.4.6 &middot; lands on book pages 46&ndash;51 &middot; continues 2.4 Last-Minute Engineer Life</span>
+          </div>
+        </div>
+
+        <div class="pages">
+
+          <article class="page" data-sec="2.4.1">
+            <div class="page-top"><span class="eyebrow">Chapter 2 &middot; Chaos, Cramming &amp; Creativity</span></div>
+            <h3 class="sec-title">2.4.1 The One-Day Miracle</h3>
+            <div class="page-body">
+              <p>My first exam of engineering was approached with full scientific planning: I studied one entire day before it. Twenty-four hours of notes, chai and prayer, and I walked in with hope, fear, and one night of reading as my entire army. Then the paper began, and somehow, question after question, that single desperate day kept answering. My handwriting hit speeds it has never touched again.</p>
+              <p>The result came back passable, even decent, and that is where the real story starts. My brain filed a dangerous conclusion under proven methods: one day is enough. From that day on, the syllabus and I maintained a simple treaty &mdash; it stayed forgotten, I stayed busy, and we met properly only in the final seventy-two hours. It was a horrible system. It was also, embarrassingly, my system.</p>
+              <p>I do not recommend the one-day method to anyone, and I confess it worked for me more than once. Here is the honest analysis: cramming works exactly until it does not, and you never know which exam is the exception until you are sitting in it. I survived my luck. Many around me did not. Treat the one-day miracle as a lucky accident, never as a strategy. Luck does not take attendance.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">2.4.1</span><span>46</span></div>
+          </article>
+
+          <article class="page" data-sec="2.4.2">
+            <div class="page-top"><span class="eyebrow">Chapter 2 &middot; Chaos, Cramming &amp; Creativity</span></div>
+            <h3 class="sec-title">2.4.2 The Three-Hour Formula</h3>
+            <div class="page-body">
+              <p>After the first exam set the precedent, a national standard emerged across our batch: three hours of panicked revision per paper. Not two, not four. Three. It was practically a laboratory finding, replicated across fifty students and eight semesters. In those three hours, a human being reads one semester at the speed of panic, and retains precisely enough. Enough, we learnt, is a moving target.</p>
+              <p>The three hours had a refined internal structure, passed down like a family recipe. Hour one: read everything once at speed, no notes, pure exposure. Hour two: attack the important questions, the ones every senior swears appear every year. Hour three: surrender to the probable &mdash; five questions, memorised cold, with full faith in the pattern of the universe and the paper-setter's laziness.</p>
+              <p>The funny thing is what those three hours taught me about my own brain. Pressure is a formatting tool: it deletes the decorative and keeps the core. Even today, before any big meeting or deadline, I give myself the same three-hour ritual &mdash; one pass over everything, one pass over what matters, one pass over what will definitely be asked. The exam changed. The formula stayed.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">2.4.2</span><span>47</span></div>
+          </article>
+
+          <article class="page" data-sec="2.4.3">
+            <div class="page-top"><span class="eyebrow">Chapter 2 &middot; Chaos, Cramming &amp; Creativity</span></div>
+            <h3 class="sec-title">2.4.3 The Ratta Anthem</h3>
+            <div class="page-body">
+              <p>Every batch has an anthem, and ours was sung during revision, at full volume, on the terrace: Patak patak ke, rattaaaa maarrrr. Translation for outsiders: we beat the knowledge into our heads, together, rhythmically, and with far more joy than the phrase suggests. Ratta &mdash; memorisation by chanting &mdash; was our group sport, and we trained like athletes. The neighbour's dog learnt the anthem too, and howled on pitch.</p>
+              <p>The terrace sessions had rules. One person read the definition aloud, the rest repeated it like a congregation, and the definition that survived three laps without anyone laughing became permanent. Dates, formulas, full forms &mdash; everything was converted into rhythm. Our marks owed a quiet debt to volume and repetition, and the neighbours owed us noise complaints they mercifully never filed.</p>
+              <p>People dismiss ratta as the lazy cousin of understanding, and sometimes they are right. But those evenings taught a deeper craft: how to compress. To fit a chapter into a chant, you must first understand it enough to know what to keep. The anthem was silly; the skill was not. Even today, when I prepare for anything big, I try to explain it in three sentences out loud. If it cannot be chanted, it is not yet clear.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">2.4.3</span><span>48</span></div>
+          </article>
+
+          <article class="page" data-sec="2.4.4">
+            <div class="page-top"><span class="eyebrow">Chapter 2 &middot; Chaos, Cramming &amp; Creativity</span></div>
+            <h3 class="sec-title">2.4.4 The Five Files Night</h3>
+            <div class="page-body">
+              <p>Picture the final week of the semester: five end-sem files, twenty-five pages each, all due together, and all five begun on the same glorious night. We divided the flat surface of two rooms into an assembly line: one writing, one drawing diagrams, one fact-checking from a senior's old file, one on food duty, and one simply motivating us by existing calmly.</p>
+              <p>By page forty, hands had developed their own protest movement. By page eighty, we were inventing content with academic confidence &mdash; describing experiments we had only heard about in legends. By page one hundred, the diagrams had entered an abstract art phase. And yet, somehow, by sunrise, five files lay complete, stapled, front-paged, and signed with the steadiest hands of the night: the food guy's.</p>
+              <p>That night should have been a disaster and became a diploma instead. It taught assembly-line thinking, honest delegation, and the strange stamina of five friends against one sunrise. I have run bigger projects with bigger budgets since, and I still organise them the same way: divide the pages, protect the food, rotate the hands, and never let the calm one leave the room.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">2.4.4</span><span>49</span></div>
+          </article>
+
+          <article class="page" data-sec="2.4.5">
+            <div class="page-top"><span class="eyebrow">Chapter 2 &middot; Chaos, Cramming &amp; Creativity</span></div>
+            <h3 class="sec-title">2.4.5 The Jugaad Degree</h3>
+            <div class="page-body">
+              <p>Alongside the degree, engineering awarded us all a second, unofficial qualification: jugaad. The art of making things work with what is present. A laptop stand built from two matchboxes. A broken fan made useful by pointing it artistically. A projector screen that was, in truth, a bedsheet with good intentions. Nothing was purchased when something could be arranged.</p>
+              <p>The hostel projector night remains the museum piece. Matchbox stand for the laptop, bedsheet screen on the wall, speakers borrowed from a music friend, movie arranged five minutes before. Twenty people on beds and floors, one intermission for Maggi, zero rupees spent. The film was forgettable. The engineering around it was not. We still describe that setup to people like a patent.</p>
+              <p>Jugaad gets teased as the opposite of engineering, but it is actually engineering at its purest: constraints named, resources listed, solution shipped before the deadline. My first job surprised me with how much of my value came from that habit. Big systems fail politely and wait for permission; jugaad minds fix things now with matchboxes. Keep the habit. It is the degree that never expires.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">2.4.5</span><span>50</span></div>
+          </article>
+
+          <article class="page" data-sec="2.4.6">
+            <div class="page-top"><span class="eyebrow">Chapter 2 &middot; Chaos, Cramming &amp; Creativity</span></div>
+            <h3 class="sec-title">2.4.6 The Last-Minute Creed</h3>
+            <div class="page-body">
+              <p>Let me confess the truth of our batch with full clarity: we were never early. Not once, not for anything. Assignments, files, exam prep, train bookings &mdash; everything departed at the last minute, waving cheerfully. And yet, somehow, nothing was ever left undone. The last minute was not our enemy. It had become our co-pilot. We did not fear it. We had studied it.</p>
+              <p>Because here is what nobody admits about last-minute people: we know exactly how long things take. The student who starts three hours before the deadline has, somewhere deep inside, a private stopwatch that says this task is a two-hour task plus one hour of fear. That stopwatch, brutal as it sounds, is real self-knowledge. Early starters have schedules; last-minuters have calibrated instincts.</p>
+              <p>So here is my creed, after years of arriving exactly on time by leaving exactly on time: respect your last minute, but never miss it. Miss it once and the system breaks; make it repeatedly and it becomes a strange kind of reliability. All my life, people have described me the same way: cuts it close, but delivers. In engineering, and maybe in life, that sentence is a career.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">2.4.6</span><span>51</span></div>
+          </article>
+
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      The book still ends with &ldquo;To Be Continued . . . .&rdquo; &mdash; these pages slot in before it.<br>
+      Written to match the original voice: simple English, no emojis, a little Hinglish where it belongs.
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script>
+      (function () {
+        "use strict";
+        var toast = document.getElementById("toast");
+        var toastTimer = null;
+        function showToast(msg) {
+          toast.textContent = msg;
+          toast.classList.add("show");
+          clearTimeout(toastTimer);
+          toastTimer = setTimeout(function () { toast.classList.remove("show"); }, 2000);
+        }
+
+        document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+        document.addEventListener('copy', function(e) { e.preventDefault(); });
+
+        // Mobile reading bottom nav
+        var pages = Array.prototype.slice.call(document.querySelectorAll(".page"));
+        var currentPageIndex = 0;
+        var isFullScreen = false;
+        var isScrolling = false;
+        var scrollTimeout = null;
+
+        var navHtml = '<div class="mobile-bottom-nav">' +
+          '<button id="btnPrevPage">Back Page</button>' +
+          '<button id="btnFullScreen">Full Screen</button>' +
+          '<button id="btnNextPage">Next Page</button>' +
+        '</div>';
+        document.body.insertAdjacentHTML('beforeend', navHtml);
+
+        var btnPrev = document.getElementById("btnPrevPage");
+        var btnNext = document.getElementById("btnNextPage");
+        var btnFull = document.getElementById("btnFullScreen");
+
+        function updateNav() {
+          btnPrev.disabled = currentPageIndex <= 0;
+          btnNext.disabled = currentPageIndex >= pages.length - 1;
+        }
+
+        function syncCurrentPage() {
+          if (isFullScreen || isScrolling || pages.length === 0) return;
+          var minDiff = Infinity;
+          var bestIdx = 0;
+          pages.forEach(function(p, i) {
+            var rect = p.getBoundingClientRect();
+            var diff = Math.abs(rect.top);
+            if (diff < minDiff) { minDiff = diff; bestIdx = i; }
+          });
+          currentPageIndex = bestIdx;
+          updateNav();
+        }
+
+        window.addEventListener('scroll', function() { syncCurrentPage(); });
+
+        btnPrev.addEventListener("click", function() {
+          if (currentPageIndex > 0) {
+            if (isFullScreen) {
+              pages[currentPageIndex].style.display = 'none';
+              pages[currentPageIndex].classList.remove('mobile-fullscreen-page');
+            }
+            currentPageIndex--;
+            if (isFullScreen) {
+              pages[currentPageIndex].style.display = '';
+              pages[currentPageIndex].classList.add('mobile-fullscreen-page');
+              pages[currentPageIndex].scrollTop = 0;
+            } else {
+              isScrolling = true;
+              pages[currentPageIndex].scrollIntoView({behavior: "smooth", block: "start"});
+              clearTimeout(scrollTimeout);
+              scrollTimeout = setTimeout(function(){ isScrolling = false; syncCurrentPage(); }, 800);
+            }
+            updateNav();
+          }
+        });
+
+        btnNext.addEventListener("click", function() {
+          if (currentPageIndex < pages.length - 1) {
+            if (isFullScreen) {
+              pages[currentPageIndex].style.display = 'none';
+              pages[currentPageIndex].classList.remove('mobile-fullscreen-page');
+            }
+            currentPageIndex++;
+            if (isFullScreen) {
+              pages[currentPageIndex].style.display = '';
+              pages[currentPageIndex].classList.add('mobile-fullscreen-page');
+              pages[currentPageIndex].scrollTop = 0;
+            } else {
+              isScrolling = true;
+              pages[currentPageIndex].scrollIntoView({behavior: "smooth", block: "start"});
+              clearTimeout(scrollTimeout);
+              scrollTimeout = setTimeout(function(){ isScrolling = false; syncCurrentPage(); }, 800);
+            }
+            updateNav();
+          }
+        });
+
+        btnFull.addEventListener("click", function() {
+          isFullScreen = !isFullScreen;
+          if (isFullScreen) {
+            btnFull.textContent = "Exit Full";
+            pages.forEach(function(p, i) {
+              if (i !== currentPageIndex) p.style.display = 'none';
+              else {
+                p.style.display = '';
+                p.classList.add('mobile-fullscreen-page');
+                p.scrollTop = 0;
+              }
+            });
+            document.body.style.overflow = 'hidden';
+          } else {
+            btnFull.textContent = "Full Screen";
+            pages.forEach(function(p) {
+              p.style.display = '';
+              p.classList.remove('mobile-fullscreen-page');
+            });
+            document.body.style.overflow = '';
+            pages[currentPageIndex].scrollIntoView({block: "start"});
+          }
+        });
+        syncCurrentPage();
+
+        // tabs scrollspy
+        var tabs = document.querySelectorAll(".tab");
+        function setActive(id) {
+          tabs.forEach(function (t) {
+            t.classList.toggle("active", t.getAttribute("href") === "#" + id);
+          });
+        }
+        if ("IntersectionObserver" in window) {
+          var spy = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              if (e.isIntersecting) setActive(e.target.id);
+            });
+          }, { rootMargin: "-35% 0px -55% 0px", threshold: 0 });
+          document.querySelectorAll(".chapter").forEach(function (s) { spy.observe(s); });
+        }
+        tabs.forEach(function (t) {
+          t.addEventListener("click", function (ev) {
+            ev.preventDefault();
+            var target = document.querySelector(t.getAttribute("href"));
+            if (target) {
+              var smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+              target.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
+            }
+          });
+        });
+      })();
+    </script>
+
+  </div>
+
+  <!-- Next Chapter Navigation -->
+  <div style="text-align:center; padding: 40px 20px 60px; background: var(--desk);">
+    <p style="color: var(--desk-muted); font-family: var(--mono, monospace); font-size: 13px; margin-bottom: 16px; letter-spacing: .08em; text-transform: uppercase;">You&rsquo;ve finished Chapter 2</p>
+    <a href="chapter3_extension.html" style="display:inline-block; background: var(--amber, #c8922a); color: #1a1208; font-family: var(--mono, monospace); font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; padding: 14px 32px; border-radius: 6px; text-decoration: none; transition: opacity .2s;">Next: Chapter 3 &rarr;</a>
+  </div>
+
+  <script>
+    if (localStorage.getItem("cwd_unlocked") !== "1") {
+      alert("Please purchase the book to read this chapter.");
+      window.location.href = "index.html#get";
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,749 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hello, Destiny — Six More Pages</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
+<style>
+:root{
+  color-scheme: dark;
+  --desk:#171310;
+  --desk-2:#211c16;
+  --line:rgba(233,222,201,.14);
+  --desk-text:#dcd4c3;
+  --desk-muted:#9a9080;
+  --amber-bright:#d9a054;
+  --green:#8fbe92;
+  --paper:#f8f3e7;
+  --paper-2:#f1eada;
+  --ink:#372f23;
+  --ink-soft:#5c5344;
+  --amber:#a56e28;
+  --paper-edge:rgba(55,45,32,.16);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  padding:0 20px 64px;
+  background:var(--desk);
+  color:var(--desk-text);
+  font-family:"Newsreader",Georgia,serif;
+  font-size:16px;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:#a56e28;color:#f8f3e7}
+.mono{font-family:"JetBrains Mono",monospace}
+
+/* ---------- masthead ---------- */
+.shell{max-width:1180px;margin:0 auto}
+.mast{
+  display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;
+  gap:16px 28px;padding-block:44px 20px;
+}
+.brand-code{
+  font-family:"JetBrains Mono",monospace;
+  font-size:clamp(17px,2.6vw,22px);
+  font-weight:600;color:var(--desk-text);letter-spacing:.01em;
+}
+.brand-code .kw{color:var(--amber-bright)}
+.brand-code .str{color:var(--green)}
+.brand-sub{
+  display:block;margin-top:8px;
+  font-style:italic;font-size:15.5px;color:var(--desk-muted);
+  max-width:52ch;line-height:1.5;
+}
+.btn{
+  font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.14em;
+  border-radius:4px;cursor:pointer;padding:9px 14px;
+  transition:background .15s ease,color .15s ease,border-color .15s ease;
+}
+.btn-dark{
+  background:transparent;color:var(--desk-text);
+  border:1px solid rgba(233,222,201,.3);
+}
+.btn-dark:hover{background:var(--paper);border-color:var(--paper);color:var(--ink)}
+.howto{
+  margin:0 0 26px;padding-bottom:18px;border-bottom:1px solid var(--line);
+  font-size:14.5px;font-style:italic;color:var(--desk-muted);line-height:1.6;max-width:78ch;
+}
+.howto b{font-style:normal;font-weight:500;color:var(--desk-text)}
+
+/* ---------- tabs ---------- */
+.tabs{
+  position:sticky;top:0;z-index:30;
+  margin-inline:-20px;padding-inline:20px;
+  display:flex;gap:4px;align-items:center;
+  background:rgba(23,19,16,.94);
+  border-bottom:1px solid var(--line);
+  overflow-x:auto;scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  flex:0 0 auto;
+  font-family:"JetBrains Mono",monospace;font-size:11.5px;font-weight:500;
+  text-transform:uppercase;letter-spacing:.1em;
+  color:var(--desk-muted);text-decoration:none;
+  padding:13px 13px 11px;border-bottom:2px solid transparent;
+  white-space:nowrap;
+}
+.tab:hover{color:var(--desk-text)}
+.tab.active{color:var(--desk-text);border-bottom-color:var(--amber-bright)}
+.tab .tno{color:var(--amber-bright);margin-right:6px;font-weight:600}
+.tab.active .tno{color:var(--amber-bright)}
+
+/* ---------- chapter head ---------- */
+.chapter{scroll-margin-top:64px;padding-top:44px}
+.ch-head{
+  display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;
+  gap:14px 28px;margin-bottom:22px;
+}
+.ch-eyebrow{
+  font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.22em;color:var(--amber-bright);
+  display:block;margin-bottom:10px;
+}
+.ch-title{
+  margin:0;
+  font-family:"Fraunces",Georgia,serif;font-weight:600;
+  font-size:clamp(26px,3.6vw,34px);line-height:1.15;color:var(--paper);
+  text-wrap:balance;
+}
+.ch-meta{
+  display:block;margin-top:8px;
+  font-family:"JetBrains Mono",monospace;font-size:11.5px;color:var(--desk-muted);letter-spacing:.04em;
+}
+.ch-head .btn-copy-ch{flex:0 0 auto}
+
+/* ---------- pages grid ---------- */
+.pages{display:grid;grid-template-columns:1fr;gap:22px;align-items:start}
+@media (min-width:900px){.pages{grid-template-columns:repeat(2,1fr)}}
+
+.page{
+  background:linear-gradient(180deg,var(--paper),var(--paper-2));
+  border:1px solid var(--paper-edge);
+  border-radius:6px;
+  padding:24px 26px 16px;
+  box-shadow:0 12px 28px rgba(0,0,0,.32);
+  color:var(--ink);
+}
+.page-top{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  margin-bottom:12px;
+}
+.eyebrow{
+  font-family:"JetBrains Mono",monospace;font-size:10.5px;font-weight:500;
+  text-transform:uppercase;letter-spacing:.2em;color:var(--amber);
+}
+.btn-paper{
+  background:transparent;color:var(--ink-soft);
+  border:1px solid rgba(55,45,32,.35);
+  font-size:10px;padding:6px 10px;
+}
+.btn-paper:hover{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.btn-paper.done{background:#3e5c3a;border-color:#3e5c3a;color:#e9f2e4}
+.sec-title{
+  margin:2px 0 14px;
+  font-family:"JetBrains Mono",monospace;font-weight:600;font-size:14.5px;
+  text-transform:uppercase;letter-spacing:.13em;line-height:1.7;color:var(--ink);
+  text-wrap:balance;
+}
+.page-body p{
+  margin:0;font-size:16.5px;line-height:1.68;color:var(--ink);
+  font-family:"Newsreader",Georgia,serif;
+}
+.page-body p + p{margin-top:13px}
+.page-body p:first-child::first-letter{
+  font-family:"Fraunces",Georgia,serif;font-weight:600;
+  float:left;font-size:3.05em;line-height:.86;
+  padding:2px 9px 0 0;color:var(--amber);
+}
+.folio{
+  margin-top:18px;padding-top:10px;border-top:1px dashed rgba(55,45,32,.22);
+  display:flex;justify-content:space-between;align-items:baseline;
+  font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.14em;color:var(--amber);
+}
+.folio .sec-ref{text-transform:uppercase;letter-spacing:.16em}
+
+/* ---------- footer / toast ---------- */
+.foot{
+  margin-top:56px;padding-top:22px;border-top:1px solid var(--line);
+  font-size:14.5px;font-style:italic;color:var(--desk-muted);
+  text-align:center;line-height:1.7;
+}
+.toast{
+  position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);
+  background:#242a20;border:1px solid #3e5c3a;color:#cfe3c9;
+  font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.06em;
+  padding:11px 18px;border-radius:6px;
+  opacity:0;pointer-events:none;
+  transition:opacity .2s ease,transform .2s ease;
+  z-index:50;max-width:calc(100vw - 32px);
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+:focus-visible{outline:2px solid var(--amber-bright);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .btn,.toast{transition:none}
+}
+@media (max-width:560px){
+  .mast{padding-block:30px 14px}
+  .page{padding:20px 20px 14px}
+  .page-body p{font-size:16px}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="mast">
+  <div>
+    <span class="brand-code"><span class="kw">printf</span>(<span class="str">&ldquo;Hello, Destiny&rdquo;</span>);</span>
+    <span class="brand-sub">Six new pages for every chapter &mdash; written in the book&rsquo;s voice, ready to paste into Canva.</span>
+  </div>
+  <button class="btn btn-dark" id="copyAll">Copy all 30 pages</button>
+</header>
+
+<p class="howto">How to use: open a chapter, press <b>Copy page</b>, and paste the text on a fresh page in Canva. Each card is styled like a book page &mdash; chapter eyebrow, spaced section title, body, folio number. Page numbers assume the six pages sit at the end of their chapter; section numbers continue each chapter as printed, so renumber inside Canva if your draft differs.</p>
+
+<nav class="tabs" id="tabs" aria-label="Chapters">
+  <a class="tab" href="#ch1"><span class="tno">01</span>First Commit</a>
+  <a class="tab" href="#ch2"><span class="tno">02</span>First Year</a>
+  <a class="tab" href="#ch3"><span class="tno">03</span>Code Adventure</a>
+  <a class="tab" href="#ch4"><span class="tno">04</span>Hackathons</a>
+  <a class="tab" href="#ch5"><span class="tno">05</span>Healthier Mind</a>
+</nav>
+
+<main>
+
+<!-- ==================== CHAPTER 1 ==================== -->
+<section class="chapter" id="ch1" data-ch="1" data-title="The First Commit" data-range="1.5&ndash;1.10" data-pages="04&ndash;09">
+  <div class="ch-head">
+    <div>
+      <span class="ch-eyebrow">Chapter 1 &mdash; The First Commit</span>
+      <h2 class="ch-title">More first-year stories</h2>
+      <span class="ch-meta">New sections 1.5&ndash;1.10 &middot; lands on book pages 04&ndash;09 &middot; continues after the first-year chapters</span>
+    </div>
+    <button class="btn btn-dark btn-copy-ch">Copy chapter &mdash; 6 pages</button>
+  </div>
+  <div class="pages">
+
+    <article class="page" data-sec="1.5">
+      <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">1.5 The First Viva</h3>
+      <div class="page-body">
+        <p>Writing code and explaining code are two different skills, and my first viva proved it. I had prepared the program well, but the moment the examiner said, &ldquo;Explain your logic,&rdquo; my mind went as blank as a new file. The answer was sitting in my head, and the words simply refused to leave my mouth.</p>
+        <p>The examiner was patient. He broke the question into small pieces. What does this loop do? Why did you place this condition here? Slowly, my voice found its way back, and by the end I was answering in full sentences. That day I learnt something no book printed: understanding your code is step one. Saying it out loud is step two, and most students never prepare for it.</p>
+        <p>So I changed my preparation. Before every viva after that, I explained my program aloud &mdash; to the mirror, to the ceiling fan, to anyone willing to listen. It felt silly for a week and then it felt like power. In my next viva I was among the first to raise a hand. Confidence is not something you are born with. It is something you rehearse, one uncomfortable question at a time.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">1.5</span><span>04</span></div>
+    </article>
+
+    <article class="page" data-sec="1.6">
+      <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">1.6 Pointers: The Final Boss</h3>
+      <div class="page-body">
+        <p>Every first-year batch has one monster, and ours lived inside C programming. Pointers. Seniors had warned us about them like old soldiers passing on war stories. &ldquo;If you survive pointers, you survive first year,&rdquo; they said, and we laughed, not knowing how right they were.</p>
+        <p>I read the chapter five times and understood nothing. Stars, arrows, addresses &mdash; it felt like a secret language hiding inside an already new language. Then one afternoon, a teacher drew boxes and arrows on the board and said, &ldquo;A pointer does not hold the treasure. It only remembers where the treasure is buried.&rdquo; Something clicked in that moment, and the whole topic rearranged itself in my head.</p>
+        <p>That evening I filled rough pages with tiny pointer programs, drawing the arrows by hand before running anything. When the output finally matched my drawing, the joy was pure. The scariest topic in the syllabus slowly became my favourite one to explain to friends. And that is the pattern of engineering, I realised. What you refuse to skip today becomes the thing you are proud of tomorrow.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">1.6</span><span>05</span></div>
+    </article>
+
+    <article class="page" data-sec="1.7">
+      <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">1.7 The Notebook Economy</h3>
+      <div class="page-body">
+        <p>First year ran on paper more than on screens. Every subject had its note-makers, and every note-maker had a small fan club. If your notes were complete and readable, you were basically running a public service. Friends queued up with genuine faces, and the notes travelled across the class like a daily newspaper.</p>
+        <p>I followed one simple rule: write in my own words, not the teacher&rsquo;s exact sentences. It cost a little extra effort during class, but it saved entire weeks before exams. My notebook became my revision, my backup and, honestly, my safety net. Whenever a concept slipped my mind, the answer was already written there &mdash; in language my own brain had chosen, which is the easiest language to re-read.</p>
+        <p>There was also an unofficial trade system running quietly. One friend supplied maths solutions, another drew the best flowcharts, someone else covered the theory subjects. No contracts, no reminders &mdash; everyone repaid in their own currency. Years later, when I started writing documentation for my projects, I recognised the habit immediately. Good notes were never about beautiful handwriting. They were about care &mdash; for the subject, and for the friend who will need them tomorrow.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">1.7</span><span>06</span></div>
+    </article>
+
+    <article class="page" data-sec="1.8">
+      <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">1.8 The First Mini Project</h3>
+      <div class="page-body">
+        <p>In the second semester, our teacher threw a small challenge at us: build a mini project in C. No competition, no trophy &mdash; just make something work. I chose a library record system. Add a book, issue a book, return a book. On paper it was three buttons of logic. On screen, it became a full weekend of my life.</p>
+        <p>The menu loop broke twice. File saving failed once and quietly wiped everything I had stored. I rebuilt it piece by piece with patience I did not know I owned. Then, on Sunday night, the whole program finally ran top to bottom without a single error. I called home and proudly announced that I had &ldquo;made software.&rdquo; My mother did not fully understand what I had built, but her excitement remains the best review I have ever received.</p>
+        <p>It was a tiny program by any standard. Classmates built similar ones the same weekend. But it was mine &mdash; designed, debugged and delivered by my own hands. That project drew a line in my journey: before it, I studied code. After it, I started building code. Every big system I have touched since then began in that same small place &mdash; one stubborn evening when quitting was easier, and I did not quit.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">1.8</span><span>07</span></div>
+    </article>
+
+    <article class="page" data-sec="1.9">
+      <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">1.9 The Senior Council</h3>
+      <div class="page-body">
+        <p>Every campus runs on two currencies: attendance and senior advice. The seniors knew which units carried the most marks, which teacher valued discipline, which lab was strict about deadlines. Fifteen honest minutes with the right senior could save a junior a full month of confusion. We were lucky to receive that advice early &mdash; and luckier still to recognise its worth.</p>
+        <p>In my first year, a third-year senior handed our group his old question papers and said one line I still follow: &ldquo;Don&rsquo;t memorise these. Study the pattern. Papers repeat their thinking, not their questions.&rdquo; That single sentence changed the way I prepared for every exam that came after it.</p>
+        <p>What I understood much later is that this guidance is a relay. The seniors who helped us were once helped by their own seniors, and the only fee they charged was simple &mdash; pass it on. So when our juniors arrived, quiet and lost, we sat with them the same way: shared our papers, our mistakes, our shortcuts. Knowledge in college was never private property. It was a hand-me-down, and the system only works when every batch keeps lending it forward.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">1.9</span><span>08</span></div>
+    </article>
+
+    <article class="page" data-sec="1.10">
+      <div class="page-top"><span class="eyebrow">Chapter 1 &middot; The First Commit</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">1.10 One Year Down</h3>
+      <div class="page-body">
+        <p>On the last day of first year, I sat for a while in the same classroom where the journey had begun. Same benches, same board, same sunlight &mdash; but a different person sitting there. A year earlier I was scared of a compiler&rsquo;s error messages. Now I was explaining pointers to my classmates, the same pointers that once scared me.</p>
+        <p>The year was not smooth, and I will not pretend it was. There were skipped classes, failed tests and nights when coding felt like punishment. But every struggle left something behind &mdash; a skill, a lesson or a friend. That is the quiet magic of the first year. It tests you with small problems now so that the bigger ones later find you prepared.</p>
+        <p>If I could speak to my first-day self &mdash; the nervous boy holding a new ID card &mdash; I would say only this: relax, you will figure it out. The semicolons will be found. The teachers will become familiar. The strangers will slowly become family. Just keep showing up, because showing up is the whole secret, and it takes one full year to truly believe that.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">1.10</span><span>09</span></div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 2 ==================== -->
+<section class="chapter" id="ch2" data-ch="2" data-title="First Year Tales" data-range="2.5&ndash;2.10" data-pages="13&ndash;18">
+  <div class="ch-head">
+    <div>
+      <span class="ch-eyebrow">Chapter 2 &mdash; First Year Tales</span>
+      <h2 class="ch-title">Classroom chaos, continued</h2>
+      <span class="ch-meta">New sections 2.5&ndash;2.10 &middot; lands on book pages 13&ndash;18 &middot; continues after the cramming-and-creativity pages</span>
+    </div>
+    <button class="btn btn-dark btn-copy-ch">Copy chapter &mdash; 6 pages</button>
+  </div>
+  <div class="pages">
+
+    <article class="page" data-sec="2.5">
+      <div class="page-top"><span class="eyebrow">Chapter 2 &middot; First Year Tales</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">2.5 The Teacher Varieties</h3>
+      <div class="page-body">
+        <p>Somewhere between semesters I realised that every class is a small collection of teaching styles, and the syllabus never mentions this. There was the strict one, whose silence alone kept sixty students awake. The chill one, who taught with jokes and let doubt sessions run long. The fast one, whose slides moved quicker than our pens. And the rare gem, who taught from the heart &mdash; the class nobody skipped, and not because of attendance.</p>
+        <p>Each variety trained a different muscle. The strict one taught respect for rules. The chill one proved that learning can be light. The fast one forced me to prepare before class, which turned out to be a hidden gift. And the gem showed me what a subject looks like when the teacher truly loves it. You do not get to choose your teachers, but you always get to choose what you take from them.</p>
+        <p>By the second year, I stopped judging teachers and started decoding them. What does this person value &mdash; discipline, preparation, curiosity? Once I had the answer, every classroom became easier to navigate. Teachers are not speed breakers on the engineering road. They are its characters, and each one quietly teaches a lesson that was never printed in the syllabus.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">2.5</span><span>13</span></div>
+    </article>
+
+    <article class="page" data-sec="2.6">
+      <div class="page-top"><span class="eyebrow">Chapter 2 &middot; First Year Tales</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">2.6 Group Study Rules</h3>
+      <div class="page-body">
+        <p>Group study in engineering usually begins with one honest sentence: &ldquo;Bhai, yeh topic samajh nahi aa raha.&rdquo; Within the hour, three more people admit the same thing, a corner of the hostel floor gets claimed, and a study circle is born &mdash; surrounded by chai cups and closed notebooks.</p>
+        <p>Our method never changed. Whoever understood a topic taught it to the rest. Explaining out loud exposed every crack in their own knowledge, so the teacher learnt twice. The listeners asked the simple, dangerous questions that classrooms rarely allow. Some nights the plan survived. Most nights we covered only half of it. Strangely, that half stayed with us forever.</p>
+        <p>There is a physics behind this that no timetable will tell you. What you teach, you keep. What you only read, you borrow and return. Even today, the topics I can still explain without notes are exactly the ones I once taught to friends under one dim tube light. Marks measure what you did alone. Group study measured how far we could carry each other &mdash; and that number was always bigger.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">2.6</span><span>14</span></div>
+    </article>
+
+    <article class="page" data-sec="2.7">
+      <div class="page-top"><span class="eyebrow">Chapter 2 &middot; First Year Tales</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">2.7 The Practical File Industry</h3>
+      <div class="page-body">
+        <p>No organisation on campus ran with stricter standards than the practical file industry. Red margins ruled with a pencil and a scale. Aim, apparatus, procedure, observation &mdash; the same holy order in every subject, every semester, every batch. The certificate page alone demanded more creativity than some exams: a submission date filled in to match attendance rather than truth.</p>
+        <p>At the centre of this industry stood the photocopy shop near the main gate. During submission week its machines ran like temple bells &mdash; non-stop, devotional, slightly overheated. We collected printouts, borrowed diagrams from trusted seniors and traced waveforms with the patience of jewellers. The hostel at midnight looked less like a hostel and more like a small factory of rulers and ink.</p>
+        <p>My handwriting still resembles a resistor symbol, but I drew every diagram myself. Not out of perfectionism &mdash; out of a discovery. The third time you draw a circuit by hand, it stops being a diagram and becomes an idea you own. The file was for marks. The drawing was for understanding. Sometimes the most boring paperwork in engineering is secretly the practice hall where the subject finally enters your head.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">2.7</span><span>15</span></div>
+    </article>
+
+    <article class="page" data-sec="2.8">
+      <div class="page-top"><span class="eyebrow">Chapter 2 &middot; First Year Tales</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">2.8 Library Days</h3>
+      <div class="page-body">
+        <p>Our library was the quietest classroom on campus, and it taught from a different syllabus. The front tables belonged to the sincerely regular, reserved permanently by two books and a water bottle. The corner seats belonged to our circle &mdash; friends who came to study and spent the first twenty minutes whispering about everything except the syllabus.</p>
+        <p>I loved that hall for a strange reason: it made me feel rich. Thousands of books standing quietly on shelves, and every single one free to hold. In first year I picked whatever called out to me &mdash; books on inventors, on startups, on how everyday machines work. None of it appeared in any exam. All of it quietly rebuilt how I think, which is probably why I remember those books better than some of my textbooks.</p>
+        <p>The library also ran on unspoken kindness. The nod you exchange with the same stranger every evening until you are not strangers anymore. The charger lent across the table during a battery emergency. The seat saved with a bag while a friend went for water. Silence has its own language of friendship, and it leaves you with a lesson no lecture covers: focus is not a mood that arrives. It is a place you can walk into.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">2.8</span><span>16</span></div>
+    </article>
+
+    <article class="page" data-sec="2.9">
+      <div class="page-top"><span class="eyebrow">Chapter 2 &middot; First Year Tales</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">2.9 The February Slump</h3>
+      <div class="page-body">
+        <p>Every semester hides a villain, and it is never a subject. It arrives in the middle weeks, after the novelty dies and long before the exams appear: the February slump. Cold mornings, pending records, assignments stacked like untested code, and one dangerous sentence floating in every room &mdash; &ldquo;Kal se pakka.&rdquo; Everyone said it. Nobody meant it.</p>
+        <p>The slump never announces itself. It starts with one skipped lecture, then a record that stays pending for a week, then a test prepared on the walk to the test. By the time you notice, your semester has a flat tyre and you are pedalling on willpower alone. The strange part? Everyone around you is pedalling the same way, pretending to cruise.</p>
+        <p>What rescued us was never motivation &mdash; motivation slept in too. It was one friend suddenly deciding to fix his routine, attending everything for two days and shamelessly dragging the rest of us along. That is the slump&rsquo;s only known cure: borrowed momentum. When you cannot push yourself, stand next to someone who is moving. Semesters are not won in January or in March. They are saved, quietly, in February.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">2.9</span><span>17</span></div>
+    </article>
+
+    <article class="page" data-sec="2.10">
+      <div class="page-top"><span class="eyebrow">Chapter 2 &middot; First Year Tales</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">2.10 The Doubt Session</h3>
+      <div class="page-body">
+        <p>The bravest student in every class is not the topper. It is the one who lifts a hand and says, &ldquo;Sir, I did not understand this part.&rdquo; I admired such students from a distance for too long. Their one small question opened a door for thirty silent classmates who carried the exact same doubt but guarded it like a secret.</p>
+        <p>I learnt the price of silence the hard way. One concept confused me for two full weeks, and I kept telling myself I would manage. I did not. The next topic stood on top of it, and the confusion multiplied like an error passing through a loop. When I finally asked, the teacher solved in five minutes what I had carried for fourteen days. Five minutes. Fourteen days. The maths still embarrasses me.</p>
+        <p>So I made a rule that still runs in my head: a doubt has a shelf life. Ask early. Ask badly. Ask in broken sentences if needed &mdash; but ask. A question is not a confession of weakness; it is a shortcut bought for the small price of a little embarrassment. The student who asks moves ahead. The student who stays silent stays stuck, politely.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">2.10</span><span>18</span></div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 3 ==================== -->
+<section class="chapter" id="ch3" data-ch="3" data-title="The Great Code Adventure" data-range="3.5&ndash;3.10" data-pages="23&ndash;28">
+  <div class="ch-head">
+    <div>
+      <span class="ch-eyebrow">Chapter 3 &mdash; The Great Code Adventure</span>
+      <h2 class="ch-title">Campus life beyond the deadline</h2>
+      <span class="ch-meta">New sections 3.5&ndash;3.10 &middot; lands on book pages 23&ndash;28 &middot; continues after the vacation-and-result pages</span>
+    </div>
+    <button class="btn btn-dark btn-copy-ch">Copy chapter &mdash; 6 pages</button>
+  </div>
+  <div class="pages">
+
+    <article class="page" data-sec="3.5">
+      <div class="page-top"><span class="eyebrow">Chapter 3 &middot; The Great Code Adventure</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">3.5 The Fest Season</h3>
+      <div class="page-body">
+        <p>Every college keeps a second personality hidden inside it, and it appears only during fest week. Banners climb every wall, speakers arrive on rent, dance practice colonises the corridors, and the campus quietly switches from study mode to show mode. For a few days the college is not a college. It is a stage, and everyone has a role in the play.</p>
+        <p>I volunteered with the organising team and learnt a hard truth: running a fest is a bigger project than any lab we ever did. We chased sponsors with printed proposals and rehearsed our pitch in the corridor. We argued with vendors over rent, guarded the budget like family silver, and once printed a banner with the chief guest&rsquo;s name spelled wrong &mdash; which taught me, permanently, to check everything twice before it becomes public.</p>
+        <p>The performances were lovely, but the real show ran backstage: sleeping three hours after setup, solving small fires with borrowed extension boards, and watching strangers enjoy something we had built from zero. A fest teaches planning, pressure and politeness in three flat days. My advice to every junior is simple &mdash; do not just attend your fest. Organise it once. It is a full semester of management, compressed.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">3.5</span><span>23</span></div>
+    </article>
+
+    <article class="page" data-sec="3.6">
+      <div class="page-top"><span class="eyebrow">Chapter 3 &middot; The Great Code Adventure</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">3.6 Canteen Economics</h3>
+      <div class="page-body">
+        <p>Engineering taught us finance too, though no subject ever took the credit. The canteen was our stock market, the menu was our index, and pocket money was a daily bull-versus-bear match. Chai for the whole table. Samosa if the week had been kind. And bill splitting, that delicate art in which everyone does mental maths, everyone rounds down, and the uncle somehow never loses.</p>
+        <p>By month end, a special dish appeared on every table, known in our dictionary as adjust chai and one packet, distribution managed by committee. We knew prices in student units before we knew them in rupees. One samosa equals two glasses of canteen water. A good day meant ice cream. A birthday meant somebody else&rsquo;s treat, definitely not ours.</p>
+        <p>The canteen uncle deserved an honorary management degree. He remembered our regular orders, extended credit with zero interest and zero lectures, and settled our dues with a smile instead of a legal notice. Years later, when I finally started tracking my own expenses, I found the basics already installed in me &mdash; budgeting under pressure, spending with intention, surviving month-end. Pocket money finishes every month. The training never does.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">3.6</span><span>20</span></div>
+    </article>
+
+    <article class="page" data-sec="3.7">
+      <div class="page-top"><span class="eyebrow">Chapter 3 &middot; The Great Code Adventure</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">3.7 The Mess Food Chronicles</h3>
+      <div class="page-body">
+        <p>No topic united the hostel like mess food. It was our daily serial, our shared complaint, our common enemy and occasional friend. The menu was printed with great confidence and served with complete surrender. Monday&rsquo;s pav bhaji earned respect. Thursday&rsquo;s dal tested our character. And the Sunday special was special mostly in its name.</p>
+        <p>We inherited survival tactics from generations of seniors, like folk wisdom. Reach early, or the good portion becomes a rumour. Befriend the person serving &mdash; one extra roti there can save a whole evening. Never judge a dish on Monday; the cook has moods, and the moods have seasons. We followed these laws with the seriousness of court orders.</p>
+        <p>But here is the twist I understood only after college life moved on. We never really went to the mess for the food. We went for the noise &mdash; forty boys eating together, complaining together, laughing at the same bad dish together. The mess never served a great meal, but it served one long table where everyone belonged. Taste fades with time. That table does not.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">3.7</span><span>21</span></div>
+    </article>
+
+    <article class="page" data-sec="3.8">
+      <div class="page-top"><span class="eyebrow">Chapter 3 &middot; The Great Code Adventure</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">3.8 Trains, Buses &amp; Home Runs</h3>
+      <div class="page-body">
+        <p>The journey home was a subject by itself, with its own syllabus and its own exams. Waiting list numbers longer than phone numbers. Platform benches claimed by seniors since dawn. That one friend whose bag always carried extra snacks, officially labelled as emergency supplies but actually meant for the whole coach.</p>
+        <p>Night trains had a culture no classroom could teach. Cards played under dim berths. Chai in clay cups at small stations at strange hours. And a complete stranger who became family by morning &mdash; somebody&rsquo;s mother had packed food for double the number of people, so half the bay ate together. Nobody planned that kindness. It simply travelled with us, seat to seat.</p>
+        <p>My favourite part was always the last hour. Familiar fields sliding past the window, the station board coming closer, and the phone buzzing with &ldquo;Kitne baje pahunchega?&rdquo; &mdash; a question that is really an announcement of love. Half tired, half excited, fully home-bound. Years later I understood why those journeys feel bigger than the vacations themselves. Between two heavy semesters, the train was the pause button. And the pause was always worth more than the play.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">3.8</span><span>22</span></div>
+    </article>
+
+    <article class="page" data-sec="3.9">
+      <div class="page-top"><span class="eyebrow">Chapter 3 &middot; The Great Code Adventure</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">3.9 The Invigilator Watch</h3>
+      <div class="page-body">
+        <p>Exam halls run on their own wildlife, and the invigilator is its most observed species. Before touching the question paper, every student completes a silent field study. The Marcher, whose shoes announce a full round every four minutes. The Statue, fixed at one corner, staring into philosophy. The Reader, who reads your paper over your shoulder with more interest than you have. And the rarest kind, the Kind One &mdash; who announces &ldquo;half time&rdquo; out of pure mercy.</p>
+        <p>The students had their own rituals, equally sacred. The scale borrowed from the neighbour ten seconds before time. The silent prayer with the pen. The slow, romantic reading of the question paper, as if it were a love letter. And the universal face code &mdash; one look at your friend across the hall, and both of you know exactly what the other is thinking: yeh kya sawaal hai?</p>
+        <p>The funny part is what survives after years. Not the marks, not the paper, not even the syllabus. What remains is the silence of a full hall thinking hard at once, the slow circle of the fan above, and the last bell that suddenly sounded like a festival. Exams end. The atmosphere of those mornings, somehow, refuses to.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">3.9</span><span>23</span></div>
+    </article>
+
+    <article class="page" data-sec="3.10">
+      <div class="page-top"><span class="eyebrow">Chapter 3 &middot; The Great Code Adventure</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">3.10 The Last Bench Legends</h3>
+      <div class="page-body">
+        <p>Every class has a map of characters, and the last bench is its storytelling capital. Sitting there was never a crime &mdash; it was a culture. The last bench held the artist who drew flawless bikes in the margins, the sleeper who rested with open eyes, the singer who hummed between topics, and one shocking topper who proved the back row and brilliance could share a seat.</p>
+        <p>I served my time there too, and I learnt things the front bench never taught. From the back you can see the whole class &mdash; who is following, who is lost, who is drawing, who is dreaming somewhere better. You become a quiet student of people, and that observation skill later runs meetings, teams and friendships better than any formula ever did.</p>
+        <p>Teachers judged the last bench harshly. Time judged it kindly. Today, many of those legends are doing remarkably well &mdash; the artist designs, the singer performs, and the sleeper, believe it or not, manages people better than most of us manage spreadsheets. Marks never noticed them. But life, it turns out, was never a marking scheme. The last bench knew this all along and politely kept the secret to itself.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">3.10</span><span>24</span></div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 4 ==================== -->
+<section class="chapter" id="ch4" data-ch="4" data-title="Hackathon Heroes" data-range="4.7&ndash;4.12" data-pages="35&ndash;40">
+  <div class="ch-head">
+    <div>
+      <span class="ch-eyebrow">Chapter 4 &mdash; Hackathon Heroes</span>
+      <h2 class="ch-title">Behind every trophy</h2>
+      <span class="ch-meta">New sections 4.7&ndash;4.12 &middot; lands on book pages 35&ndash;40 &middot; continues after the life-lesson pages</span>
+    </div>
+    <button class="btn btn-dark btn-copy-ch">Copy chapter &mdash; 6 pages</button>
+  </div>
+  <div class="pages">
+
+    <article class="page" data-sec="4.7">
+      <div class="page-top"><span class="eyebrow">Chapter 4 &middot; Hackathon Heroes</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">4.7 Choosing the Team</h3>
+      <div class="page-body">
+        <p>After a few hackathons, I stopped asking &ldquo;which competition?&rdquo; and started asking &ldquo;which team?&rdquo; The team decides the outcome before the problem statement is even announced. Skills matter, obviously. But three brilliant coders with three separate egos will lose to three average coders who share one brain and zero ego.</p>
+        <p>Over time our selection grew a checklist that never failed us. Does this person stay calm when the code collapses at 3 a.m.? Can they say &ldquo;I don&rsquo;t know&rdquo; without feeling smaller? Do they complete their own part instead of completing other people&rsquo;s sentences? And the biggest question of all &mdash; will they still be friendly after losing? A team that cannot lose together will never win together.</p>
+        <p>We also learnt to divide roles before the clock starts. Who builds, who designs, who pitches to the judges, who watches the time. Half of all hackathon chaos is simply four people doing the same task while the next task starves. I choose teammates the way I would choose a trekking partner &mdash; not the fastest one, but the one who carries the rope when you cannot. That single choice has won me more prizes than any technology we ever used.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">4.7</span><span>35</span></div>
+    </article>
+
+    <article class="page" data-sec="4.8">
+      <div class="page-top"><span class="eyebrow">Chapter 4 &middot; Hackathon Heroes</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">4.8 The Night Before the Battle</h3>
+      <div class="page-body">
+        <p>People imagine hackathons begin at the venue. Ours began the night before, with a ritual that slowly became sacred. Read the theme ten times. Write down ten ideas, then honestly murder seven of them. Pack like a soldier &mdash; laptop, charger, extension board, earphones, and the unofficial fourth teammate: a water bottle nobody remembers until it saves someone.</p>
+        <p>We prepared our weapons quietly too. A folder of reusable code from old projects. A list of favourite tools, tested in advance, not discovered at midnight. A rough screen sketch on paper, because at hour six paper thinks faster than a tired brain. And one non-negotiable rule: decide who owns which part before entering the hall, never after the timer starts.</p>
+        <p>Most teams walked in with energy. We walked in with energy plus a plan, and the difference surfaced exactly when the energy ran out. Hackathons are won twice &mdash; once on paper the night before, once on the screen the next day. The first victory is invisible, nobody applauds it, and it quietly decides whether the second one is even possible.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">4.8</span><span>36</span></div>
+    </article>
+
+    <article class="page" data-sec="4.9">
+      <div class="page-top"><span class="eyebrow">Chapter 4 &middot; Hackathon Heroes</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">4.9 The Demo That Died</h3>
+      <div class="page-body">
+        <p>Every hackathon soldier carries one scar. Mine has a name: The Demo That Died. For twenty-three hours, everything had gone right. The project worked, the slides were ready, the pitch was rehearsed. Then, in front of the judges, the screen froze. The internet collapsed. The laptop, choosing the worst possible moment of its life, restarted for a long-postponed update.</p>
+        <p>I stood there explaining code that was not on the screen, smiling like a politician while a building fell quietly inside my chest. We recovered partially, answered the judges as best we could, and walked off the stage knowing the result would hurt. It did. The judges were kind. The scoreboard was not.</p>
+        <p>But that disaster gifted me the most valuable rule of my hackathon life: never trust a live demo alone. Since that day, every project carries a recorded backup video, offline data and a plan for the exact moment technology betrays us. There is an unexpected bonus too &mdash; teams with a plan B demo with steadier hands, because they have already rehearsed the disaster. Preparation does not just save your demo. It saves your composure while you show it.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">4.9</span><span>37</span></div>
+    </article>
+
+    <article class="page" data-sec="4.10">
+      <div class="page-top"><span class="eyebrow">Chapter 4 &middot; Hackathon Heroes</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">4.10 Feedback: The Real Prize</h3>
+      <div class="page-body">
+        <p>No trophy ever mentions the most valuable thing a hackathon gives away free: the feedback round after the results. Losing weekends taught me a personal rule &mdash; walk up to the judges anyway and ask one question: &ldquo;What would you have done differently?&rdquo; That single question returned more growth than some of our prize money.</p>
+        <p>The answers were honest in a way marks never are. One judge said our idea was strong but our pitch buried it under technical words. Another said our app solved a real problem, but we never proved that users actually needed it. A pattern slowly became visible. The judges were not rejecting our code. They were rejecting our story. So we rebuilt the way we presented &mdash; problem first, users next, technology last.</p>
+        <p>Our next wins grew quietly out of those lost weekends. Now, whenever a result did not go our way, I felt something unexpected replacing the disappointment &mdash; curiosity. What did they see that we did not? Every competition leaves that question lying on the table. The teams that pick it up grow. The teams that only check the prize list repeat the same mistakes in nicer fonts.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">4.10</span><span>38</span></div>
+    </article>
+
+    <article class="page" data-sec="4.11">
+      <div class="page-top"><span class="eyebrow">Chapter 4 &middot; Hackathon Heroes</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">4.11 The Day After</h3>
+      <div class="page-body">
+        <p>Nobody talks about the day after a hackathon. The code is submitted, the results are out, the photos are posted &mdash; and suddenly, silence. Your body demands a fourteen-hour sleep. Your brain keeps compiling in the background. You wake up at 2 p.m. unsure whether it is morning or some new timezone invented just for you.</p>
+        <p>The day after is also when the truth arrives. The bugs you ignored at 4 a.m. are waiting patiently, like homework promised to a teacher. The feature you confidently pitched exists only in the pitch. So the day after becomes a quiet repair shift &mdash; fixing, documenting, cleaning. The project that slept as a demo slowly wakes up as a real product, one honest fix at a time.</p>
+        <p>And then there is my favourite ritual. The team chat gets a new name. The inside jokes get documented before they fade. Someone shares the photos, and everyone relives the exact minute the demo finally worked. Hackathons are measured in hours, but their afterglow runs for weeks. Winning is the headline. The day after is the actual story &mdash; tired, funny, slightly broken and completely worth it.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">4.11</span><span>39</span></div>
+    </article>
+
+    <article class="page" data-sec="4.12">
+      <div class="page-top"><span class="eyebrow">Chapter 4 &middot; Hackathon Heroes</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">4.12 Passing the Baton</h3>
+      <div class="page-body">
+        <p>The best moment of my hackathon life did not happen on any stage. It happened in a classroom, teaching first-year students how to prepare for their first competition. I showed them my old projects, my crashed demos, my nervous pitch decks &mdash; the complete museum of my mistakes. Their eyes carried the same glow I once took into my first hall, and something in me wanted to protect that glow.</p>
+        <p>I told them what seniors once told me, plus one thing nobody had told me: you do not need to be an expert to enter a hackathon. You need to be brave enough to enter. Expertise arrives mid-way, somewhere between the first panic and the third hour of debugging. What you genuinely need on day one is the willingness to sit down and try.</p>
+        <p>Months later, I watched a team of those students win their first prize, and the happiness felt strangely bigger than my own wins &mdash; like a tree enjoying its fruit without climbing for it. Trophies collect dust on shelves. But a builder you helped create goes on building long after your own competitions end. That is the real prize list of a hackathon life, and it keeps growing quietly, one junior at a time.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">4.12</span><span>40</span></div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 5 ==================== -->
+<section class="chapter" id="ch5" data-ch="5" data-title="Healthy Habits, Healthier Mind" data-range="5.3&ndash;5.8" data-pages="43&ndash;48">
+  <div class="ch-head">
+    <div>
+      <span class="ch-eyebrow">Chapter 5 &mdash; Healthy Habits, Healthier Mind</span>
+      <h2 class="ch-title">The system behind the player</h2>
+      <span class="ch-meta">New sections 5.3&ndash;5.8 &middot; lands on book pages 43&ndash;48 &middot; continues after the badminton-and-friends pages</span>
+    </div>
+    <button class="btn btn-dark btn-copy-ch">Copy chapter &mdash; 6 pages</button>
+  </div>
+  <div class="pages">
+
+    <article class="page" data-sec="5.3">
+      <div class="page-top"><span class="eyebrow">Chapter 5 &middot; Healthy Habits, Healthier Mind</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">5.3 Mornings That Decide the Day</h3>
+      <div class="page-body">
+        <p>I discovered a quiet truth in hostel life: the first hour of the morning decides the whole day. If the phone wins that hour, the day plays defence. If I win it &mdash; water, a few stretches, ten minutes of silence &mdash; the day plays on my terms. No magic trick. Just order, repeated until it becomes character.</p>
+        <p>Waking early in a hostel sounds like a joke. Doors slam on different schedules, alarms cry in four different voices, and one friend snores in surround sound. So I built a small system instead of trusting willpower. The alarm lives across the room, so standing up is compulsory. The water bottle sits on the table before the phone does. And screens stay off for the first thirty minutes &mdash; no negotiations, no exceptions.</p>
+        <p>The results arrived without drama. Lectures felt lighter when the day had already begun calmly. Errors in code looked smaller to a mind that was not racing from minute one. I am not a morning-motivation speaker &mdash; some of my proudest nights were sleepless ones. But between two ordinary days, the morning is the steering wheel. Whoever holds it first chooses the direction.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">5.3</span><span>43</span></div>
+    </article>
+
+    <article class="page" data-sec="5.4">
+      <div class="page-top"><span class="eyebrow">Chapter 5 &middot; Healthy Habits, Healthier Mind</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">5.4 Fuel for the Machine</h3>
+      <div class="page-body">
+        <p>We serviced our laptops with full sincerity &mdash; updates, cleaning, careful charging. Meanwhile, the machine that actually ran our lives, the body, got whatever survived till midnight. In first year, my diet had a name, and the name was &ldquo;whatever is available.&rdquo; Extra salt, extra sugar, zero timetable.</p>
+        <p>The change began embarrassingly small. Water before chai. One proper meal at roughly the same time daily, instead of five random snacks. Fruit when the canteen offered it, silently skipped when it did not. No revolutions, no diet charts on the wall. Yet within weeks the difference showed up exactly where it matters &mdash; focus. Long coding sessions stopped ending in headaches. Evening games felt lighter. My mood steadied like a server that finally received enough memory.</p>
+        <p>Hostels are not wellness retreats, and I am no nutrition expert. A perfect diet is impossible there; a better one is always one small choice away &mdash; less fried, more water, regular timings. Code taught me the rule early: garbage in, garbage out. The body runs the exact same law. Feed it like something you are building for the long term, because that is precisely what it is.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">5.4</span><span>44</span></div>
+    </article>
+
+    <article class="page" data-sec="5.5">
+      <div class="page-top"><span class="eyebrow">Chapter 5 &middot; Healthy Habits, Healthier Mind</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">5.5 The Screen Break</h3>
+      <div class="page-body">
+        <p>Here is an ironic confession from a programmer: the habit that saved my focus was spending less time on screens. In second year, I opened my phone&rsquo;s screen-time report and did some honest maths. My daily average, collected over a month, could have built a complete project. I was not using the phone. The phone was scheduling me.</p>
+        <p>So I ran a one-week experiment. Notifications off for everything except calls. The phone sleeps outside the study table. One full screen-free hour daily &mdash; walking, stretching, or simply staring at the ceiling like a philosopher on a budget. The first two days felt like my hands were missing an organ. By day four, something unexpected returned: boredom. And behind boredom, quietly, ideas started lining up.</p>
+        <p>That week taught me the difference between using a device and being used by one. Screens are not the enemy &mdash; code is my favourite screen, after all. The enemy is the endless scroll that eats the empty gaps where thinking used to live. Guard those gaps fiercely. Silence is not wasted time. It is where the next idea waits, patiently, behind all the noise.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">5.5</span><span>45</span></div>
+    </article>
+
+    <article class="page" data-sec="5.6">
+      <div class="page-top"><span class="eyebrow">Chapter 5 &middot; Healthy Habits, Healthier Mind</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">5.6 Learning to Rest</h3>
+      <div class="page-body">
+        <p>For years I treated rest like a salary: finish the work, then earn the break. The flaw in that deal is simple &mdash; the work never finishes, so the break never arrives, and the body collects the payment later with interest. My first burnout did not announce itself either. It just made everything slower, flatter and heavier, while I blamed everything except the actual cause.</p>
+        <p>Recovery taught me the difference between escaping and resting. Three hours of scrolling is not rest; it is simply a different screen. Real rest is plainer and harder: sleeping at a fixed time, one guilt-free off day a week, and doing nothing without apologising for it. The guilt is the hardest ingredient. An engineering brain whispers that rest is a loss. It is not. Rest is maintenance, and maintenance is part of the work.</p>
+        <p>These days I treat sleep like a deadline &mdash; fixed, respected, non-negotiable. And the mathematics I discovered still surprises me: seven hours of rested work regularly beats twelve hours of tired work. Rest is not the opposite of productivity. It is the fuel station that productivity keeps visiting, whether you schedule the stop or not.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">5.6</span><span>45</span></div>
+    </article>
+
+    <article class="page" data-sec="5.7">
+      <div class="page-top"><span class="eyebrow">Chapter 5 &middot; Healthy Habits, Healthier Mind</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">5.7 The Streak Trick</h3>
+      <div class="page-body">
+        <p>Motivation gave me beautiful beginnings and terrible endings. Every plan started like a festival and ended like a weekday. What finally fixed it was not a stronger reason &mdash; it was a weaker goal. I stopped demanding perfection and started demanding presence. The rule was embarrassingly small: show up daily, even if only for fifteen minutes.</p>
+        <p>Then I added the trick that changed everything &mdash; a calendar on the wall, one ink cross per completed day. Twenty crosses in a row did something strange to my brain. I was no longer exercising or practising; I was protecting a streak. The streak had its own gravity. On low days I did not aim for a great session, only for one more cross, and somehow that was always enough to keep the chain alive.</p>
+        <p>Three lessons fell out of that wall. Small daily effort beats big occasional effort, the way regular deposits beat one dramatic deposit. Missing one day is human; missing two quietly starts a new and worse habit. And the target is consistency, never intensity. Whether it is fitness, coding practice or reading &mdash; the daily rep is the entire secret. Big results are just small promises, kept in ink, on a wall, under your own eyes.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">5.7</span><span>47</span></div>
+    </article>
+
+    <article class="page" data-sec="5.8">
+      <div class="page-top"><span class="eyebrow">Chapter 5 &middot; Healthy Habits, Healthier Mind</span><button class="btn btn-paper page-copy">Copy page</button></div>
+      <h3 class="sec-title">5.8 A Promise to My Future Self</h3>
+      <div class="page-body">
+        <p>Every habit in these pages cost me something small &mdash; a lazy morning, a comfort meal, a scrolling hour, a skip day. And every one of them returned something large: a steadier mind, a stronger body, a calmer way of handling pressure. Engineering taught me to build reliable systems. These habits are simply the system I built for the engineer himself.</p>
+        <p>So here is my promise, written while the journey is still running. College will end. The court will compete with office hours. The friend circle will scatter across cities and time zones. Excuses will arrive in bulk, with free home delivery. But the person reading this later &mdash; the one with deadlines, responsibilities and a few grey hairs on the way &mdash; will still show up. Not to protect a streak, but to protect the person the streak built.</p>
+        <p>Because marks fade, trophies gather dust, and today&rsquo;s code gets refactored by tomorrow&rsquo;s coder. But the way you treat your body and mind travels with you into every chapter that follows. Health is the one project that never ships a final version. It asks for one small commit a day, forever, and pays back every single day you invest. &ldquo;Sehat hi asli daulat hai.&rdquo; Ship it daily.</p>
+      </div>
+      <div class="folio"><span class="sec-ref">5.8</span><span>48</span></div>
+    </article>
+
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  The book still ends with &ldquo;To Be Continued . . . .&rdquo; &mdash; these thirty pages slot in before it.<br>
+  Written to match the original voice: simple English, no emojis, a little Hinglish where it belongs.
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  "use strict";
+  var toast = document.getElementById("toast");
+  var toastTimer = null;
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toast.classList.remove("show"); }, 2000);
+  }
+  function flash(btn){
+    var old = btn.textContent;
+    btn.textContent = "Copied";
+    btn.classList.add("done");
+    setTimeout(function(){
+      btn.textContent = old;
+      btn.classList.remove("done");
+    }, 1400);
+  }
+  function copyText(text, cb){
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){ cb(true); }, function(){ cb(fallback(text)); });
+    } else {
+      cb(fallback(text));
+    }
+  }
+  function fallback(text){
+    try{
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      var ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      return ok;
+    }catch(e){ return false; }
+  }
+  function pageText(card){
+    var t = card.querySelector(".sec-title").textContent.replace(/\s+/g," ").trim();
+    var ps = Array.prototype.map.call(card.querySelectorAll(".page-body p"), function(p){
+      return p.textContent.replace(/\s+/g," ").trim();
+    });
+    return t + "\n\n" + ps.join("\n\n");
+  }
+  function chapterText(sec){
+    var head = "Chapter " + sec.dataset.ch + " — " + sec.dataset.title +
+      "\nExtension pages " + sec.dataset.range.replace(/ /g," ") + " (book pages " + sec.dataset.pages + ")";
+    var body = Array.prototype.map.call(sec.querySelectorAll(".page"), pageText)
+      .join("\n\n" + new Array(46).join("-") + "\n\n");
+    return head + "\n\n" + body;
+  }
+  document.querySelectorAll(".page-copy").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var card = btn.closest(".page");
+      copyText(pageText(card), function(ok){
+        if(ok){ showToast("Page " + card.dataset.sec + " copied"); flash(btn); }
+        else { showToast("Copy failed — select the text manually"); }
+      });
+    });
+  });
+  document.querySelectorAll(".btn-copy-ch").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var sec = btn.closest(".chapter");
+      copyText(chapterText(sec), function(ok){
+        if(ok){ showToast("Chapter " + sec.dataset.ch + " copied — 6 pages"); flash(btn); }
+        else { showToast("Copy failed — select the text manually"); }
+      });
+    });
+  });
+  document.getElementById("copyAll").addEventListener("click", function(){
+    var secs = document.querySelectorAll(".chapter");
+    var all = Array.prototype.map.call(secs, chapterText)
+      .join("\n\n" + new Array(60).join("=") + "\n\n");
+    var btn = this;
+    copyText("printf(\"Hello, Destiny\") — extension pages\n\n" + all, function(ok){
+      if(ok){ showToast("All 30 pages copied"); flash(btn); }
+      else { showToast("Copy failed — select the text manually"); }
+    });
+  });
+
+  // tabs scrollspy
+  var tabs = document.querySelectorAll(".tab");
+  function setActive(id){
+    tabs.forEach(function(t){
+      t.classList.toggle("active", t.getAttribute("href") === "#" + id);
+    });
+  }
+  if ("IntersectionObserver" in window){
+    var spy = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting) setActive(e.target.id);
+      });
+    }, { rootMargin: "-35% 0px -55% 0px", threshold: 0 });
+    document.querySelectorAll(".chapter").forEach(function(s){ spy.observe(s); });
+  }
+  tabs.forEach(function(t){
+    t.addEventListener("click", function(ev){
+      ev.preventDefault();
+      var target = document.querySelector(t.getAttribute("href"));
+      if (target){
+        var smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        target.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
+      }
+    });
+  });
+})();
+</script>
+
+</div>
+</body>
+</html>

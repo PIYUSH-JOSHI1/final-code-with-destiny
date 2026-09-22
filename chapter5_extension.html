@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Hello, Destiny — Chapter 5 Extension</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
+  <style>
+    :root {
+      color-scheme: dark;
+      --desk: #171310;
+      --desk-2: #211c16;
+      --line: rgba(233, 222, 201, .14);
+      --desk-text: #dcd4c3;
+      --desk-muted: #9a9080;
+      --amber-bright: #d9a054;
+      --green: #8fbe92;
+      --paper: #f8f3e7;
+      --paper-2: #f1eada;
+      --ink: #372f23;
+      --ink-soft: #5c5344;
+      --amber: #a56e28;
+      --paper-edge: rgba(55, 45, 32, .16);
+    }
+
+    * { box-sizing: border-box }
+    html { scroll-behavior: smooth }
+
+    body {
+      margin: 0;
+      padding: 0 20px 64px;
+      background: var(--desk);
+      color: var(--desk-text);
+      font-family: "Newsreader", Georgia, serif;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    ::selection { background: #a56e28; color: #f8f3e7 }
+    .mono { font-family: "JetBrains Mono", monospace }
+
+    .shell { max-width: 1180px; margin: 0 auto }
+
+    .mast {
+      display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
+      gap: 16px 28px; padding-block: 44px 20px;
+    }
+
+    .brand-code {
+      font-family: "JetBrains Mono", monospace;
+      font-size: clamp(17px, 2.6vw, 22px);
+      font-weight: 600; color: var(--desk-text); letter-spacing: .01em;
+    }
+    .brand-code .kw { color: var(--amber-bright) }
+    .brand-code .str { color: var(--green) }
+
+    .btn {
+      font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .14em;
+      border-radius: 4px; cursor: pointer; padding: 9px 14px;
+      transition: background .15s ease, color .15s ease, border-color .15s ease;
+    }
+    .btn-dark {
+      background: transparent; color: var(--desk-text);
+      border: 1px solid rgba(233, 222, 201, .3);
+    }
+    .btn-dark:hover { background: var(--paper); border-color: var(--paper); color: var(--ink) }
+
+    .tabs {
+      position: sticky; top: 0; z-index: 30;
+      margin-inline: -20px; padding-inline: 20px;
+      display: flex; gap: 4px; align-items: center;
+      background: rgba(23, 19, 16, .94);
+      border-bottom: 1px solid var(--line);
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none }
+
+    .tab {
+      flex: 0 0 auto;
+      font-family: "JetBrains Mono", monospace; font-size: 11.5px; font-weight: 500;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--desk-muted); text-decoration: none;
+      padding: 13px 13px 11px; border-bottom: 2px solid transparent;
+      white-space: nowrap;
+    }
+    .tab:hover { color: var(--desk-text) }
+    .tab.active { color: var(--desk-text); border-bottom-color: var(--amber-bright) }
+    .tab .tno { color: var(--amber-bright); margin-right: 6px; font-weight: 600 }
+
+    .chapter { scroll-margin-top: 64px; padding-top: 44px }
+
+    .ch-head {
+      display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
+      gap: 14px 28px; margin-bottom: 22px;
+    }
+
+    .ch-eyebrow {
+      font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .22em; color: var(--amber-bright);
+      display: block; margin-bottom: 10px;
+    }
+
+    .ch-title {
+      margin: 0;
+      font-family: "Fraunces", Georgia, serif; font-weight: 600;
+      font-size: clamp(26px, 3.6vw, 34px); line-height: 1.15; color: var(--paper);
+      text-wrap: balance;
+    }
+
+    .ch-meta {
+      display: block; margin-top: 8px;
+      font-family: "JetBrains Mono", monospace; font-size: 11.5px;
+      color: var(--desk-muted); letter-spacing: .04em;
+    }
+
+    .pages { display: grid; grid-template-columns: 1fr; gap: 22px; align-items: start }
+    @media (min-width:900px) { .pages { grid-template-columns: repeat(2, 1fr) } }
+
+    .page {
+      background: linear-gradient(180deg, var(--paper), var(--paper-2));
+      border: 1px solid var(--paper-edge);
+      border-radius: 6px;
+      padding: 24px 26px 16px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, .32);
+      color: var(--ink);
+    }
+
+    .page-top {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; margin-bottom: 12px;
+    }
+
+    .eyebrow {
+      font-family: "JetBrains Mono", monospace; font-size: 10.5px; font-weight: 500;
+      text-transform: uppercase; letter-spacing: .2em; color: var(--amber);
+    }
+
+    .sec-title {
+      margin: 2px 0 14px;
+      font-family: "JetBrains Mono", monospace; font-weight: 600; font-size: 14.5px;
+      text-transform: uppercase; letter-spacing: .13em; line-height: 1.7; color: var(--ink);
+      text-wrap: balance;
+    }
+
+    .page-body p {
+      margin: 0; font-size: 16.5px; line-height: 1.68; color: var(--ink);
+      font-family: "Newsreader", Georgia, serif;
+    }
+    .page-body p + p { margin-top: 13px }
+    .page-body p:first-child::first-letter {
+      font-family: "Fraunces", Georgia, serif; font-weight: 600;
+      float: left; font-size: 3.05em; line-height: .86;
+      padding: 2px 9px 0 0; color: var(--amber);
+    }
+
+    .folio {
+      margin-top: 18px; padding-top: 10px;
+      border-top: 1px dashed rgba(55, 45, 32, .22);
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-family: "JetBrains Mono", monospace; font-size: 11px;
+      letter-spacing: .14em; color: var(--amber);
+    }
+    .folio .sec-ref { text-transform: uppercase; letter-spacing: .16em }
+
+    .opening-page {
+      background: linear-gradient(180deg, var(--paper), var(--paper-2));
+      border: 1px solid var(--paper-edge);
+      border-radius: 6px;
+      padding: 0;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, .4);
+      color: var(--ink);
+      overflow: hidden;
+      margin-bottom: 26px;
+    }
+
+    .opening-page .opening-image {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #e8dfcc;
+      min-height: 180px;
+      padding: 20px 0;
+    }
+
+    .opening-page .opening-image img {
+      width: 100%;
+      max-width: 760px;
+      max-height: 460px;
+      object-fit: contain;
+      display: block;
+      border-radius: 4px;
+      box-shadow: 0 8px 24px rgba(55, 45, 32, 0.2);
+    }
+
+    .opening-page .opening-image .img-placeholder {
+      padding: 60px 20px;
+      text-align: center;
+      color: var(--ink-soft);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      border: 2px dashed rgba(55, 45, 32, .25);
+      margin: 20px;
+      border-radius: 4px;
+    }
+
+    .opening-page .opening-body {
+      padding: 24px 26px 16px;
+    }
+
+    .opening-page .opening-body .eyebrow {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .opening-page .opening-body .sec-title {
+      font-size: 15px;
+    }
+
+    .opening-page .opening-body p {
+      margin: 0;
+      font-size: 16.5px;
+      line-height: 1.68;
+      color: var(--ink);
+      font-family: "Newsreader", Georgia, serif;
+    }
+
+    .opening-page .opening-body p + p { margin-top: 13px }
+
+    .opening-page .opening-body p:first-child::first-letter {
+      font-family: "Fraunces", Georgia, serif; font-weight: 600;
+      float: left; font-size: 3.05em; line-height: .86;
+      padding: 2px 9px 0 0; color: var(--amber);
+    }
+
+    .foot {
+      margin-top: 56px; padding-top: 22px;
+      border-top: 1px solid var(--line);
+      font-size: 14.5px; font-style: italic; color: var(--desk-muted);
+      text-align: center; line-height: 1.7;
+    }
+
+    .toast {
+      position: fixed; left: 50%; bottom: 26px; transform: translate(-50%, 14px);
+      background: #242a20; border: 1px solid #3e5c3a; color: #cfe3c9;
+      font-family: "JetBrains Mono", monospace; font-size: 12px; letter-spacing: .06em;
+      padding: 11px 18px; border-radius: 6px;
+      opacity: 0; pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+      z-index: 50; max-width: calc(100vw - 32px);
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0) }
+
+    :focus-visible { outline: 2px solid var(--amber-bright); outline-offset: 2px }
+
+    @media (prefers-reduced-motion:reduce) {
+      html { scroll-behavior: auto }
+      .btn, .toast { transition: none }
+    }
+
+    .mobile-bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--desk);
+      border-top: 1px solid var(--line);
+      z-index: 100;
+      padding: 10px 16px;
+      padding-bottom: calc(10px + env(safe-area-inset-bottom));
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .mobile-bottom-nav button {
+      background: var(--paper-2); color: var(--ink);
+      border: none; border-radius: 4px;
+      padding: 12px 10px;
+      font-family: var(--mono, monospace); font-size: 11.5px; font-weight: 700;
+      flex: 1; text-transform: uppercase; letter-spacing: .05em;
+      cursor: pointer;
+    }
+    .mobile-bottom-nav button:disabled { opacity: 0.5 }
+
+    .mobile-fullscreen-page {
+      position: fixed !important;
+      top: 0 !important; left: 0 !important; right: 0 !important;
+      bottom: 60px !important;
+      z-index: 99 !important;
+      margin: 0 !important; border-radius: 0 !important;
+      overflow-y: auto !important;
+      padding-bottom: 40px !important;
+    }
+
+    @media (max-width: 768px) {
+      .mobile-bottom-nav { display: flex }
+      body { padding-bottom: 70px }
+    }
+
+    @media (max-width:560px) {
+      .mast { padding-block: 30px 14px }
+      .page { padding: 20px 20px 14px }
+      .page-body p { font-size: 16px }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+
+    <header class="mast">
+      <div>
+        <span class="brand-code"><span class="kw">printf</span>(<span class="str">&ldquo;Hello, Destiny&rdquo;</span>);</span>
+      </div>
+      <a href="index.html#contents" class="btn btn-dark" style="text-decoration:none;">&#8592; Back to Contents</a>
+    </header>
+
+    <nav class="tabs" id="tabs" aria-label="Chapter 5 sub-chapters">
+      <a class="tab" href="#ch51"><span class="tno">5.1</span>Badminton</a>
+      <a class="tab" href="#ch52"><span class="tno">5.2</span>Friends</a>
+    </nav>
+
+    <main>
+
+      <!-- ==================== CHAPTER 5 · SUB-CHAPTER 5.1 ==================== -->
+      <section class="chapter" id="ch51" data-ch="5.1" data-title="Badminton & Gym" data-range="5.1.1&ndash;5.1.6" data-pages="106&ndash;111">
+
+        <div class="opening-page">
+          
+          <div class="opening-body">
+            <span class="eyebrow">Chapter 5 &middot; Healthy Habits, Healthier Mind</span>
+            <h3 class="sec-title">5.1 Badminton &amp; Gym</h3>
+            <p>Apart from academics and coding, badminton and the gym became my real escape. Whenever I felt stuck in a difficult situation or mentally drained, these two activities refreshed my mind instantly. They helped me reset my thoughts, reduce frustration, and return to my work with a calmer mindset.</p>
+            <p>For me, they are not just hobbies &mdash; they are powerful tools that protect my mental health and bring balance to my routine. I genuinely believe that unhealthy addictions like alcohol or other temporary distractions only harm the body and mind.</p>
+            <p>Choosing sports and fitness gave me a healthier and more positive way to handle pressure. Badminton taught me focus, the gym taught me discipline, and together they helped me stay strong throughout my engineering journey.</p>
+            <div class="folio"><span class="sec-ref">5.1</span><span>19</span></div>
+          </div>
+        </div>
+
+        <div class="ch-head">
+          <div>
+            <span class="ch-eyebrow">Chapter 5 &mdash; Healthy Habits, Healthier Mind &middot; Sub-chapter 5.1</span>
+            <h2 class="ch-title">The court behind the hostel</h2>
+            <span class="ch-meta">New pages 5.1.1&ndash;5.1.6 &middot; lands on book pages 106&ndash;111 &middot; continues 5.1 Badminton &amp; Gym</span>
+          </div>
+        </div>
+
+        <div class="pages">
+
+          <article class="page" data-sec="5.1.1">
+            <div class="page-top"><span class="eyebrow">Chapter 5 &middot; Healthy Habits, Healthier Mind</span></div>
+            <h3 class="sec-title">5.1.1 The Court Behind the Hostel</h3>
+            <div class="page-body">
+              <p>I did not choose badminton; the court was simply on the way to everything. It stood behind our hostel, a concrete rectangle with faded lines, one net that sagged in the middle like a tired hammock, and floodlights that worked on approximately seventy percent of the days you needed them. Nobody ever announced its existence. You simply heard it every evening &mdash; the hollow knock of a shuttle on wood, and laughter that carried up to the third-floor windows.</p>
+              <p>One evening my roommate gave me a choice with no options in it: come and watch, or sit alone in the room. I went to watch. Within ten minutes a senior had thrown me a racket, and within ten more the shuttle had been everywhere on that court except the place I aimed at. I apologised twice, called the racket defective once, and was laughed at honestly and completely. That was my first match: me versus my own grip, and I lost in straight games.</p>
+              <p>But something had already happened that evening that I did not have vocabulary for yet. For ninety minutes my head had gone completely quiet &mdash; no submissions, no results, no future &mdash; only a small white object arriving at speeds my whole attention had to meet. I walked back to the room sweating and strangely light. I did not know it then, but I had just been introduced to the cheapest therapy a student can buy.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">5.1.1</span><span>106</span></div>
+          </article>
+
+          <article class="page" data-sec="5.1.2">
+            <div class="page-top"><span class="eyebrow">Chapter 5 &middot; Healthy Habits, Healthier Mind</span></div>
+            <h3 class="sec-title">5.1.2 The Six O'Clock Religion</h3>
+            <div class="page-body">
+              <p>The court ran on an unwritten constitution that no warden ever drafted. Games started at six, ended at seven-thirty, and the winner stayed on while the loser's side rotated out &mdash; a system that produced both fierce rallies and sudden, democratic retirements. Court booking happened by handshake, disputes were settled by a replay, and the man who brought the shuttlecock held seniority no committee could overrule.</p>
+              <p>What fascinated me most was the mixture of people the net collected. Toppers and backbenchers, seniors and juniors, the gym regulars and the first-timers &mdash; all of them equal at exactly twenty-one points. The court asked nobody their percentage and checked nobody's attendance. On that concrete, a university topper and a backbencher were simply two people arguing about whether the shuttle had touched the line, which, by ancient law, it had not.</p>
+              <p>Within a month, six o'clock had become a religion I did not have to believe in &mdash; only attend. That, I later understood, was the whole trick: a fixed slot does the work motivation cannot. Motivation asks every evening whether you feel like playing. A slot does not ask. The court met at six, and I either kept my appointment with it or I did not, and for once in my student life, I mostly did.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">5.1.2</span><span>107</span></div>
+          </article>
+
+          <article class="page" data-sec="5.1.3">
+            <div class="page-top"><span class="eyebrow">Chapter 5 &middot; Healthy Habits, Healthier Mind</span></div>
+            <h3 class="sec-title">5.1.3 The Senior Who Fixed My Grip</h3>
+            <div class="page-body">
+              <p>I played badly for a long time and proudly blamed the racket, the lights, the wind inside a closed hall. Then one evening the tallest senior in our hostel stopped the game mid-rally, walked over, and rearranged my fingers on the grip like a man adjusting a camera he had owned for years. You are arm-wrestling the shuttle, he said. The wrist gives it life; the arm only delivers it.</p>
+              <p>That ten-minute correction did what months of effort had failed to do. My smashes stopped apologising on arrival, my clears finally cleared, and my wrist learnt a vocabulary my arm had been faking. He watched me play one more game, nodded like a teacher signing an assignment, and went back to his own match without another word. I practised that grip for the rest of the year like it was a formula I had smuggled out of an exam hall.</p>
+              <p>That correction became one of the defining lessons of my education, and it had nothing to do with badminton. A senior's ten minutes saved me a year of wrong practice &mdash; the exact exchange rate I later found in code, where a mentor's one comment saved me days of confident wrongness. Ask early, I decided that evening. Pride costs ten hours; a question costs ten minutes.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">5.1.3</span><span>108</span></div>
+          </article>
+
+          <article class="page" data-sec="5.1.4">
+            <div class="page-top"><span class="eyebrow">Chapter 5 &middot; Healthy Habits, Healthier Mind</span></div>
+            <h3 class="sec-title">5.1.4 Sweat Before Supper</h3>
+            <div class="page-body">
+              <p>The changes arrived quietly, the way good code refactors arrive &mdash; no announcements, just things working better. My appetite, which had run on chaos, fixed its own schedule. Sleep stopped being a negotiation and became a collapse of the pleasant kind. And mess food, the same mess food I had criticised all first year, suddenly tasted earned. It turns out dinner after a real rally is a different dish from dinner after a nap.</p>
+              <p>The strangest benefit was where it showed up in my work. The best ideas of that year did not arrive while I scrolled; they arrived mid-rally, between points, in the gaps where the mind was too busy to interrupt itself. I would walk off the court with a solution to a bug that had resisted two hours of staring. Sweat, I discovered, is an excellent compiler for thoughts that refuse to build.</p>
+              <p>Years later, in a hackathon chapter I have already written, I called stamina a design decision. What I did not mention there is where that belief was first compiled: on this court, in these evenings, one exhausted rally at a time. The body, I learnt long before any judge confirmed it, is not a transport arrangement for the brain. It is the machine the brain runs on &mdash; and machines that never move, rust.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">5.1.4</span><span>109</span></div>
+          </article>
+
+          <article class="page" data-sec="5.1.5">
+            <div class="page-top"><span class="eyebrow">Chapter 5 &middot; Healthy Habits, Healthier Mind</span></div>
+            <h3 class="sec-title">5.1.5 The Inter-Department Tournament</h3>
+            <div class="page-body">
+              <p>Every February the college held its inter-department badminton tournament, and in my second year our circle finally entered with more courage than credentials. My doubles partner was my roommate &mdash; a boy whose serve had a mind of its own and whose smash was legally classified as a lob. We practised for two weeks, designed one signal system of blinks and nods, and called our partnership strategy, which flattered it considerably.</p>
+              <p>The draw gave us the mechanical department first, and nobody expected anything from us, which is the most dangerous thing a team can be given. We played above ourselves, took the first game on pure noise from the sideline, and eventually scraped through. The quarter-final, though, met the eventual champions, and our fairytale ended the way most do &mdash; 21-19 in the third game, with my last smash landing a centimetre wide and a whole department exhaling at once.</p>
+              <p>Here is the part I remember more than the score: we applauded the winners, and then we ate together. That is what sport teaches that examinations never do &mdash; losing in front of people and shaking their hands in the same hour. I had already begun collecting a syllabus of losing in hackathons; the court had been teaching the same course all along, at a cheaper fee and with better exercise attached.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">5.1.5</span><span>110</span></div>
+          </article>
+
+          <article class="page" data-sec="5.1.6">
+            <div class="page-top"><span class="eyebrow">Chapter 5 &middot; Healthy Habits, Healthier Mind</span></div>
+            <h3 class="sec-title">5.1.6 The Cheapest Therapy in Town</h3>
+            <div class="page-body">
+              <p>Every student discovers exam anxiety, and most discover it alone, staring at a ceiling at two in the morning. I discovered a loophole. After any bad paper, I stopped brooding in the room and went to the court instead, and ninety minutes later the same problem sat in my head, smaller, wearing its actual size. Sweat turned out to be an excellent solvent for thoughts that will not dissolve otherwise.</p>
+              <p>The court was also the only place in college where nobody's history followed them. Not once in three years did anyone ask my marks there. The topper's serve got returned the same way the backbencher's did, and the net kept its opinions entirely sporting. For a student brain that spent all day being measured, that concrete rectangle was a small country with no currency except the rally.</p>
+              <p>So I will say it plainly, because nobody said it to me early enough: everyone needs a court. A place where the mind's forty tabs close at once, where the body does the talking and the head is only allowed to watch. It does not have to be badminton. It only has to be regular, physical and slightly out of breath. The habit this whole chapter is built on began with one roommate dragging me outside &mdash; and the friends he introduced me to there are the next pages of this chapter.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">5.1.6</span><span>111</span></div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ==================== CHAPTER 5 · SUB-CHAPTER 5.2 ==================== -->
+      <section class="chapter" id="ch52" data-ch="5.2" data-title="The Friend Circle" data-range="5.2.1&ndash;5.2.6" data-pages="112&ndash;117">
+
+        <div class="opening-page">
+          
+          <div class="opening-body">
+            <span class="eyebrow">Chapter 5 &middot; Healthy Habits, Healthier Mind</span>
+            <h3 class="sec-title">5.2 The Real Ones Remain</h3>
+            <p>I love playing badminton with my friends &mdash; it just clears my mind. Every game is fun, full of laughs, and somehow all stress disappears. And after that, just sitting together with pizza or burgers, chatting and joking &mdash; it turns a normal day into a memory I'll never forget.</p>
+            <p>I go on midnight walks sometimes, and it's crazy how peaceful it feels. Talking under streetlights, sharing thoughts &mdash; it makes problems feel smaller. And working out with my gym buddy? It's not just about muscles. It's about having someone who keeps you going, in life and in fitness.</p>
+            <p>Night scooty rides are the best &mdash; wind in your face, city lights passing by, pure freedom. And jamming in my room with friends, singing randomly &mdash; it's the kind of happiness that fills you up completely. "Jahan dosti ho, wahan har pal khaas ho jaata hai."</p>
+            <div class="folio"><span class="sec-ref">5.2</span><span>20</span></div>
+          </div>
+        </div>
+
+        <div class="ch-head">
+          <div>
+            <span class="ch-eyebrow">Chapter 5 &mdash; Healthy Habits, Healthier Mind &middot; Sub-chapter 5.2</span>
+            <h2 class="ch-title">The people who refill you</h2>
+            <span class="ch-meta">New pages 5.2.1&ndash;5.2.6 &middot; lands on book pages 112&ndash;117 &middot; continues 5.2 The Real Ones Remain</span>
+          </div>
+        </div>
+
+        <div class="pages">
+
+          <article class="page" data-sec="5.2.1">
+            <div class="page-top"><span class="eyebrow">Chapter 5 &middot; Healthy Habits, Healthier Mind</span></div>
+            <h3 class="sec-title">5.2.1 The Mess Table Parliament</h3>
+            <div class="page-body">
+              <p>Every friend circle has an address, and ours was the third table from the fan in the mess. Nobody elected it, nobody minuted it, yet by the second month of college the parliament convened there at eight o'clock every night with the reliability of a government that actually works. Seats had owners. The corner seat belonged to whoever arrived first, and the chair nearest the fan was defended with the seriousness of a border dispute.</p>
+              <p>The parliament had its permanent members. There was the topper who explained the day's lecture while eating, as if digestion and differentiation could share a brain. There was the food critic, who reviewed every dal like a newspaper restaurant column. There was the quiet one who said little and noticed everything, and there was the comedian, whose one job &mdash; executed with professional consistency &mdash; was to make the table forget whatever paper had gone badly that day.</p>
+              <p>Years later, when people spoke about networking and communities, I always thought of that table first. A friend circle is not an accident of proximity; it is a system. The mess table was where the day got debugged out loud, where a bad test became a joke and a good day became a story. Before any habit of this chapter made me healthier, that table already knew the first rule of a healthy mind: you cannot carry a day alone.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">5.2.1</span><span>112</span></div>
+          </article>
+
+          <article class="page" data-sec="5.2.2">
+            <div class="page-top"><span class="eyebrow">Chapter 5 &middot; Healthy Habits, Healthier Mind</span></div>
+            <h3 class="sec-title">5.2.2 The Economics of Borrowing</h3>
+            <div class="page-body">
+              <p>Hostel friendship is measured in units the bank would not recognise: chargers, notes, an iron, one plate of whatever arrived from somebody's home. The circle ran a parallel economy where the currency was small favours, and the ledger &mdash; though nobody wrote it &mdash; balanced itself over months with better accuracy than any accounting software I have used since.</p>
+              <p>Submission week showed the system at full load. One laptop circulated between four boys like a government job; a hotspot was donated for a night and returned with gratitude; the boy with the printer access became, for two days, the most visited man in the wing. Nobody kept formal score, and yet everybody remembered. When my turn came to be the charger or the notes or the two a.m. proof-reader, I paid without being asked twice.</p>
+              <p>That economy taught me what friendship actually deposits. It is not the grand gestures films advertise; it is a hundred tiny transfers that compound quietly over years. Never keep the score loudly, but never stop keeping it honestly &mdash; because the day you need a large withdrawal, it is the small deposits that the whole circle remembers. The best banks I ever knew had mess-table branches.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">5.2.2</span><span>113</span></div>
+          </article>
+
+          <article class="page" data-sec="5.2.3">
+            <div class="page-top"><span class="eyebrow">Chapter 5 &middot; Healthy Habits, Healthier Mind</span></div>
+            <h3 class="sec-title">5.2.3 The Two O'Clock Conversation</h3>
+            <div class="page-body">
+              <p>Deadline nights had a second shift that nobody scheduled: the two o'clock conversation. When the laptops finally closed and the corridor went quiet, four boys would drift to the stairs or the terrace, and the talk would drift somewhere the day's jokes never reached. Placements. Family expectations. The private fear that everyone else was somehow ahead. The hostel's official volume was noise; its real business was conducted in these whispers.</p>
+              <p>One such night, a friend of ours &mdash; the funny one, the table's comedian &mdash; said quietly that he sometimes felt invisible, that his marks were average and his jokes were the only thing anyone noticed. Nobody offered solutions; at two in the morning, solutions are premature. We simply stayed, and argued his case back to him, listing what we actually saw when we looked at him. By three, the boy who made everyone laugh was laughing too, and it was not a performance.</p>
+              <p>I have never forgotten that night, because it taught me the cheapest mental-health technology ever invented: a friend who stays. A problem spoken aloud loses weight; that is not philosophy, it is physics of a kind. Every mind needs a two o'clock friend, and every friend must occasionally be the two o'clock. Talking, we discovered, is maintenance &mdash; and maintenance, as I keep learning in this chapter, is part of the work.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">5.2.3</span><span>114</span></div>
+          </article>
+
+          <article class="page" data-sec="5.2.4">
+            <div class="page-top"><span class="eyebrow">Chapter 5 &middot; Healthy Habits, Healthier Mind</span></div>
+            <h3 class="sec-title">5.2.4 The Friend Who Asked Twice</h3>
+            <div class="page-body">
+              <p>Among all the habits my friends taught me, the rarest was the art of checking in. Most people ask "are you okay?" the way they ask for attendance &mdash; ritually, expecting the printed reply. One friend in our circle had trained himself to ask it twice. The first "are you okay?" collects the automatic fine. The second, asked an hour later with actual eyes, is the one that collects the truth.</p>
+              <p>Result week tested everyone (my own result panic deserves its own chapter, and the book has given it one). That week my answers were monosyllables and my chai went cold untouched, and this friend did not lecture me about attitude. He simply appeared, said the mess was serving something non-vegetarian &mdash; a sentence that has saved more students than any counselling cell &mdash; and sat with me until I talked. The real answer arrived on the second asking. It always does.</p>
+              <p>Since then I try to be that friend for others, with mixed early results and improving technique. Asking twice is a skill, and answering honestly is a bigger one. Between them stands the whole subject of this chapter &mdash; a healthier mind is not built alone in a room; it is co-built, in small conversations, by people who refuse to accept the first fine as the truth.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">5.2.4</span><span>115</span></div>
+          </article>
+
+          <article class="page" data-sec="5.2.5">
+            <div class="page-top"><span class="eyebrow">Chapter 5 &middot; Healthy Habits, Healthier Mind</span></div>
+            <h3 class="sec-title">5.2.5 The Circle That Edited Me</h3>
+            <div class="page-body">
+              <p>Friends, I eventually understood, are code reviewers for your character. They catch your bad habits in review &mdash; the rising temper, the comfortable excuses, the small dishonesties nobody else is close enough to notice &mdash; before those habits reach production and embarrass you in front of strangers. A good circle does not clap at everything. A good circle comments on the pull request.</p>
+              <p>After our national hackathon win, when a newspaper clipping had begun to circulate and my sentences had begun to grow adjectives, one friend delivered a review I still keep. He waited for the right moment, then said: you were the same boy who could not find teammates in first year, so stay findable. One sentence. My arrogance never fully recovered, which was the entire intention. A circle that only praises is a linter with the rules switched off.</p>
+              <p>This is also how you choose a circle, if you are choosing. Audit it the way you audit dependencies: keep the ones that make your builds better, remove the ones that only inflate the bundle. Some friendships are loud cheerleaders and some are quiet compilers; the second kind hurts briefly and saves you for years. My circle edited me for four years, and I have been grateful in every draft since.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">5.2.5</span><span>116</span></div>
+          </article>
+
+          <article class="page" data-sec="5.2.6">
+            <div class="page-top"><span class="eyebrow">Chapter 5 &middot; Healthy Habits, Healthier Mind</span></div>
+            <h3 class="sec-title">5.2.6 Scattered Cities, One Group Chat</h3>
+            <div class="page-body">
+              <p>Graduation did what graduations do: it took the mess table and distributed it across six cities and three time zones. The parliament dissolved, and something smaller but stubborn survived in its place &mdash; a group chat that has now outlived several phones. The seat nearest the fan has become whoever replies first. The food critic still reviews restaurants by photograph. The comedian's jokes now arrive one hour late from a different timezone, which somehow makes them funnier.</p>
+              <p>Distance tested the circle the way only distance can, and the results surprised me. The bonds I assumed were built on proximity turned out to be built on attention: birthday calls that cross timezones, one annual reunion where everybody pretends not to have aged, and the quiet rule that a message left unread for a week is still answered, never buried. Rituals, I learnt, are the load-bearing walls of friendship. Remove them and the roof sags, wherever everyone lives.</p>
+              <p>Friendship, it turns out, obeys the same law as every habit in this chapter: it survives on small, regular deposits, and dies of large, long silences. A text, a call, a remembered detail &mdash; these are the ink crosses of the group chat, one per day. The people who built me still refill me from six cities away. That is the next habit's perfect introduction, because the mind this chapter protects was never a solo project.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">5.2.6</span><span>117</span></div>
+          </article>
+
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      The book still ends with &ldquo;To Be Continued . . . .&rdquo; &mdash; these pages slot in before it.<br>
+      Written to match the original voice: simple English, no emojis, a little Hinglish where it belongs.
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script>
+      (function () {
+        "use strict";
+        var toast = document.getElementById("toast");
+        var toastTimer = null;
+        function showToast(msg) {
+          toast.textContent = msg;
+          toast.classList.add("show");
+          clearTimeout(toastTimer);
+          toastTimer = setTimeout(function () { toast.classList.remove("show"); }, 2000);
+        }
+
+        document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+        document.addEventListener('copy', function(e) { e.preventDefault(); });
+
+        var pages = Array.prototype.slice.call(document.querySelectorAll(".page"));
+        var currentPageIndex = 0;
+        var isFullScreen = false;
+        var isScrolling = false;
+        var scrollTimeout = null;
+
+        var navHtml = '<div class="mobile-bottom-nav">' +
+          '<button id="btnPrevPage">Back Page</button>' +
+          '<button id="btnFullScreen">Full Screen</button>' +
+          '<button id="btnNextPage">Next Page</button>' +
+        '</div>';
+        document.body.insertAdjacentHTML('beforeend', navHtml);
+
+        var btnPrev = document.getElementById("btnPrevPage");
+        var btnNext = document.getElementById("btnNextPage");
+        var btnFull = document.getElementById("btnFullScreen");
+
+        function updateNav() {
+          btnPrev.disabled = currentPageIndex <= 0;
+          btnNext.disabled = currentPageIndex >= pages.length - 1;
+        }
+
+        function syncCurrentPage() {
+          if (isFullScreen || isScrolling || pages.length === 0) return;
+          var minDiff = Infinity;
+          var bestIdx = 0;
+          pages.forEach(function(p, i) {
+            var rect = p.getBoundingClientRect();
+            var diff = Math.abs(rect.top);
+            if (diff < minDiff) { minDiff = diff; bestIdx = i; }
+          });
+          currentPageIndex = bestIdx;
+          updateNav();
+        }
+
+        window.addEventListener('scroll', function() { syncCurrentPage(); });
+
+        btnPrev.addEventListener("click", function() {
+          if (currentPageIndex > 0) {
+            if (isFullScreen) {
+              pages[currentPageIndex].style.display = 'none';
+              pages[currentPageIndex].classList.remove('mobile-fullscreen-page');
+            }
+            currentPageIndex--;
+            if (isFullScreen) {
+              pages[currentPageIndex].style.display = '';
+              pages[currentPageIndex].classList.add('mobile-fullscreen-page');
+              pages[currentPageIndex].scrollTop = 0;
+            } else {
+              isScrolling = true;
+              pages[currentPageIndex].scrollIntoView({behavior: "smooth", block: "start"});
+              clearTimeout(scrollTimeout);
+              scrollTimeout = setTimeout(function(){ isScrolling = false; syncCurrentPage(); }, 800);
+            }
+            updateNav();
+          }
+        });
+
+        btnNext.addEventListener("click", function() {
+          if (currentPageIndex < pages.length - 1) {
+            if (isFullScreen) {
+              pages[currentPageIndex].style.display = 'none';
+              pages[currentPageIndex].classList.remove('mobile-fullscreen-page');
+            }
+            currentPageIndex++;
+            if (isFullScreen) {
+              pages[currentPageIndex].style.display = '';
+              pages[currentPageIndex].classList.add('mobile-fullscreen-page');
+              pages[currentPageIndex].scrollTop = 0;
+            } else {
+              isScrolling = true;
+              pages[currentPageIndex].scrollIntoView({behavior: "smooth", block: "start"});
+              clearTimeout(scrollTimeout);
+              scrollTimeout = setTimeout(function(){ isScrolling = false; syncCurrentPage(); }, 800);
+            }
+            updateNav();
+          }
+        });
+
+        btnFull.addEventListener("click", function() {
+          isFullScreen = !isFullScreen;
+          if (isFullScreen) {
+            btnFull.textContent = "Exit Full";
+            pages.forEach(function(p, i) {
+              if (i !== currentPageIndex) p.style.display = 'none';
+              else {
+                p.style.display = '';
+                p.classList.add('mobile-fullscreen-page');
+                p.scrollTop = 0;
+              }
+            });
+            document.body.style.overflow = 'hidden';
+          } else {
+            btnFull.textContent = "Full Screen";
+            pages.forEach(function(p) {
+              p.style.display = '';
+              p.classList.remove('mobile-fullscreen-page');
+            });
+            document.body.style.overflow = '';
+            pages[currentPageIndex].scrollIntoView({block: "start"});
+          }
+        });
+        syncCurrentPage();
+
+        var tabs = document.querySelectorAll(".tab");
+        function setActive(id) {
+          tabs.forEach(function (t) {
+            t.classList.toggle("active", t.getAttribute("href") === "#" + id);
+          });
+        }
+        if ("IntersectionObserver" in window) {
+          var spy = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              if (e.isIntersecting) setActive(e.target.id);
+            });
+          }, { rootMargin: "-35% 0px -55% 0px", threshold: 0 });
+          document.querySelectorAll(".chapter").forEach(function (s) { spy.observe(s); });
+        }
+        tabs.forEach(function (t) {
+          t.addEventListener("click", function (ev) {
+            ev.preventDefault();
+            var target = document.querySelector(t.getAttribute("href"));
+            if (target) {
+              var smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+              target.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
+            }
+          });
+        });
+      })();
+    </script>
+
+  </div>
+
+  <!-- End of Book Navigation -->
+  <div style="text-align:center; padding: 40px 20px 60px; background: var(--desk);">
+    <p style="color: var(--desk-muted); font-family: var(--mono, monospace); font-size: 13px; margin-bottom: 16px; letter-spacing: .08em; text-transform: uppercase;">You&rsquo;ve finished the book!</p>
+    <a href="index.html#contents" style="display:inline-block; background: var(--amber, #c8922a); color: #1a1208; font-family: var(--mono, monospace); font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; padding: 14px 32px; border-radius: 6px; text-decoration: none; transition: opacity .2s;">Back to Home &rarr;</a>
+  </div>
+
+  <script>
+    if (localStorage.getItem("cwd_unlocked") !== "1") {
+      alert("Please purchase the book to read this chapter.");
+      window.location.href = "index.html#get";
+    }
+  </script>
+</body>
+
+</html>

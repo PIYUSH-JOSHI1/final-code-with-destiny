@@ -1,0 +1,1726 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#171310">
+  <title>Code with Destiny — a book by Varad</title>
+  <meta name="description"
+    content="Code with Destiny by Varad: an engineering student's story of all-nighters, canteen classrooms and last-minute code. Read the full book online or download the PDF.">
+  <meta property="og:title" content="Code with Destiny">
+  <meta property="og:description"
+    content="An engineering student's story of all-nighters, canteen classrooms and programs that somehow worked at the last minute.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
+  <style>
+    :root {
+      color-scheme: dark;
+      --desk: #171310;
+      --desk-2: #1d1813;
+      --line: rgba(233, 222, 201, .14);
+      --text: #dcd4c3;
+      --muted: #a39985;
+      --amber: #d9a054;
+      --amber-deep: #a56e28;
+      --green: #8fbe92;
+      --paper: #f8f3e7;
+      --paper-2: #f1eada;
+      --ink: #372f23;
+      --ink-soft: #5c5344;
+      --paper-edge: rgba(55, 45, 32, .18);
+      --cloth: #1f3a2d;
+      --cloth-dark: #132519;
+      --foil: linear-gradient(115deg, #a9772f 0%, #f0cf8c 26%, #c99245 50%, #f6dda2 74%, #b07a30 100%);
+      --display: "Fraunces", Georgia, serif;
+      --body: "Newsreader", Georgia, serif;
+      --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    [hidden] {
+      display: none !important
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      margin: 0;
+      background: var(--desk);
+      color: var(--text);
+      font-family: var(--body);
+      font-size: 17px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection {
+      background: var(--amber-deep);
+      color: var(--paper)
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--amber);
+      outline-offset: 3px
+    }
+
+    .shell {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding-inline: 24px
+    }
+
+    section[id] {
+      scroll-margin-top: 72px
+    }
+
+    /* state switches — the page shows one or the other after payment */
+    body:not(.is-unlocked) .only-unlocked {
+      display: none !important
+    }
+
+    body.is-unlocked .only-locked {
+      display: none !important
+    }
+
+    /* ---------- buttons ---------- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .6em;
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1;
+      padding: 15px 22px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background .18s ease, color .18s ease, border-color .18s ease;
+    }
+
+    .btn:disabled {
+      opacity: .65;
+      cursor: progress
+    }
+
+    .btn-sm {
+      padding: 10px 14px;
+      font-size: 12.5px
+    }
+
+    .btn-amber {
+      background: var(--amber);
+      color: #22190e
+    }
+
+    .btn-amber:hover:not(:disabled) {
+      background: #e6b46c
+    }
+
+    .btn-ink {
+      background: var(--ink);
+      color: var(--paper)
+    }
+
+    .btn-ink:hover:not(:disabled) {
+      background: #1f1911
+    }
+
+    .btn-line {
+      border-color: currentColor;
+      background: transparent
+    }
+
+    .link {
+      color: var(--text);
+      text-decoration: underline;
+      text-decoration-color: rgba(233, 222, 201, .4);
+      text-underline-offset: 5px;
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 500
+    }
+
+    .link:hover {
+      text-decoration-color: var(--amber);
+      color: #fff
+    }
+
+    /* ---------- nav ---------- */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(23, 19, 16, .84);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-in {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      height: 64px
+    }
+
+    .brand {
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      text-decoration: none;
+      white-space: nowrap
+    }
+
+    .brand .kw {
+      color: var(--amber)
+    }
+
+    .brand .str {
+      color: var(--green)
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 26px
+    }
+
+    .nav-links a:not(.btn) {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none
+    }
+
+    .nav-links a:not(.btn):hover {
+      color: var(--text)
+    }
+
+    /* ---------- hero ---------- */
+    .hero {
+      position: relative;
+      overflow-x: clip;
+      background:
+        radial-gradient(52% 68% at var(--lx, 68%) var(--ly, 42%), rgba(217, 160, 84, .17), rgba(217, 160, 84, 0) 72%),
+        var(--desk);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.02fr .98fr;
+      gap: 40px;
+      align-items: center;
+      min-height: min(780px, calc(100svh - 64px));
+      padding-block: 48px 64px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: clamp(46px, 7.2vw, 88px);
+      line-height: 1;
+      letter-spacing: -.015em;
+      color: var(--paper);
+      text-wrap: balance;
+    }
+
+    .hero .sub {
+      margin: 26px 0 0;
+      max-width: 34em;
+      font-size: clamp(18px, 1.9vw, 21px);
+      line-height: 1.55;
+      color: var(--text)
+    }
+
+    .hero .by {
+      margin: 14px 0 0;
+      font-style: italic;
+      color: var(--muted)
+    }
+
+    .cta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px 26px;
+      margin-top: 34px
+    }
+
+    .fine {
+      margin: 16px 0 0;
+      font-size: 15px;
+      color: var(--muted)
+    }
+
+    /* ---------- the 3D book ---------- */
+    .book-zone {
+      --bw: clamp(220px, 23vw, 300px);
+      --bh: calc(var(--bw) * 1.4);
+      --bt: calc(var(--bw) * .16);
+      --pt: calc(var(--bt) - 4px);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: zoneIn .9s ease both;
+    }
+
+    .stage {
+      position: relative;
+      width: 100%;
+      height: calc(var(--bh) + 96px);
+      display: grid;
+      place-items: center;
+      perspective: 1800px;
+      cursor: pointer;
+      touch-action: pan-y;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .enter,
+    .shift,
+    .tilt,
+    .book,
+    .cover {
+      transform-style: preserve-3d
+    }
+
+    .enter {
+      width: var(--bw);
+      height: var(--bh);
+      animation: bookIn 1.3s cubic-bezier(.2, .75, .2, 1) both, bob 7s ease-in-out 1.3s infinite;
+    }
+
+    .shift {
+      width: 100%;
+      height: 100%;
+      transition: transform 1.1s cubic-bezier(.3, .7, .2, 1)
+    }
+
+    .is-open .shift {
+      transform: translateX(calc(var(--bw) / 2))
+    }
+
+    .tilt {
+      width: 100%;
+      height: 100%;
+      transform: rotateX(var(--rx, 9deg)) rotateY(var(--ry, -17deg))
+    }
+
+    .book {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      font-size: calc(var(--bw) / 20)
+    }
+
+    .face {
+      position: absolute;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden
+    }
+
+    .floor {
+      position: absolute;
+      left: 50%;
+      top: calc(50% + var(--bh) / 2 - 4px);
+      width: calc(var(--bw) * 1.3);
+      height: calc(var(--bw) * .2);
+      transform: translateX(calc(-50% + var(--fx, 0px)));
+      background: radial-gradient(closest-side, rgba(0, 0, 0, .62), rgba(0, 0, 0, 0));
+      filter: blur(4px);
+      pointer-events: none;
+      transition: width 1.1s cubic-bezier(.3, .7, .2, 1), transform 1.1s cubic-bezier(.3, .7, .2, 1);
+    }
+
+    .is-open .floor {
+      width: calc(var(--bw) * 2.3);
+      transform: translateX(calc(-50% + var(--fx, 0px) + var(--bw) / 2))
+    }
+
+    /* back board */
+    .b-back {
+      inset: 0;
+      background: var(--cloth-dark);
+      border-radius: .3em .5em .5em .3em;
+      transform: translateZ(calc(var(--bt) / -2)) rotateY(180deg);
+    }
+
+    /* spine */
+    .b-spine {
+      left: calc(var(--bt) / -2);
+      top: 0;
+      width: var(--bt);
+      height: 100%;
+      transform: rotateY(-90deg);
+      background: linear-gradient(90deg, #122418, #264732 50%, #122418);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .b-spine span {
+      writing-mode: vertical-rl;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 1.05em;
+      letter-spacing: .08em;
+      color: #e7c37f;
+      white-space: nowrap;
+    }
+
+    /* page block: fore-edge, top, bottom */
+    .b-fore {
+      left: calc(100% - 4px - var(--pt) / 2);
+      top: 4px;
+      width: var(--pt);
+      height: calc(100% - 8px);
+      transform: rotateY(90deg);
+      background: repeating-linear-gradient(90deg, #f6efdd 0 2px, #d6cbb0 2px 3px);
+    }
+
+    .b-top,
+    .b-bottom {
+      left: 0;
+      width: calc(100% - 4px);
+      height: var(--pt);
+      background: repeating-linear-gradient(180deg, #f6efdd 0 2px, #d6cbb0 2px 3px);
+    }
+
+    .b-top {
+      top: calc(4px - var(--pt) / 2);
+      transform: rotateX(90deg)
+    }
+
+    .b-bottom {
+      top: calc(100% - 4px - var(--pt) / 2);
+      transform: rotateX(-90deg)
+    }
+
+    /* first page (right-hand page once the cover is open) */
+    .leaf {
+      left: 0;
+      top: 4px;
+      width: calc(100% - 4px);
+      height: calc(100% - 8px);
+      transform: translateZ(calc(var(--bt) / 2 - 3px));
+      background: linear-gradient(90deg, rgba(60, 45, 25, .28), rgba(60, 45, 25, 0) 7%), var(--paper);
+      color: var(--ink);
+      padding: 2.1em 1.5em 1.2em 2em;
+      border-radius: 0 .2em .2em 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .leaf .l-no {
+      font-family: var(--mono);
+      font-size: .62em;
+      color: var(--amber-deep);
+      letter-spacing: .06em
+    }
+
+    .leaf .l-title {
+      margin: .5em 0 .7em;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 1.25em;
+      line-height: 1.15
+    }
+
+    .leaf p {
+      margin: 0;
+      font-family: var(--body);
+      font-size: .86em;
+      line-height: 1.6
+    }
+
+    .leaf p::first-letter {
+      font-family: var(--display);
+      font-weight: 600;
+      float: left;
+      font-size: 2.7em;
+      line-height: .85;
+      padding: .05em .1em 0 0;
+      color: var(--amber-deep)
+    }
+
+    .leaf .l-folio {
+      margin-top: auto;
+      padding-top: .6em;
+      border-top: 1px dashed rgba(55, 45, 32, .25);
+      font-family: var(--mono);
+      font-size: .58em;
+      color: var(--amber-deep);
+      text-align: right
+    }
+
+    /* front cover, hinged on the spine */
+    .cover {
+      position: absolute;
+      inset: 0;
+      transform-origin: 0 50%;
+      transform: translateZ(calc(var(--bt) / 2)) rotateY(0deg);
+      transition: transform 1.25s cubic-bezier(.45, .05, .2, 1);
+    }
+
+    .stage:hover .cover {
+      transform: translateZ(calc(var(--bt) / 2)) rotateY(-11deg)
+    }
+
+    .is-open .cover,
+    .is-open .stage:hover .cover {
+      transform: translateZ(calc(var(--bt) / 2)) rotateY(-160deg)
+    }
+
+    .cover .front,
+    .cover .inside {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden
+    }
+
+    .front {
+      border-radius: .3em .5em .5em .3em;
+      background:
+        linear-gradient(90deg, rgba(0, 0, 0, .42) 0, rgba(255, 255, 255, .07) 1.3%, rgba(0, 0, 0, .28) 2.6%, rgba(0, 0, 0, 0) 7%),
+        linear-gradient(200deg, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, .3)),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .22 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+        linear-gradient(135deg, #2c4e3d 0%, var(--cloth) 46%, var(--cloth-dark) 100%);
+    }
+
+    .frame {
+      position: absolute;
+      inset: 1em 1em 1em 1.5em;
+      border: 1px solid rgba(240, 207, 140, .5);
+      border-radius: .15em
+    }
+
+    .cv {
+      position: absolute;
+      inset: 0;
+      padding: 1.9em 1.6em 1.9em 2.2em;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between
+    }
+
+    .cv-top,
+    .cv-print {
+      font-family: var(--mono);
+      font-size: .62em;
+      letter-spacing: .02em
+    }
+
+    .cv-top {
+      color: #e7c37f;
+      opacity: .9
+    }
+
+    .cv-print {
+      color: #9cc7a0
+    }
+
+    .cv-title {
+      display: flex;
+      flex-direction: column;
+      line-height: .98;
+      margin-top: -1.2em
+    }
+
+    .cv-title span {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 3.6em;
+      letter-spacing: -.01em;
+      background: var(--foil);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .cv-title em {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 1.5em;
+      color: #e7c37f;
+      margin: .1em 0 .1em .12em
+    }
+
+    .cv-bottom {
+      display: flex;
+      flex-direction: column;
+      gap: .7em
+    }
+
+    .cv-author {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 1.05em;
+      color: #e7c37f
+    }
+
+    .sheen {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at var(--mx, 42%) var(--my, 30%), rgba(255, 238, 200, .34), rgba(255, 238, 200, 0) 55%);
+    }
+
+    .cover-img,
+    .leaf-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block
+    }
+
+    .cover-img {
+      border-radius: .3em .5em .5em .3em
+    }
+
+    .leaf-img {
+      border-radius: 0 .2em .2em 0
+    }
+
+    .inside {
+      transform: rotateY(180deg);
+      border-radius: .5em .3em .3em .5em;
+      background: linear-gradient(to left, rgba(60, 45, 25, .3), rgba(60, 45, 25, 0) 9%), #eee5cf;
+      color: var(--ink);
+      padding: 1.6em 1.4em;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: .5em;
+    }
+
+    .inside .i-a {
+      font-family: var(--mono);
+      font-size: .62em;
+      color: var(--ink-soft)
+    }
+
+    .inside .i-line {
+      height: 1px;
+      background: rgba(55, 45, 32, .5);
+      margin-bottom: 1.2em
+    }
+
+    .toggle-book {
+      margin-top: 8px
+    }
+
+    .tip {
+      margin: 10px 0 0;
+      font-size: 14.5px;
+      font-style: italic;
+      color: var(--muted);
+      text-align: center
+    }
+
+    @keyframes zoneIn {
+      from {
+        opacity: 0
+      }
+
+      to {
+        opacity: 1
+      }
+    }
+
+    @keyframes bookIn {
+      from {
+        transform: translateY(38px) rotateY(-38deg)
+      }
+
+      to {
+        transform: none
+      }
+    }
+
+    @keyframes bob {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(-9px)
+      }
+    }
+
+    /* ---------- sections ---------- */
+    .sec {
+      padding-block: clamp(64px, 9vw, 120px)
+    }
+
+    .sec h2 {
+      margin: 0;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: clamp(30px, 4.2vw, 48px);
+      line-height: 1.1;
+      letter-spacing: -.01em;
+      color: var(--paper);
+      text-wrap: balance;
+    }
+
+    .lead {
+      margin: 14px 0 0;
+      max-width: 34em;
+      color: var(--muted);
+      font-size: 18px
+    }
+
+    /* excerpt */
+    .excerpt {
+      background: var(--desk-2);
+      border-block: 1px solid var(--line)
+    }
+
+    .ex-grid {
+      display: grid;
+      grid-template-columns: .8fr 1.2fr;
+      gap: clamp(32px, 6vw, 80px);
+      align-items: center;
+      isolation: isolate
+    }
+
+    .page {
+      position: relative;
+      max-width: 580px;
+      justify-self: center;
+      background: linear-gradient(180deg, var(--paper), var(--paper-2));
+      color: var(--ink);
+      border-radius: 6px;
+      padding: 34px 36px 22px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, .42);
+    }
+
+    .page::before,
+    .page::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 6px;
+      z-index: -1;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, .25)
+    }
+
+    .page::before {
+      background: #e9e0cb;
+      transform: rotate(-1.6deg)
+    }
+
+    .page::after {
+      background: #efe6d2;
+      transform: rotate(1.3deg)
+    }
+
+    .pg-ch {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--amber-deep)
+    }
+
+    .pg-title {
+      margin: 10px 0 16px;
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--ink)
+    }
+
+    .page p {
+      margin: 0;
+      font-size: 17.5px;
+      line-height: 1.7
+    }
+
+    .page p::first-letter {
+      font-family: var(--display);
+      font-weight: 600;
+      float: left;
+      font-size: 3.1em;
+      line-height: .86;
+      padding: 2px 9px 0 0;
+      color: var(--amber-deep)
+    }
+
+    .pg-folio {
+      margin-top: 20px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(55, 45, 32, .25);
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--amber-deep);
+      text-align: right
+    }
+
+    /* contents */
+    .toc-list {
+      margin-top: 44px
+    }
+
+    .ch {
+      border-top: 1px solid var(--line);
+      padding-block: 30px 40px
+    }
+
+    .ch:last-child {
+      border-bottom: 1px solid var(--line)
+    }
+
+    .ch-row {
+      display: grid;
+      grid-template-columns: 64px 1fr auto;
+      gap: 8px 20px;
+      align-items: center
+    }
+
+    .ch-no {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 46px;
+      line-height: 1;
+      color: var(--amber)
+    }
+
+    .ch-row h3 {
+      margin: 0;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: clamp(23px, 3vw, 32px);
+      line-height: 1.15;
+      color: var(--paper)
+    }
+
+    .ch-act {
+      display: inline-flex;
+      align-items: center;
+      gap: .55em;
+      font-family: var(--mono);
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 9px 13px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .ch-act:hover {
+      color: var(--text);
+      border-color: rgba(233, 222, 201, .35)
+    }
+
+    .ch-act.open {
+      color: var(--green);
+      border-color: rgba(143, 190, 146, .45)
+    }
+
+    .ch-act.open:hover {
+      background: rgba(143, 190, 146, .1)
+    }
+
+    .subs {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 34px 52px;
+      margin: 30px 0 0 84px
+    }
+
+    .sub h4 {
+      margin: 0 0 8px;
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 14.5px;
+      color: var(--text)
+    }
+
+    .sub ol {
+      list-style: none;
+      margin: 0;
+      padding: 0
+    }
+
+    .sub li {
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      padding: 7px 0;
+      border-top: 1px dashed var(--line);
+      font-size: 16.5px;
+      line-height: 1.4;
+      color: var(--text)
+    }
+
+    .sn {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      padding-top: 3px
+    }
+
+    /* purchase — full-bleed paper, the one calm, bright moment on the page */
+    .buy {
+      background: var(--paper);
+      color: var(--ink)
+    }
+
+    .buy :focus-visible {
+      outline-color: var(--amber-deep)
+    }
+
+    .buy h2 {
+      color: var(--ink)
+    }
+
+    .buy-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: clamp(32px, 6vw, 80px);
+      align-items: start
+    }
+
+    .price {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0 .1em;
+      margin: 26px 0 4px;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: clamp(68px, 9vw, 108px);
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .price .rs {
+      font-size: .55em;
+      color: var(--amber-deep)
+    }
+
+    .price-note {
+      margin-left: 18px;
+      font-family: var(--body);
+      font-weight: 400;
+      font-size: 17px;
+      color: var(--ink-soft)
+    }
+
+    .perks {
+      list-style: none;
+      margin: 22px 0 28px;
+      padding: 0;
+      display: grid;
+      gap: 8px
+    }
+
+    .perks li {
+      position: relative;
+      padding-left: 1.7em;
+      font-size: 18px
+    }
+
+    .perks li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--amber-deep);
+      font-family: var(--mono);
+      font-size: 15px;
+      top: .1em
+    }
+
+    .preview-note {
+      margin: 0 0 18px;
+      padding: 12px 14px;
+      border: 1px dashed var(--amber-deep);
+      border-radius: 6px;
+      font-family: var(--mono);
+      font-size: 12.5px;
+      line-height: 1.55;
+      color: var(--ink-soft)
+    }
+
+    .secure {
+      margin: 14px 0 0;
+      font-size: 15px;
+      color: var(--ink-soft)
+    }
+
+    .restore {
+      margin-top: 18px;
+      font-size: 15px;
+      color: var(--ink-soft)
+    }
+
+    .restore summary {
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 13px;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      width: max-content
+    }
+
+    .restore form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px
+    }
+
+    .restore input {
+      flex: 1 1 220px;
+      min-width: 0;
+      padding: 13px 14px;
+      border: 1px solid rgba(55, 45, 32, .4);
+      border-radius: 6px;
+      background: #fffdf7;
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 13.5px;
+    }
+
+    .owned {
+      margin: 0 0 20px;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: clamp(24px, 3vw, 32px);
+      line-height: 1.2;
+      color: var(--ink)
+    }
+
+    .status {
+      min-height: 1.6em;
+      margin: 16px 0 0;
+      font-size: 16px;
+      color: var(--ink-soft)
+    }
+
+    .status[data-tone="error"] {
+      color: #9b3b22
+    }
+
+    .status[data-tone="ok"] {
+      color: #3e5c3a
+    }
+
+    .buy-pdf {
+      padding-left: clamp(24px, 4vw, 56px);
+      border-left: 1px solid var(--paper-edge)
+    }
+
+    .buy-pdf h3 {
+      margin: 0 0 10px;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 26px;
+      line-height: 1.2;
+      color: var(--ink)
+    }
+
+    .buy-pdf p {
+      margin: 0 0 22px;
+      color: var(--ink-soft)
+    }
+
+    /* footer */
+    .foot {
+      border-top: 1px solid var(--line);
+      padding-block: 34px
+    }
+
+    .foot-in {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 14px 30px;
+      align-items: center;
+      font-size: 15px;
+      color: var(--muted)
+    }
+
+    .foot p {
+      margin: 0
+    }
+
+    .foot nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 24px
+    }
+
+    .foot a {
+      font-family: var(--mono);
+      font-size: 12.5px;
+      color: var(--muted);
+      text-decoration: none
+    }
+
+    .foot a:hover {
+      color: var(--text)
+    }
+
+    /* toast */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 26px;
+      transform: translate(-50%, 14px);
+      z-index: 60;
+      background: #242a20;
+      border: 1px solid #3e5c3a;
+      color: #cfe3c9;
+      font-family: var(--mono);
+      font-size: 12.5px;
+      padding: 11px 18px;
+      border-radius: 6px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+      max-width: calc(100vw - 32px);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0)
+    }
+
+    /* ---------- responsive ---------- */
+    @media (max-width:900px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        min-height: 0;
+        gap: 8px;
+        padding-block: 28px 56px
+      }
+
+      .book-zone {
+        --bw: min(58vw, 250px);
+        order: -1
+      }
+
+      .is-open .shift {
+        transform: translateX(calc(var(--bw) / 2)) scale(.74)
+      }
+
+      .hero-copy {
+        text-align: left
+      }
+
+      .ex-grid,
+      .buy-grid {
+        grid-template-columns: 1fr
+      }
+
+      .buy-pdf {
+        padding: 32px 0 0;
+        border-left: 0;
+        border-top: 1px solid var(--paper-edge)
+      }
+
+      .nav-links a:not(.btn) {
+        display: none
+      }
+    }
+
+    @media (max-width:640px) {
+      .shell {
+        padding-inline: 16px
+      }
+
+      .hero-grid {
+        padding-block: 16px 40px;
+      }
+
+      .hero h1 {
+        font-size: clamp(36px, 9vw, 46px);
+      }
+
+      .hero .sub {
+        font-size: 16px;
+        margin-top: 16px;
+      }
+
+      .brand {
+        font-size: 12px;
+        white-space: normal;
+        line-height: 1.2;
+      }
+
+      .nav-in {
+        gap: 10px;
+      }
+
+      .btn {
+        padding: 12px 16px;
+        font-size: 13px;
+      }
+
+      .btn-sm {
+        padding: 8px 12px;
+        font-size: 11px;
+      }
+
+      .ch-row {
+        grid-template-columns: 40px 1fr;
+        align-items: start
+      }
+
+      .ch-no {
+        font-size: 32px
+      }
+
+      .ch-act {
+        grid-column: 1 / span 2;
+        justify-self: start;
+        margin-top: 8px
+      }
+
+      .subs {
+        grid-template-columns: 1fr;
+        margin: 20px 0 0
+      }
+
+      .page {
+        padding: 20px 16px 16px
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      html {
+        scroll-behavior: auto
+      }
+
+      .enter,
+      .book-zone {
+        animation: none
+      }
+
+      .shift,
+      .cover,
+      .floor,
+      .btn,
+      .toast {
+        transition-duration: .01s
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="nav">
+    <div class="shell nav-in">
+      <a class="brand" href="#top" aria-label="Code with Destiny — top of page"><span class="kw">printf</span>(<span
+          class="str">"Code with Destiny"</span>);</a>
+      <nav class="nav-links" aria-label="Page">
+        <a href="#contents">What's inside</a>
+        <button class="btn btn-amber btn-sm js-buy only-locked" type="button">Buy the full book</button>
+        <a class="btn btn-amber btn-sm js-read only-unlocked" href="#contents">Continue reading</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ================= HERO ================= -->
+    <section class="hero" aria-labelledby="hero-h">
+      <div class="shell hero-grid">
+        <div class="hero-copy">
+          <h1 id="hero-h">Code with Destiny</h1>
+          <p class="sub">An engineering student's story of all-nighters, canteen classrooms and programs that somehow
+            worked at the last minute.</p>
+          <p class="by">by Piyush Joshi</p>
+          <div class="cta">
+            <button class="btn btn-amber js-buy only-locked" type="button">Get the Book / Contribute</button>
+            <a class="btn btn-amber js-read only-unlocked" href="#contents">Continue reading</a>
+          </div>
+          <p class="fine">Free to read online. Contribute any amount you like to support the work.</p>
+        </div>
+
+        <div class="book-zone" id="bookZone">
+          <div class="stage" id="stage" aria-hidden="true">
+            <div class="floor"></div>
+            <div class="enter">
+              <div class="shift">
+                <div class="tilt" id="tilt">
+                  <div class="book">
+                    <div class="face b-back"></div>
+                    <div class="face b-spine"><span>Code with Destiny</span></div>
+                    <div class="face b-fore"></div>
+                    <div class="face b-top"></div>
+                    <div class="face b-bottom"></div>
+
+                    <div class="face leaf">
+                      <img class="leaf-img" src="chapter1-page1.png"
+                        alt="Chapter 1: The First Commit — 1.1 Welcome to the Matrix">
+                    </div>
+
+                    <div class="cover">
+                      <div class="front">
+                        <img class="cover-img" src="cover.png"
+                          alt="Code with Destiny — Tales from the Engineering Trenches, by Piyush Joshi">
+                        <div class="sheen"></div>
+                      </div>
+                      <div class="inside">
+                        <span class="i-a">// this copy belongs to</span>
+                        <span class="i-line"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-line btn-sm toggle-book" id="toggleBook" type="button">Open the book</button>
+          <p class="tip">Move your mouse over the book, or drag it on a touch screen.</p>
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- ================= CONTENTS ================= -->
+    <section class="sec toc" id="contents" aria-labelledby="toc-h">
+      <div class="shell">
+        <h2 id="toc-h">What's inside</h2>
+        <p class="lead only-locked">Every chapter opens as soon as you buy the book.</p>
+        <p class="lead only-unlocked">You own the book. Pick a chapter and start reading.</p>
+        <div class="toc-list" id="tocList"></div>
+      </div>
+    </section>
+
+    <!-- ================= PURCHASE ================= -->
+    <section class="sec buy" id="get" aria-labelledby="buy-h">
+      <div class="shell">
+        <div class="buy-main">
+          <h2 id="buy-h">Get the Book / Buy me a Coffee</h2>
+
+          <div class="only-locked">
+            <p style="color: var(--ink-soft); margin-bottom: 20px;">The book is free to read online! If you'd like to
+              support my work, enter any contribution amount below and you'll get instant access to all chapters.</p>
+
+            <form id="paymentForm" onsubmit="event.preventDefault(); startPayment();"
+              style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;">
+              <div>
+                <label for="userEmail"
+                  style="display:block; font-weight: 600; margin-bottom: 5px; color: var(--ink)">Your Email
+                  Address</label>
+                <input id="userEmail" type="email" placeholder="you@example.com" required
+                  style="width: 100%; padding: 12px; border: 1px solid var(--paper-edge); border-radius: 6px; font-family: var(--mono); background: #fffdf7; color: var(--ink)">
+              </div>
+              <div>
+                <label for="userAmount"
+                  style="display:block; font-weight: 600; margin-bottom: 5px; color: var(--ink)">Contribution Amount (₹)
+                  — Optional, enter 0 to read for free</label>
+                <input id="userAmount" type="number" min="0" value="0"
+                  style="width: 100%; padding: 12px; border: 1px solid var(--paper-edge); border-radius: 6px; font-family: var(--mono); background: #fffdf7; color: var(--ink)">
+              </div>
+              <button class="btn btn-ink" type="submit" id="mainBuyBtn">Get the Book</button>
+            </form>
+
+            <p class="preview-note" id="previewNote" hidden>Preview mode: Razorpay isn't connected yet, so Buy simulates
+              a successful payment. Add your key in CONFIG to take real payments.</p>
+            <p class="secure">Contributions are handled by Razorpay. Your card details never touch this site.</p>
+            <details class="restore" id="restoreBox" hidden>
+              <summary>Already contributed? Restore access across devices</summary>
+              <form id="restoreForm" autocomplete="off">
+                <p style="margin-bottom: 12px; font-size: 14px; color: var(--desk-muted);">If you contributed on a
+                  different device, enter your Razorpay Payment ID from your email receipt to restore access.</p>
+                <input name="paymentId" type="text" placeholder="Payment ID, like pay_Abc123"
+                  aria-label="Razorpay payment ID" required>
+                <button class="btn btn-ink btn-sm" type="submit">Restore access</button>
+              </form>
+            </details>
+          </div>
+
+          <div class="only-unlocked">
+            <p class="owned">You have full access. Happy reading!</p>
+            <a class="btn btn-ink js-read" href="#contents">Start reading</a>
+          </div>
+
+          <p class="status" id="payStatus" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="foot">
+    <div class="shell foot-in">
+      <p>Code with Destiny, written by Piyush Joshi.</p>
+      <nav aria-label="Policies">
+        <a href="terms.html">Terms</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="refund.html">Refunds</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    /* =====================================================================
+       CONFIG — everything you need to edit is in this block.
+    
+       HOW THE RAZORPAY FLOW WORKS (your server does the sensitive parts):
+    
+       1. Buyer clicks "Buy the full book".
+          Page  → POST api.createOrder            (no body needed)
+          Server→ creates a Razorpay order for the REAL price (never trust
+                  the browser for the amount) and replies:
+                  { "orderId": "order_xxx", "amount": 19900, "currency": "INR" }
+                  (amount is in paise: ₹199 = 19900)
+    
+       2. Page opens Razorpay Checkout with keyId + orderId.
+    
+       3. On success, Razorpay hands back three values. Page → POST api.verify:
+                  { razorpay_order_id, razorpay_payment_id, razorpay_signature }
+          Server→ checks the signature (HMAC-SHA256 of "order_id|payment_id"
+                  with your KEY SECRET). If valid, it sets an httpOnly cookie
+                  on your domain and replies { "ok": true }.
+    
+       4. Your chapter pages must check that cookie on the SERVER before they
+          send any HTML. Hiding links in the browser is not protection —
+          anyone could type the chapter URL directly.
+    
+       Optional endpoints:
+          api.session → GET  → { "unlocked": true|false }  (checks the cookie)
+          api.restore → POST { paymentId } → sets the cookie again, { "ok": true }
+    
+       Never put your Razorpay KEY SECRET in this file. Only the public keyId.
+       ===================================================================== */
+    const CONFIG = {
+      priceInr: 199,                        // shown on the page; the server sets the real amount
+      supportEmail: "you@example.com",      // shown if a payment can't be confirmed
+      pdfUrl: "Code with destiny.pdf",        // file next to this page, or a Google Drive link
+      pdfRequiresPayment: false,            // true = only buyers can download the PDF
+
+      razorpay: {
+        keyId: "rzp_live_Teq4CCRJs0S7li",                          // rzp_test_... or rzp_live_...  (empty = preview mode)
+        name: "Code with Destiny",
+        description: "Code with Destiny — full book",
+        themeColor: "#a56e28"
+      },
+
+      api: {
+        // Falling back to the Render URLs since local might not be running
+        createOrder: "https://code-with-destiny-backend.onrender.com/api/create-order",
+        verify: "https://code-with-destiny-backend.onrender.com/api/verify-payment",
+        session: "",
+        restore: "https://code-with-destiny-backend.onrender.com/api/restore-access"
+      },
+
+      // Point `file` at your chapter pages. Set free:true to let anyone read that chapter.
+      chapters: [
+        {
+          no: 1, title: "The First Commit", file: "chapter1_extension.html", free: false, subs: [
+            { no: "1.1", title: "Welcome to Matrix", sections: [] },
+            { no: "1.2", title: "The Semicolon Saga", sections: [] },
+            { no: "1.3", title: "Hostel Midnights", sections: [] },
+            { no: "1.4", title: "The First-Year Struggles", sections: [] }
+          ]
+        },
+        {
+          no: 2, title: "Chaos, Cramming & Creativity", file: "chapter2_extension.html", free: false, subs: [
+            { no: "2.1", title: "All-Nighters & Submissions", sections: [] },
+            { no: "2.2", title: "Coding Everywhere", sections: [] },
+            { no: "2.3", title: "Beautiful Chaos", sections: [] },
+            { no: "2.4", title: "Last-Minute Engineer Life", sections: [] }
+          ]
+        },
+        {
+          no: 3, title: "Results, Vacations & Life Lessons", file: "chapter3_extension.html", free: false, subs: [
+            { no: "3.1", title: "Vacation Highs", sections: [] },
+            { no: "3.2", title: "Result Panic", sections: [] },
+            { no: "3.3", title: "Motivation & Life Philosophy", sections: [] }
+          ]
+        },
+        {
+          no: 4, title: "The Hackathon Journey", file: "chapter4_extension.html", free: false, subs: [
+            { no: "4.1", title: "Hackathon Hustle", sections: [] },
+            { no: "4.2", title: "Tantra Hackathon (6-Hour Sprint)", sections: [] },
+            { no: "4.3", title: "Lakhpati Banne Ka Din", sections: [] },
+            { no: "4.4", title: "20 Hackathons, 9 Wins", sections: [] },
+            { no: "4.5", title: "A Message From Malaysia", sections: [] },
+            { no: "4.6", title: "Important lesson of Life", sections: [] }
+          ]
+        },
+        {
+          no: 5, title: "Healthy Habits, Healthier Mind", file: "chapter5_extension.html", free: false, subs: [
+            { no: "5.1", title: "Badminton & Gym", sections: [] },
+            { no: "5.2", title: "The Real Ones Remain", sections: [] }
+          ]
+        }
+      ]
+    };
+
+    /* ===================================================================== */
+    const $ = (s, r = document) => r.querySelector(s);
+    const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const clamp = v => Math.max(-1, Math.min(1, v));
+    const FLAG = "cwd_unlocked";
+    const previewMode = !CONFIG.razorpay.keyId;
+
+    let unlocked = false;
+    try { unlocked = !previewMode && localStorage.getItem(FLAG) === "1"; } catch (e) { }
+
+    /* ---------- toast + status ---------- */
+    let toastTimer;
+    function toast(msg) {
+      const t = $("#toast"); t.textContent = msg; t.classList.add("show");
+      clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 3200);
+    }
+    function say(msg, tone = "") { const s = $("#payStatus"); s.textContent = msg; s.dataset.tone = tone; }
+
+    /* ---------- contents ---------- */
+    const ICON_LOCK = '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" d="M4.5 7V5.2a3.5 3.5 0 0 1 7 0V7M3.5 7h9v6.5h-9z"/></svg>';
+    function renderToc() {
+      $("#tocList").innerHTML = CONFIG.chapters.map(ch => {
+        const canRead = unlocked || ch.free;
+        const action = canRead
+          ? `<a class="ch-act open" href="${esc(ch.file)}">Read chapter</a>`
+          : `<a class="ch-act" href="#get">${ICON_LOCK} Locked</a>`;
+        const subs = ch.subs && ch.subs.length ? `<div class="subs">${ch.subs.map(s => `
+      <section class="sub">
+        <h4>${esc(s.no)} ${esc(s.title)}</h4>
+        <ol>${s.sections.map((t, i) => `<li><span class="sn">${esc(s.no)}.${i + 1}</span><span>${esc(t)}</span></li>`).join("")}</ol>
+      </section>`).join("")}</div>` : "";
+        return `<article class="ch">
+      <header class="ch-row"><span class="ch-no">${esc(ch.no)}</span><h3>${esc(ch.title)}</h3>${action}</header>
+      ${subs}
+    </article>`;
+      }).join("");
+    }
+
+    /* ---------- render everything that depends on access ---------- */
+    function render() {
+      document.body.classList.toggle("is-unlocked", unlocked);
+      $$(".js-price").forEach(el => el.textContent = Number(CONFIG.priceInr).toLocaleString("en-IN"));
+      $$(".js-read").forEach(a => a.setAttribute("href", CONFIG.chapters[0].file));
+      renderToc();
+    }
+    function unlock(msg) {
+      unlocked = true;
+      if (!previewMode) { try { localStorage.setItem(FLAG, "1"); } catch (e) { } }
+      render(); setOpen(true);
+      say(msg || "Payment received. The full book is unlocked.", "ok");
+      toast("Book unlocked");
+
+      // Automatically redirect to the first chapter
+      if (CONFIG.chapters && CONFIG.chapters.length > 0) {
+        window.location.href = CONFIG.chapters[0].file;
+      }
+    }
+
+    /* ---------- Razorpay ---------- */
+    async function postJSON(url, body) {
+      const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body || {}) });
+      let data = {}; try { data = await res.json(); } catch (e) { }
+      if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
+      return data;
+    }
+    let rzpLoad;
+    function loadRazorpay() {
+      if (window.Razorpay) return Promise.resolve();
+      return rzpLoad || (rzpLoad = new Promise((ok, fail) => {
+        const s = document.createElement("script");
+        s.src = "https://checkout.razorpay.com/v1/checkout.js";
+        s.onload = ok;
+        s.onerror = () => { rzpLoad = null; fail(new Error("Couldn't load Razorpay. Check your connection and try again.")); };
+        document.head.appendChild(s);
+      }));
+    }
+    function busy(on, label) {
+      $$(".js-buy").forEach(b => {
+        if (on) { if (!b.dataset.html) b.dataset.html = b.innerHTML; b.disabled = true; b.textContent = label; }
+        else { b.disabled = false; if (b.dataset.html) { b.innerHTML = b.dataset.html; delete b.dataset.html; } }
+      });
+    }
+    async function startPayment() {
+      say("");
+
+      const emailInput = document.getElementById("userEmail");
+      const amountInput = document.getElementById("userAmount");
+      let email = emailInput ? emailInput.value.trim() : "";
+      let amount = amountInput ? parseInt(amountInput.value) || 0 : 0;
+
+      if (!email) {
+        document.getElementById("get").scrollIntoView({ behavior: "smooth" });
+        toast("Please enter your email to get the book.");
+        return;
+      }
+
+      // ── 0 Rs path: skip Razorpay entirely ──
+      if (amount <= 0) {
+        busy(true, "Sending your book access…");
+        say("Hang tight — sending you the book link…");
+        try {
+          await postJSON(CONFIG.api.createOrder, { email: email, amount: 0 });
+          busy(false);
+          unlock("You're in! Check your email for the download link. 🎉");
+        } catch (err) {
+          busy(false);
+          // Still unlock access even if email fails (they can read online)
+          console.warn("Email send may have failed:", err.message);
+          unlock("You're in! Enjoy the book. 🎉 (If you don't receive an email, check spam.)");
+        }
+        return;
+      }
+
+      // ── Paid path: use Razorpay ──
+      try {
+        busy(true, "Creating your order…");
+        const order = await postJSON(CONFIG.api.createOrder, { email: email, amount: amount });
+        await loadRazorpay();
+        busy(true, "Waiting for payment…");
+        const rzp = new window.Razorpay({
+          key: CONFIG.razorpay.keyId,
+          order_id: order.orderId,
+          amount: order.amount,
+          currency: order.currency || "INR",
+          name: CONFIG.razorpay.name,
+          description: CONFIG.razorpay.description,
+          theme: { color: CONFIG.razorpay.themeColor },
+          prefill: { email: email },
+          modal: { ondismiss: () => { busy(false); say("Checkout closed. You can come back anytime."); } },
+          handler: async res => {
+            busy(true, "Confirming payment…");
+            try {
+              await postJSON(CONFIG.api.verify, {
+                razorpay_order_id: res.razorpay_order_id,
+                razorpay_payment_id: res.razorpay_payment_id,
+                razorpay_signature: res.razorpay_signature,
+                email: email
+              });
+              busy(false);
+              unlock("Payment successful! Thank you for your support. 🙏");
+            } catch (err) {
+              busy(false);
+              say("Verification failed: " + err.message + ". Please contact support.", "error");
+            }
+          }
+        });
+        rzp.on("payment.failed", r => {
+          busy(false);
+          say(`Payment failed: ${(r.error && r.error.description) || "the bank declined it"}. Try another method.`, "error");
+        });
+        rzp.open();
+      } catch (err) {
+        busy(false);
+        say(err.message || "Something went wrong. Please try again.", "error");
+      }
+    }
+    $$(".js-buy").forEach(b => b.addEventListener("click", () => {
+      if (b.closest(".hero, .nav")) $("#get").scrollIntoView({ behavior: "smooth" });
+      startPayment();
+    }));
+
+    /* restore access + session check */
+    if (CONFIG.api.restore && !previewMode) {
+      $("#restoreBox").hidden = false;
+      $("#restoreForm").addEventListener("submit", async e => {
+        e.preventDefault();
+        const id = e.target.paymentId.value.trim();
+        if (!/^pay_\w+$/.test(id)) { say("Enter the payment ID from your Razorpay receipt. It starts with pay_.", "error"); return; }
+        try { await postJSON(CONFIG.api.restore, { paymentId: id }); unlock("Access restored. Welcome back."); }
+        catch (err) { say(err.message || "We couldn't find that payment. Check the ID and try again.", "error"); }
+      });
+    }
+    if (CONFIG.api.session && !previewMode) {
+      fetch(CONFIG.api.session, { credentials: "include" })
+        .then(r => r.ok ? r.json() : null)
+        .then(d => { if (d && typeof d.unlocked === "boolean") { unlocked = d.unlocked; try { unlocked ? localStorage.setItem(FLAG, "1") : localStorage.removeItem(FLAG); } catch (e) { } render(); } })
+        .catch(() => { });
+    }
+    if (previewMode) $("#previewNote").hidden = false;
+
+    /* ---------- the 3D book ---------- */
+    const zone = $("#bookZone"), stage = $("#stage"), hero = $(".hero"), tiltEl = $("#tilt"), toggleBtn = $("#toggleBook");
+    const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let tx = 0, ty = 0, cx = 0, cy = 0, cRy = null, cRx = null, lx = 68, ly = 42;
+    let dragging = false, moved = 0, sx = 0, sy = 0, running = false;
+
+    const isOpen = () => zone.classList.contains("is-open");
+    function setOpen(v) {
+      zone.classList.toggle("is-open", v);
+      toggleBtn.textContent = v ? "Close the book" : "Open the book";
+      kick();
+    }
+    toggleBtn.addEventListener("click", () => setOpen(!isOpen()));
+
+    function frame() {
+      const b = isOpen() ? { ry: -3, rx: 5 } : { ry: -17, rx: 9 };
+      const tRy = b.ry + tx * 22, tRx = b.rx - ty * 12, k = reduceMotion ? 1 : .09;
+      cRy = cRy === null ? tRy : cRy + (tRy - cRy) * k;
+      cRx = cRx === null ? tRx : cRx + (tRx - cRx) * k;
+      cx += (tx - cx) * k; cy += (ty - cy) * k;
+      lx += ((68 + tx * 10) - lx) * (reduceMotion ? 1 : .05);
+      ly += ((42 + ty * 12) - ly) * (reduceMotion ? 1 : .05);
+      tiltEl.style.setProperty("--ry", cRy.toFixed(2) + "deg");
+      tiltEl.style.setProperty("--rx", cRx.toFixed(2) + "deg");
+      tiltEl.style.setProperty("--mx", (42 + cx * 55).toFixed(1) + "%");
+      tiltEl.style.setProperty("--my", (30 + cy * 45).toFixed(1) + "%");
+      zone.style.setProperty("--fx", (-cx * 16).toFixed(1) + "px");
+      hero.style.setProperty("--lx", lx.toFixed(1) + "%");
+      hero.style.setProperty("--ly", ly.toFixed(1) + "%");
+      const settled = Math.abs(tRy - cRy) < .02 && Math.abs(tRx - cRx) < .02 &&
+        Math.abs(tx - cx) < .002 && Math.abs(ty - cy) < .002 &&
+        Math.abs(68 + tx * 10 - lx) < .05 && Math.abs(42 + ty * 12 - ly) < .05;
+      if (settled) running = false; else requestAnimationFrame(frame);
+    }
+    function kick() { if (!running) { running = true; requestAnimationFrame(frame); } }
+    const norm = (e, el) => { const r = el.getBoundingClientRect(); return [clamp(((e.clientX - r.left) / r.width - .5) * 2), clamp(((e.clientY - r.top) / r.height - .5) * 2)]; };
+
+    hero.addEventListener("pointermove", e => { if (e.pointerType !== "mouse" || dragging) return;[tx, ty] = norm(e, hero); kick(); });
+    hero.addEventListener("pointerleave", () => { if (!dragging) { tx = ty = 0; kick(); } });
+    stage.addEventListener("pointerdown", e => {
+      moved = 0; if (e.pointerType === "mouse") return;
+      dragging = true; sx = e.clientX; sy = e.clientY; stage.setPointerCapture(e.pointerId);
+    });
+    stage.addEventListener("pointermove", e => {
+      if (!dragging) return;
+      moved = Math.max(moved, Math.hypot(e.clientX - sx, e.clientY - sy));
+      [tx, ty] = norm(e, stage); kick();
+    });
+    const endDrag = () => { dragging = false; tx = ty = 0; kick(); };
+    stage.addEventListener("pointerup", endDrag);
+    stage.addEventListener("pointercancel", endDrag);
+    stage.addEventListener("click", () => { if (moved > 8) return; setOpen(!isOpen()); });
+
+    /* go */
+    render();
+    kick();
+  </script>
+</body>
+
+</html>

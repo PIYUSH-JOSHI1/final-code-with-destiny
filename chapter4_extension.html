@@ -1,0 +1,1083 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Hello, Destiny — Chapter 4 Extension</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
+  <style>
+    :root {
+      color-scheme: dark;
+      --desk: #171310;
+      --desk-2: #211c16;
+      --line: rgba(233, 222, 201, .14);
+      --desk-text: #dcd4c3;
+      --desk-muted: #9a9080;
+      --amber-bright: #d9a054;
+      --green: #8fbe92;
+      --paper: #f8f3e7;
+      --paper-2: #f1eada;
+      --ink: #372f23;
+      --ink-soft: #5c5344;
+      --amber: #a56e28;
+      --paper-edge: rgba(55, 45, 32, .16);
+    }
+
+    * { box-sizing: border-box }
+    html { scroll-behavior: smooth }
+
+    body {
+      margin: 0;
+      padding: 0 20px 64px;
+      background: var(--desk);
+      color: var(--desk-text);
+      font-family: "Newsreader", Georgia, serif;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    ::selection { background: #a56e28; color: #f8f3e7 }
+    .mono { font-family: "JetBrains Mono", monospace }
+
+    .shell { max-width: 1180px; margin: 0 auto }
+
+    .mast {
+      display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
+      gap: 16px 28px; padding-block: 44px 20px;
+    }
+
+    .brand-code {
+      font-family: "JetBrains Mono", monospace;
+      font-size: clamp(17px, 2.6vw, 22px);
+      font-weight: 600; color: var(--desk-text); letter-spacing: .01em;
+    }
+    .brand-code .kw { color: var(--amber-bright) }
+    .brand-code .str { color: var(--green) }
+
+    .btn {
+      font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .14em;
+      border-radius: 4px; cursor: pointer; padding: 9px 14px;
+      transition: background .15s ease, color .15s ease, border-color .15s ease;
+    }
+    .btn-dark {
+      background: transparent; color: var(--desk-text);
+      border: 1px solid rgba(233, 222, 201, .3);
+    }
+    .btn-dark:hover { background: var(--paper); border-color: var(--paper); color: var(--ink) }
+
+    .tabs {
+      position: sticky; top: 0; z-index: 30;
+      margin-inline: -20px; padding-inline: 20px;
+      display: flex; gap: 4px; align-items: center;
+      background: rgba(23, 19, 16, .94);
+      border-bottom: 1px solid var(--line);
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none }
+
+    .tab {
+      flex: 0 0 auto;
+      font-family: "JetBrains Mono", monospace; font-size: 11.5px; font-weight: 500;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--desk-muted); text-decoration: none;
+      padding: 13px 13px 11px; border-bottom: 2px solid transparent;
+      white-space: nowrap;
+    }
+    .tab:hover { color: var(--desk-text) }
+    .tab.active { color: var(--desk-text); border-bottom-color: var(--amber-bright) }
+    .tab .tno { color: var(--amber-bright); margin-right: 6px; font-weight: 600 }
+
+    .chapter { scroll-margin-top: 64px; padding-top: 44px }
+
+    .ch-head {
+      display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
+      gap: 14px 28px; margin-bottom: 22px;
+    }
+
+    .ch-eyebrow {
+      font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .22em; color: var(--amber-bright);
+      display: block; margin-bottom: 10px;
+    }
+
+    .ch-title {
+      margin: 0;
+      font-family: "Fraunces", Georgia, serif; font-weight: 600;
+      font-size: clamp(26px, 3.6vw, 34px); line-height: 1.15; color: var(--paper);
+      text-wrap: balance;
+    }
+
+    .ch-meta {
+      display: block; margin-top: 8px;
+      font-family: "JetBrains Mono", monospace; font-size: 11.5px;
+      color: var(--desk-muted); letter-spacing: .04em;
+    }
+
+    .pages { display: grid; grid-template-columns: 1fr; gap: 22px; align-items: start }
+    @media (min-width:900px) { .pages { grid-template-columns: repeat(2, 1fr) } }
+
+    .page {
+      background: linear-gradient(180deg, var(--paper), var(--paper-2));
+      border: 1px solid var(--paper-edge);
+      border-radius: 6px;
+      padding: 24px 26px 16px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, .32);
+      color: var(--ink);
+    }
+
+    .page-top {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; margin-bottom: 12px;
+    }
+
+    .eyebrow {
+      font-family: "JetBrains Mono", monospace; font-size: 10.5px; font-weight: 500;
+      text-transform: uppercase; letter-spacing: .2em; color: var(--amber);
+    }
+
+    .sec-title {
+      margin: 2px 0 14px;
+      font-family: "JetBrains Mono", monospace; font-weight: 600; font-size: 14.5px;
+      text-transform: uppercase; letter-spacing: .13em; line-height: 1.7; color: var(--ink);
+      text-wrap: balance;
+    }
+
+    .page-body p {
+      margin: 0; font-size: 16.5px; line-height: 1.68; color: var(--ink);
+      font-family: "Newsreader", Georgia, serif;
+    }
+    .page-body p + p { margin-top: 13px }
+    .page-body p:first-child::first-letter {
+      font-family: "Fraunces", Georgia, serif; font-weight: 600;
+      float: left; font-size: 3.05em; line-height: .86;
+      padding: 2px 9px 0 0; color: var(--amber);
+    }
+
+    .folio {
+      margin-top: 18px; padding-top: 10px;
+      border-top: 1px dashed rgba(55, 45, 32, .22);
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-family: "JetBrains Mono", monospace; font-size: 11px;
+      letter-spacing: .14em; color: var(--amber);
+    }
+    .folio .sec-ref { text-transform: uppercase; letter-spacing: .16em }
+
+    .opening-page {
+      background: linear-gradient(180deg, var(--paper), var(--paper-2));
+      border: 1px solid var(--paper-edge);
+      border-radius: 6px;
+      padding: 0;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, .4);
+      color: var(--ink);
+      overflow: hidden;
+      margin-bottom: 26px;
+    }
+
+    .opening-page .opening-image {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #e8dfcc;
+      min-height: 180px;
+      padding: 20px 0;
+    }
+
+    .opening-page .opening-image img {
+      width: 100%;
+      max-width: 760px;
+      max-height: 460px;
+      object-fit: contain;
+      display: block;
+      border-radius: 4px;
+      box-shadow: 0 8px 24px rgba(55, 45, 32, 0.2);
+    }
+
+    .opening-page .opening-image .img-placeholder {
+      padding: 60px 20px;
+      text-align: center;
+      color: var(--ink-soft);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      border: 2px dashed rgba(55, 45, 32, .25);
+      margin: 20px;
+      border-radius: 4px;
+    }
+
+    .opening-page .opening-body {
+      padding: 24px 26px 16px;
+    }
+
+    .opening-page .opening-body .eyebrow {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .opening-page .opening-body .sec-title {
+      font-size: 15px;
+    }
+
+    .opening-page .opening-body p {
+      margin: 0;
+      font-size: 16.5px;
+      line-height: 1.68;
+      color: var(--ink);
+      font-family: "Newsreader", Georgia, serif;
+    }
+
+    .opening-page .opening-body p + p { margin-top: 13px }
+
+    .opening-page .opening-body p:first-child::first-letter {
+      font-family: "Fraunces", Georgia, serif; font-weight: 600;
+      float: left; font-size: 3.05em; line-height: .86;
+      padding: 2px 9px 0 0; color: var(--amber);
+    }
+
+    .foot {
+      margin-top: 56px; padding-top: 22px;
+      border-top: 1px solid var(--line);
+      font-size: 14.5px; font-style: italic; color: var(--desk-muted);
+      text-align: center; line-height: 1.7;
+    }
+
+    .toast {
+      position: fixed; left: 50%; bottom: 26px; transform: translate(-50%, 14px);
+      background: #242a20; border: 1px solid #3e5c3a; color: #cfe3c9;
+      font-family: "JetBrains Mono", monospace; font-size: 12px; letter-spacing: .06em;
+      padding: 11px 18px; border-radius: 6px;
+      opacity: 0; pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+      z-index: 50; max-width: calc(100vw - 32px);
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0) }
+
+    :focus-visible { outline: 2px solid var(--amber-bright); outline-offset: 2px }
+
+    @media (prefers-reduced-motion:reduce) {
+      html { scroll-behavior: auto }
+      .btn, .toast { transition: none }
+    }
+
+    .mobile-bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--desk);
+      border-top: 1px solid var(--line);
+      z-index: 100;
+      padding: 10px 16px;
+      padding-bottom: calc(10px + env(safe-area-inset-bottom));
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .mobile-bottom-nav button {
+      background: var(--paper-2); color: var(--ink);
+      border: none; border-radius: 4px;
+      padding: 12px 10px;
+      font-family: var(--mono, monospace); font-size: 11.5px; font-weight: 700;
+      flex: 1; text-transform: uppercase; letter-spacing: .05em;
+      cursor: pointer;
+    }
+    .mobile-bottom-nav button:disabled { opacity: 0.5 }
+
+    .mobile-fullscreen-page {
+      position: fixed !important;
+      top: 0 !important; left: 0 !important; right: 0 !important;
+      bottom: 60px !important;
+      z-index: 99 !important;
+      margin: 0 !important; border-radius: 0 !important;
+      overflow-y: auto !important;
+      padding-bottom: 40px !important;
+    }
+
+    @media (max-width: 768px) {
+      .mobile-bottom-nav { display: flex }
+      body { padding-bottom: 70px }
+    }
+
+    @media (max-width:560px) {
+      .mast { padding-block: 30px 14px }
+      .page { padding: 20px 20px 14px }
+      .page-body p { font-size: 16px }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+
+    <header class="mast">
+      <div>
+        <span class="brand-code"><span class="kw">printf</span>(<span class="str">&ldquo;Hello, Destiny&rdquo;</span>);</span>
+      </div>
+      <a href="index.html#contents" class="btn btn-dark" style="text-decoration:none;">&#8592; Back to Contents</a>
+    </header>
+
+    <nav class="tabs" id="tabs" aria-label="Chapter 4 sub-chapters">
+      <a class="tab" href="#ch41"><span class="tno">4.1</span>Hustle</a>
+      <a class="tab" href="#ch42"><span class="tno">4.2</span>Tantra</a>
+      <a class="tab" href="#ch43"><span class="tno">4.3</span>Lakhpati</a>
+      <a class="tab" href="#ch44"><span class="tno">4.4</span>Wins</a>
+      <a class="tab" href="#ch45"><span class="tno">4.5</span>Malaysia</a>
+      <a class="tab" href="#ch46"><span class="tno">4.6</span>Lessons</a>
+    </nav>
+
+    <main>
+
+      <!-- ==================== CHAPTER 4 · SUB-CHAPTER 4.1 ==================== -->
+      <section class="chapter" id="ch41" data-ch="4.1" data-title="Hackathon Hustle" data-range="4.1.1&ndash;4.1.6" data-pages="70&ndash;75">
+
+        <div class="opening-page">
+          <div class="opening-image">
+            <img src="images/4.1.png" alt="Chapter 4.1">
+          </div>
+          <div class="opening-body">
+            <span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span>
+            <h3 class="sec-title">4.1 Hackathon Hustle</h3>
+            <p>My first hackathon was the Tantra Hackathon at Savitribai Phule University, Pune. The rule was simple but tough: build a fast website without any AI tools or external assets &mdash; only from scratch.</p>
+            <p>Teamed up with my partner Satyam, we became a two-person coding machine. In just six intense hours, we built a medicine buyer website &mdash; pure, clean, and fully functional. No templates, no help. Just two screens, relentless focus, and seamless teamwork.</p>
+            <p>When the judges came to evaluate, they were visibly impressed. "You built this in six hours?" one asked, surprised. We won first prize.</p>
+            <div class="folio"><span class="sec-ref">4.1</span><span>14</span></div>
+          </div>
+        </div>
+
+        <div class="ch-head">
+          <div>
+            <span class="ch-eyebrow">Chapter 4 &mdash; The Hackathon Journey &middot; Sub-chapter 4.1</span>
+            <h2 class="ch-title">Where the hustle began</h2>
+            <span class="ch-meta">New pages 4.1.1&ndash;4.1.6 &middot; lands on book pages 70&ndash;75 &middot; continues 4.1 Hackathon Hustle</span>
+          </div>
+        </div>
+
+        <div class="pages">
+
+          <article class="page" data-sec="4.1.1">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.1.1 The Notice Board Discovery</h3>
+            <div class="page-body">
+              <p>My hackathon life did not start with code; it started with a poster. Some senior had pinned a hand-made advertisement on the department notice board, between a workshop notice and a lost ID card appeal. "Build. Compete. Win." Three words, and the third one did all the work. I read that poster four times between two lectures, the way you re-read a message you cannot believe.</p>
+              <p>The details reached us properly through the class group, which is how all campus news actually travelled. Venue two hours away, registration free, food provided, teams of four. "Food provided" was the line that convinced my friends; free food is the most powerful marketing language in any college. We filled the form that same night, sitting in one room, typing each other's details because nobody trusted anybody else to spell their own name.</p>
+              <p>I did not know it then, but that grey notice board had quietly handed me a career. Everything that followed &mdash; the victories, the losses, the flights &mdash; began with one senior, one marker and three words. These days students scroll event platforms at midnight, and I feel fond of that old system. The algorithm shows you a hundred events. But one paper poster, read twice between lectures, still beats them all.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.1.1</span><span>70</span></div>
+          </article>
+
+          <article class="page" data-sec="4.1.2">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.1.2 The Teammate Hunt</h3>
+            <div class="page-body">
+              <p>Finding a hackathon team is a small scandal every time. I had a registration form open and one box left to fill: team members. My batch of sixty suddenly produced sixty brilliant excuses. One had a submission due, one had a family function, one simply stopped replying, and one asked whether the hackathon could be shifted to a convenient date for him. I typed and deleted my message to the group four times.</p>
+              <p>Rescue arrived from an unexpected department. A boy from mechanical engineering, whom I knew only from nodding at the photocopy shop, said yes in five minutes and brought his roommate along. Neither of them wrote code that could frighten anyone, but both could stay awake for two days, argue politely and carry three laptops without complaint. There I learnt the first law of hackathon teams: on the first day, commitment matters more than skill.</p>
+              <p>Over the years I have formed many hackathon teams, and I still evaluate people the same way. Skills can be built in one night before an event; hunger cannot be downloaded at all. The best teammate I ever found was not the smartest coder in the batch. He was simply the one who never once asked, "yaar, why are we doing this?"</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.1.2</span><span>71</span></div>
+          </article>
+
+          <article class="page" data-sec="4.1.3">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.1.3 The Three-Day Syllabus</h3>
+            <div class="page-body">
+              <p>With the team confirmed, a new terror appeared: what exactly would we build there? Seniors gave a terrifying answer &mdash; you cannot learn everything, learn one thing properly. So we held an emergency meeting and wrote a syllabus of our own: one framework, one database, one design tool. Three days. Nobody assigned it; nobody would test it. It was the first syllabus I ever studied with full hunger.</p>
+              <p>Our preparation had its own comedy. We downloaded tutorial videos like soldiers stocking rations, printed shortcut keys for the wall, and gave each member one weapon: I took the frontend, mechanical boy took the database, his roommate took the presentation, and the fourth member appointed himself head of snacks. Division of labour, we called it proudly. The presentation boy then asked the deepest question of the week: what if judges ask something outside the syllabus? We sent him back to finish the syllabus first.</p>
+              <p>That self-made syllabus taught me a method I still use before anything new: shrink the ocean to a glass, then drink it fully. Courses and degrees spread knowledge thin across three hundred pages. A deadline of three days concentrates it. When I later trained juniors for their first hackathon, I gave them the same gift &mdash; a small list, a short deadline, and full permission to ignore the rest.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.1.3</span><span>72</span></div>
+          </article>
+
+          <article class="page" data-sec="4.1.4">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.1.4 The Long Bus Ride</h3>
+            <div class="page-body">
+              <p>The hackathon was two hours away, in a college whose name we could not pronounce correctly on the first attempt. We boarded the early morning bus with backpacks, laptops and one shared power bank, looking like a very small startup going on its first offsite. Somewhere near the third town, we realised none of us had eaten breakfast, which is how most engineering adventures officially begin.</p>
+              <p>The journey turned into an unplanned team meeting. We revised our plan on the back of the registration receipt, argued about the project name for forty minutes, and practised introducing ourselves like professionals. One teammate slept against the window the entire way and woke up only when the conductor tapped his shoulder for the ticket &mdash; a boy who had planned a database for three days but had forgotten to plan for a ticket.</p>
+              <p>I have travelled to many hackathons since &mdash; some by train, some by late-night buses, once by three different vehicles in a single day. The destination always justified the journey, but the journey itself became the part I remember best. There is something about moving towards a challenge with your team that loosens every tongue. By the time the college gate arrived, four strangers had become one team, and the event had not even started.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.1.4</span><span>73</span></div>
+          </article>
+
+          <article class="page" data-sec="4.1.5">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.1.5 The Registration Desk</h3>
+            <div class="page-body">
+              <p>College gates at hackathon mornings have a festival feel that no regular lecture day ever achieved. Banners, confused volunteers, seniors directing traffic with hand gestures, and a queue of students from different cities comparing laptops like jeeps before a safari. We joined the line at the registration desk, where a volunteer crossed our names off a list with the seriousness of airport security.</p>
+              <p>Then came my favourite part of every hackathon: the welcome kit. An ID card with a lanyard, a t-shirt that never fit anyone perfectly, a pen, a notepad and stickers. I wore that ID card for the rest of the day even when it served no purpose, because it made me feel official. In the photographs from that morning, all four of us are wearing our lanyards like Olympic medals.</p>
+              <p>Inside the kit there was also a schedule sheet, and one line on it changed how I see events: stay hydrated and take breaks. I had never seen a college event care about its participants before, and I still remember which event printed that line. When I later helped organise hackathons of our own, we printed the same line on our sheets. People forget the prize list within a month. They remember for years how an event treated them at the door.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.1.5</span><span>74</span></div>
+          </article>
+
+          <article class="page" data-sec="4.1.6">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.1.6 The Rookies in the Room</h3>
+            <div class="page-body">
+              <p>The hall sorted itself into two species within the first hour: the veterans and us. Veterans arrived with team hoodies, laptops covered in conference stickers, and a frightening calm. They greeted the organisers by first name and discussed past finals like old soldiers discussing old campaigns. We had fresh t-shirts, unmatched enthusiasm and a plan that fit on half a page. Nobody warned us that we were outnumbered by experience.</p>
+              <p>Being rookies had its own advantages, which I discovered slowly. We asked questions that experienced teams had grown too proud to ask. We followed the schedule honestly, while the veterans skipped meals like it proved their dedication. When a mentor visited our table, he spent forty minutes with us &mdash; partly because we were weak, partly because we were the only team taking notes while he spoke.</p>
+              <p>That day ended without a prize, and it remains one of my favourite hackathons. The veterans taught me more by example than any workshop could: how they divided work, how they tested early, how they spoke to judges. Rookies are not behind; they are simply at the beginning of a longer race. Every veteran in that hall had once sat at a table with half a plan, and every future victory of mine was quietly seeded in that first, clumsy, completely hopeful morning.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.1.6</span><span>75</span></div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ==================== CHAPTER 4 · SUB-CHAPTER 4.2 ==================== -->
+      <section class="chapter" id="ch42" data-ch="4.2" data-title="Tantra Hackathon" data-range="4.2.1&ndash;4.2.6" data-pages="76&ndash;81">
+
+        <div class="opening-page">
+          <div class="opening-image">
+            <img src="images/4.2.png" alt="Chapter 4.2">
+          </div>
+          <div class="opening-body">
+            <span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span>
+            <h3 class="sec-title">4.2 Tantra Hackathon (6-Hour Sprint)</h3>
+            <p>My first hackathon was the Tantra Hackathon at Savitribai Phule University, Pune. The rule was simple but tough: build a fast website without any AI tools or external assets &mdash; only from scratch.</p>
+            <p>Teamed up with my partner Satyam, we became a two-person coding machine. In just six intense hours, we built a medicine buyer website &mdash; pure, clean, and fully functional.</p>
+            <p>That victory wasn't just about the trophy. It was the thrill of creating something from nothing, the bond of a first-time partnership, and the spark that ignited my entire hackathon journey. From that day, I was hooked &mdash; not just on coding, but on turning pressure into possibility.</p>
+            <div class="folio"><span class="sec-ref">4.2</span><span>14</span></div>
+          </div>
+        </div>
+
+        <div class="ch-head">
+          <div>
+            <span class="ch-eyebrow">Chapter 4 &mdash; The Hackathon Journey &middot; Sub-chapter 4.2</span>
+            <h2 class="ch-title">Six hours, two screens</h2>
+            <span class="ch-meta">New pages 4.2.1&ndash;4.2.6 &middot; lands on book pages 76&ndash;81 &middot; continues 4.2 Tantra Hackathon</span>
+          </div>
+        </div>
+
+        <div class="pages">
+
+          <article class="page" data-sec="4.2.1">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.2.1 The Rules That Banned Shortcuts</h3>
+            <div class="page-body">
+              <p>The Tantra Hackathon at Savitribai Phule Pune University arrived with a rule sheet that read like a strict teacher's wish list: build fast, build a working website, and build it without AI tools or borrowed assets &mdash; nothing from outside, everything from scratch. My first reaction was fear. My second was a laugh. My third, somewhere between the two, was respect; somebody had designed a format where only honest skill could speak.</p>
+              <p>That rule sheet quietly rewrote our preparation. For the first time, copy-paste &mdash; the unofficial fifth subject of every engineering degree &mdash; was banned, and we had to check what remained in our hands. Satyam and I spent an evening writing syntax by hand on blank pages, no editor to correct us, like cricketers practising without pads. Whatever survived that evening was ours. Whatever did not, we studied again.</p>
+              <p>I understand the organisers better now. AI tools are excellent servants, but on that day they would have been fake muscles &mdash; the event wanted to know what we could lift alone. Rules that remove shortcuts feel cruel in the beginning and generous by the end, because they hand you back a rare thing: proof. Six hours later we had built something no search engine could claim credit for.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.2.1</span><span>76</span></div>
+          </article>
+
+          <article class="page" data-sec="4.2.2">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.2.2 The Partner and the Plan</h3>
+            <div class="page-body">
+              <p>Some hackathons need five members; Tantra rewarded pairs, and Satyam was the easiest yes of my student life. We had studied in the same class long enough to finish each other's sentences and each other's bugs. A two-person team is a marriage of the technical kind: no middlemen, no committees, no waiting for votes. One nod, and the work simply moved from his screen to mine.</p>
+              <p>We divided the six hours like a marriage divides a kitchen: quietly, and with full trust. Satyam took the backend logic &mdash; accounts, orders, the database spine &mdash; and I took the frontend, the face the judges would meet. We chose a medicine buyer website: simple to explain, honest to build, and useful in a way our families would understand immediately. No grand ideas. Just one clean problem, solved properly.</p>
+              <p>That partnership taught me what people later call collaboration, a word I distrust until I see it working. Working with Satyam was not two people typing side by side; it was one brain wearing two keyboards. He wrote a function, I already knew its shape. I broke something, he felt it before I confessed. Since then I judge every team by one silent test: how little does the team need to explain itself?</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.2.2</span><span>77</span></div>
+          </article>
+
+          <article class="page" data-sec="4.2.3">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.2.3 The Clock on the Wall</h3>
+            <div class="page-body">
+              <p>Six hours sounds generous until you watch it move. We spent the first twenty minutes only planning &mdash; a crime by sprint standards, and the best investment of the day. One page, three columns: must build, should build, only if time smiles. The hall around us was already typing; we were still writing. It felt like being left behind on purpose, and every sprint since has rewarded that patience.</p>
+              <p>We agreed on one strange rule: no talking while the code was flowing. Questions went into a shared notepad; answers came at the next checkpoint, every ninety minutes. To an outsider we looked antisocial, two students glued to separate screens. Inside the silence there was a rhythm &mdash; write, test, sync, breathe &mdash; and the project grew like dough left alone to rise.</p>
+              <p>The final hour had a law of its own: nothing new enters the build. No feature however tempting, no redesign however beautiful. We spent it testing what existed, polishing labels and button positions, and rehearsing the demo twice. Beginners chase ambition; veterans chase completeness. That frozen last hour is the reason our demo never once froze. I still follow it in every deadline of my life.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.2.3</span><span>78</span></div>
+          </article>
+
+          <article class="page" data-sec="4.2.4">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.2.4 Hour Four, One Letter</h3>
+            <div class="page-body">
+              <p>Around hour four, the disaster arrived wearing a very small dress: one bug. A customer could fill the whole medicine cart, but the place-order button simply refused to move. We clicked it ten times, the way people press a lift button harder as if that makes the lift arrive faster. The no-talking rule collapsed instantly, and our shared notepad filled with sentences that were no longer professional. My hands had gone cold although the hall was warm.</p>
+              <p>We returned to an ancient method: we stopped typing and started reading. Satyam read his backend aloud, slowly, like reciting a prayer, and I walked the same path through my frontend with a finger on the screen. Somewhere in the middle the two paths disagreed. His code called it order; mine called it orders. One plural letter was sitting quietly between us, poisoning the entire pipeline. The fix took eight seconds. The finding took forty minutes.</p>
+              <p>That hour taught me something no classroom had managed: pressure does not create bugs, it only finds the ones already sleeping in your code. After the fix we did not celebrate or high-five; we simply resumed typing, strangely calmer than before. Even today, whenever a project breaks close to a deadline, I hear hour four in my head. Stay quiet, follow the flow, and remember the villain is usually one careless word.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.2.4</span><span>79</span></div>
+          </article>
+
+          <article class="page" data-sec="4.2.5">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.2.5 The Judge and the Mouse</h3>
+            <div class="page-body">
+              <p>By hour five the organisers announced judging, and the hall changed its weather. Judges moved from table to table with scorecards, and every team suddenly became an actor caught without rehearsal. We watched three demos before ours: one team presenting confident slides about a project they had not finished, another where the app crashed live on stage. Satyam whispered that at least our product was alive. That is the strange comfort of honest building &mdash; you fear less, because you have less to hide.</p>
+              <p>When our turn came, we followed a rule we had set while rehearsing: hand the judge the mouse and step back. He registered himself as a user, searched a medicine, added it to the cart and placed an order without our help &mdash; the whole journey in under two minutes. He asked how we had divided the work, and then, scrolling back to the first screen, asked the question I still remember word for word: you built this in six hours?</p>
+              <p>Satyam and I exchanged the kind of look that needs no translation, and answered, almost together, yes, sir. The judge wrote something on his sheet without changing his face, thanked us and moved on. We had prepared a whole speech about our vision, and in the end the product had spoken instead. Since that day my demo style has stayed the same: keep the speech short, hand over the controls, and trust what we built.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.2.5</span><span>80</span></div>
+          </article>
+
+          <article class="page" data-sec="4.2.6">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.2.6 First Prize, First Spark</h3>
+            <div class="page-body">
+              <p>The results came at the end, as results always do, when everybody is too tired to feel anything. Then they read our names for first prize, and tiredness left the building. Satyam grabbed my shoulder; I forgot how legs work for a second. We walked up, received a certificate and a small trophy, and posed for a photograph with smiles too wide for two exhausted faces.</p>
+              <p>People assume the prize was the best part. Honestly, the trophy gathered dust on a shelf within months. The real prize was quieter: the proof that two students with no template, no AI and no senior to call could build something judges ranked first. That evening I updated nothing anywhere online, but I updated something far more important &mdash; my own belief about what pressure can produce.</p>
+              <p>Most of all, that win hooked me &mdash; not on trophies, but on the specific taste of turning pressure into possibility. Satyam and I did not become a permanent team; life eventually moved us to different cities, as life does. But the Tantra sprint remains our private monument. Six hours, two screens, one website, zero shortcuts. Whenever a new challenge looks impossible, I return to that evening and remember: we were ordinary students, and it worked.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.2.6</span><span>81</span></div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ==================== CHAPTER 4 · SUB-CHAPTER 4.3 ==================== -->
+      <section class="chapter" id="ch43" data-ch="4.3" data-title="Lakhpati Banne Ka Din" data-range="4.3.1&ndash;4.3.6" data-pages="82&ndash;87">
+
+        <div class="opening-page">
+          <div class="opening-image">
+            <img src="images/4.3.png" alt="Chapter 4.3">
+          </div>
+          <div class="opening-body">
+            <span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span>
+            <h3 class="sec-title">4.3 Lakhpati Banne Ka Din</h3>
+            <p>Our first 24-hour national hackathon changed everything. We built a project in the healthcare sector &mdash; solving, coding, surviving on coffee and chaos. When the results were announced, they called runner-ups first, then the second winner. My heart was pounding. Then they announced the first prize winners: Team Tech Tribe.</p>
+            <p>For a moment, I just sat there &mdash; shocked, frozen. My teammates erupted: screaming, jumping, hugging. I was still in my chair, trying to process it. We had just won ₹ 1,00,000. "Lakhpati ban gaye, guru!"</p>
+            <p>That victory didn't just fill our pockets &mdash; it filled us with the belief that we could build, compete, and win on a national stage.</p>
+            <div class="folio"><span class="sec-ref">4.3</span><span>15</span></div>
+          </div>
+        </div>
+
+        <div class="ch-head">
+          <div>
+            <span class="ch-eyebrow">Chapter 4 &mdash; The Hackathon Journey &middot; Sub-chapter 4.3</span>
+            <h2 class="ch-title">The day of the lakh</h2>
+            <span class="ch-meta">New pages 4.3.1&ndash;4.3.6 &middot; lands on book pages 82&ndash;87 &middot; continues 4.3 Lakhpati Banne Ka Din</span>
+          </div>
+        </div>
+
+        <div class="pages">
+
+          <article class="page" data-sec="4.3.1">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.3.1 The National Leap</h3>
+            <div class="page-body">
+              <p>Tantra had made us confident, so we did what confident people do: we registered for a twenty-four-hour national hackathon without reading the fine print. The participant list arrived by email and humbled us immediately. Teams from Kerala, Delhi, Gujarat, Hyderabad &mdash; some travelling with faculty coordinators, some with sponsor logos on their t-shirts. We had a Google Form confirmation and one shared bag of expectations. The national tag was not decoration; the room actually felt like India.</p>
+              <p>Our first calculation was innocent: six hours had made us winners, so twenty-four would make us super-winners. Wrong, the briefing explained gently. A full-day event is not four sprints stacked together; it is a marathon that tests sleep, food and temperament along with code. Prototypes by dawn, pitches by noon, no leaving the venue. Our team, Tech Tribe, had been named in the final minute of registration because every decent name was already taken. Now that joke of a name had to survive a national stage.</p>
+              <p>I have noticed a pattern since: every jump in scale rewrites the map. What felt mastered at one level becomes a beginner's shuffle at the next, and that is not an insult, it is a syllabus. That morning I was simultaneously proud of my first prize and quietly terrified of the hall around me. Both feelings were correct. Confidence opens doors, but a little fear keeps your eyes open while you walk through them.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.3.1</span><span>82</span></div>
+          </article>
+
+          <article class="page" data-sec="4.3.2">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.3.2 A Problem From Home</h3>
+            <div class="page-body">
+              <p>When the problem statements opened, we scanned the list the way hungry people scan a menu. Smart cities, agriculture, education &mdash; and one quiet line about healthcare. That line pulled me somewhere personal. Months earlier, a relative of ours had fallen seriously ill at night, and I had watched the family telephone five hospitals one after another, hunting for a bed, taking addresses, hanging up, dialling again. Nobody had told us technology could remove exactly this kind of night.</p>
+              <p>So our project chose itself: one screen that shows which nearby hospitals have beds free right now, updated by the hospitals themselves, searchable by a panicked relative at two in the morning. We argued about features, then cut most of them; in twenty-four hours, a small working truth beats a large imaginary one. The design carried a single rule: a frightened user should never have to think.</p>
+              <p>That day taught me where good problems actually live: not in lists, but in houses. Any team could have picked the healthcare line; only our table carried that particular night inside it. When you build for a person you actually know, every button has a face, and it shows in the final product. Judges, I later learnt, can smell the difference between a borrowed idea and an owned one from across the hall.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.3.2</span><span>83</span></div>
+          </article>
+
+          <article class="page" data-sec="4.3.3">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.3.3 Three in the Morning</h3>
+            <div class="page-body">
+              <p>No briefing truly prepares you for a hackathon hall at three in the morning. The music stopped, the announcements stopped, even the coffee machine queue shrank to the truly desperate. Half the hall had surrendered, heads resting on backpacks, and the other half was typing with the silent, red-eyed loyalty of night-shift workers. A volunteer moved between tables like a nurse on rounds, refilling water bottles and whispering that breakfast would appear at five.</p>
+              <p>We had planned for this night with a shift system: two of us slept for three hours while two built, then we rotated. The sleeping pair lay right under the table on the spare banners organisers had left on the floor. The joke of those hours is that they were our most productive &mdash; no announcements, no wanderers, no self-inflicted debates. Some of our best decisions, including the colour of the entire interface, were made in whispers at three in the morning.</p>
+              <p>That night corrected a belief I had carried from the movies &mdash; that great work belongs to people who never sleep. In a twenty-four-hour event, the team that manages rest builds better at hour twenty than the team that glorifies exhaustion. Stamina, I realised, is not a personality trait; it is a design decision. We were not the loudest team in that hall, but when the sun came up, we were among the steadiest.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.3.3</span><span>84</span></div>
+          </article>
+
+          <article class="page" data-sec="4.3.4">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.3.4 Five Minutes on Stage</h3>
+            <div class="page-body">
+              <p>By noon the hall had transformed into an auditorium, and one by one teams climbed the stage to pitch before a judges' panel that actually looked national &mdash; industry badges, serious notebooks, water bottles arranged symmetrically. Five minutes per team, a buzzer at four. We had rehearsed our pitch eleven times in a corridor, and I still felt my knees negotiating with the stairs as we walked up under the lights.</p>
+              <p>Our speaker opened beautifully, reached the second memorised sentence, and stopped. Three full seconds of silence on a stage feels like three semesters. Then our quietest teammate &mdash; the one who had built the database and never once volunteered for talking &mdash; took one step forward and simply explained the product the way he would explain it to a friend. No polish, no drama, just truth with a demo behind it. The audience relaxed; honesty, it turns out, is an excellent orator.</p>
+              <p>Since that day I have stopped worshipping rehearsed lines. A memorised pitch is like glass &mdash; impressive until something touches it &mdash; while understanding bends and survives. The judges' questions afterwards were answered by three different voices, because all three of us actually knew what we had built. That, I decided, would be my forever rule for presentations: rehearse the flow, never the sentences, and make sure every hand on the laptop can hold the microphone.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.3.4</span><span>85</span></div>
+          </article>
+
+          <article class="page" data-sec="4.3.5">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.3.5 Team Tech Tribe</h3>
+            <div class="page-body">
+              <p>The closing ceremony began with the cruelty all result ceremonies share: they call the smaller prizes first. Runner-ups were announced &mdash; not us. Second winner &mdash; not us. Around me, teams clapped politely while quietly crossing their fingers, and I did that strange mathematics of hope: if our name had not appeared in the small prizes, only two possibilities remained, and one of them was too large to say aloud. My heart was pounding like it wanted to leave.</p>
+              <p>Then the anchor said the words: the first prize goes to Team Tech Tribe. My teammates erupted instantly &mdash; screaming, jumping, one of them hugging a complete stranger from the next row. I stayed exactly where I was, sitting, blinking, trying to process the arithmetic: one, followed by five zeroes. One lakh rupees. Somebody in our group whispered the line that became our caption for the week: Lakhpati ban gaye, guru. I walked to the stage on legs I had borrowed from somewhere, and held the giant cheque every photograph demands.</p>
+              <p>People sometimes ask why I did not jump like the others. Honestly, the news took the scenic route to my brain. Wanting to win is a fire you learn to carry quietly, but hearing that you won is a sound your body does not have a file for. Even today that announcement plays back in slow motion &mdash; the anchor's pause, our team name, the zeroes arranging themselves in the air. Some moments refuse to become memories; they stay present tense.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.3.5</span><span>86</span></div>
+          </article>
+
+          <article class="page" data-sec="4.3.6">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.3.6 The Days After</h3>
+            <div class="page-body">
+              <p>The next few days felt like a dream someone else was directing. Our photo appeared in a newspaper &mdash; slightly blurred, all of us mid-laugh &mdash; and the clipping travelled through family WhatsApp groups faster than any project we had ever built. Relatives who had never once asked what I study suddenly called to ask about this hackathon thing. My mother answered the same call five times and gave the same tour of the newspaper each time. I let her. Some audiences you never interrupt.</p>
+              <p>The prize money itself behaved like an adult for the first week: we split it equally, formally, like founders. But the amount was never the real story. What filled us was rarer &mdash; the proof that an idea born on a hostel floor could stand on a national stage and be counted first. Validation is a strange fuel. It does not make you richer, it makes you louder in your own head, and that voice kept saying: we can do this again.</p>
+              <p>Looking back, I understand that day differently now. Lakhpati ban gaye was the joke; the truth underneath was quieter &mdash; the day we received permission. Permission to believe that five zeroes could follow a one, that our small city and our small team belonged in national conversations. Many more hackathons followed that one, with far harder problems and far taller teams. But whenever a new attempt feels too big, I remember the cheque, the blurred photograph, and the arithmetic that refused to make sense until it finally did.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.3.6</span><span>87</span></div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ==================== CHAPTER 4 · SUB-CHAPTER 4.4 ==================== -->
+      <section class="chapter" id="ch44" data-ch="4.4" data-title="Winning Streak" data-range="4.4.1&ndash;4.4.6" data-pages="88&ndash;93">
+
+        <div class="opening-page">
+          <div class="opening-image">
+            <img src="images/4.4.png" alt="Chapter 4.4">
+          </div>
+          <div class="opening-body">
+            <span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span>
+            <h3 class="sec-title">4.4 Winning Was Just the Start</h3>
+            <p>Victory was just the beginning. I entered over 20+ hackathons, won 9 &mdash; but the real prize wasn't on stage. It was in the pressure, the partnership, and the person I became with every line of code we dared to write together.</p>
+            <p>SIH 2023 &ndash; National Level: Grand Finalist, Team Tech Simp. 24 hours of non-stop brainstorming and debugging that welded our team together through coffee, code, and pure grit.</p>
+            <p>UST Global National Hackathon: 4th Place (International Level). Competing with India's best &mdash; intimidating, inspiring, and a validation of our relentless hustle. Purple Jhallosh, PCMP Pune: Winner, awarded by the Governor of Maharashtra. Vishwakarma 2024: Reached Product Dev Phase, grant of ₹ 15,000.</p>
+            <div class="folio"><span class="sec-ref">4.4</span><span>16</span></div>
+          </div>
+        </div>
+
+        <div class="ch-head">
+          <div>
+            <span class="ch-eyebrow">Chapter 4 &mdash; The Hackathon Journey &middot; Sub-chapter 4.4</span>
+            <h2 class="ch-title">The streak, and the stumble</h2>
+            <span class="ch-meta">New pages 4.4.1&ndash;4.4.6 &middot; lands on book pages 88&ndash;93 &middot; continues 4.4 Winning Was Just the Start</span>
+          </div>
+        </div>
+
+        <div class="pages">
+
+          <article class="page" data-sec="4.4.1">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.4.1 The Registration Spree</h3>
+            <div class="page-body">
+              <p>The lakh changed how the world said our name. Invitations that once needed hunting began arriving on their own &mdash; college fests, inter-university meets, a corporate challenge in the city with actual badges. Seniors who had once ignored our messages forwarded our photos with the caption, these kids are serious. Momentum, I discovered that month, is not a feeling. It is a tailwind that pushes every new registration form onto your desk half-filled.</p>
+              <p>So we did what victorious teams do: we registered for everything. Three events in one month, each form filled from the same saved document of team details. Our faculty coordinator, a patient man, signed no-objection letters so often that he kept one pen aside purely for us. Attendance stretched thinner than the hostel's tomato chutney, and the college allowed it, because the college had decided we were worth the risk.</p>
+              <p>Looking back, the spree was half strategy and half celebration. Momentum is real fuel, but it steers badly; it will carry you through every open door whether the room inside deserves you or not. Still, I would not change those crowded weeks. They taught us formats, judges and time limits in bulk, and they quietly collected the lesson I was about to need most &mdash; the one that only a loss can teach.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.4.1</span><span>88</span></div>
+          </article>
+
+          <article class="page" data-sec="4.4.2">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.4.2 The Day Our Name Was Not Called</h3>
+            <div class="page-body">
+              <p>The spree's first stop was a big-city hackathon with corporate sponsors and a stage taller than any we had seen. We walked in wearing our national-winner confidence like an extra lanyard. For their theme of warehouse logistics, we confidently re-entered our hospital bed-finder &mdash; polished, battle-tested, beloved. The demo ran without one stutter. We genuinely believed the trophy was catching a bus to come meet us.</p>
+              <p>The judges did not scold us; they did something gentler and worse. They asked, politely, what our project had to do with warehouses. We explained, brilliantly, why healthcare mattered more. They nodded, thanked us and moved to the next table. At results, our name appeared nowhere &mdash; not even in the consolation list that exists to be kind. The bus ride home carried a new kind of silence, the kind that has weight.</p>
+              <p>Somewhere on that highway, one of us finally said the sentence out loud: we were good, just not for this question. That loss taught me what all our wins had not &mdash; a hackathon is not an exam where knowledge alone passes; it is a question, and the first skill of the arena is answering the one that was actually asked. Since that day I read problem statements the way lawyers read contracts: twice, with a pencil.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.4.2</span><span>89</span></div>
+          </article>
+
+          <article class="page" data-sec="4.4.3">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.4.3 The Chart Paper Constitution</h3>
+            <div class="page-body">
+              <p>The loss stung enough to become useful. That night in the hostel we held a post-mortem where nobody was allowed to defend themselves, and by midnight a chart paper hung on our wall like a constitution: pick a problem with a face, build a demo that runs in ninety seconds, rehearse the pitch three times, ship small and finish, and test the product on one stranger before any judge sees it.</p>
+              <p>The constitution worked embarrassingly well. The next three events were smaller &mdash; a college fest, a civic problem meet, a city-level competition &mdash; and we answered each brief exactly as it was asked. A library-issue tracker. A bus timetable project. An attendance system. Three events, three first prizes. The trophies were modest enough to stack vertically, but the streak was real, and more real than that was the habit behind it.</p>
+              <p>Later we added one more column to the chart paper: a ledger of losses, with dates and honest reasons. Professionals, I understood eventually, are not people who never lose; they are people who convert losing into documents. Even today, every project I begin starts with a checklist that is, if you trace its bloodline carefully, that chart paper wearing a tie and sitting in a meeting.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.4.3</span><span>90</span></div>
+          </article>
+
+          <article class="page" data-sec="4.4.4">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.4.4 The Poster With a Passport</h3>
+            <div class="page-body">
+              <p>Somewhere in the middle of the streak, an announcement rearranged the whole semester. A national innovation challenge, open to engineering teams from every state, with one line at the bottom of its poster that made the entire lab go quiet: Grand Finale &mdash; Kuala Lumpur, Malaysia. One of us read it aloud twice, the way you read news you do not believe, and then the lab stayed quiet for another full minute.</p>
+              <p>The seniors were kind and discouraging in the same breath. Colleges like ours never reach such finales, they explained; those stages belong to the famous institutions. They were probably right, and their advice would have weighed more if our wall did not carry a rule the seniors could not see: we no longer entered events to be realistic. This poster asked one question &mdash; can you build something worth flying for? &mdash; and every one of us wanted to answer it.</p>
+              <p>Audacity, I have learnt, is cheap at the registration stage and expensive at the finale; that is the honest design of every large opportunity. We paid the small fee that evening &mdash; a form, our details, our best project &mdash; and walked back to the lab as if nothing had happened, though everything had. The chart paper on the wall had never mentioned passports. It did not need to; it had already trained us for the question.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.4.4</span><span>91</span></div>
+          </article>
+
+          <article class="page" data-sec="4.4.5">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.4.5 The Gate After Every Gate</h3>
+            <div class="page-body">
+              <p>The challenge turned out to be a pyramid wearing a competition's clothes. First gate: an online round of videos and write-ups. Second: a zonal round in another city, forty teams in a hall, five minutes each before industry judges. Third: a prototype screening where the judges actually touched the product with their hands. Each gate removed half the crowd, and each gate kept its own particular flavour of fear.</p>
+              <p>Our wall constitution earned its keep at every level. The ninety-second demo slid neatly into the five-minute slots. We answered the zonal theme exactly as asked, no flourishes. At the prototype screening, a judge did something I still admire &mdash; he switched off the internet on purpose, then watched our bed-finder keep working through its offline SMS mode, the feature we had built for rural areas that nobody had requested. He wrote on his sheet for a long time without speaking.</p>
+              <p>Surviving that pyramid taught me a method I use in every large undertaking now: you do not win a pyramid at the top, you survive it gate by gate, staying boringly consistent while others burn out being spectacular. Each round also sorted the hall by itself &mdash; the loud teams thinned out, the working teams stayed. By the last gate, the room had quietly become the shortlist, and we were still standing in it.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.4.5</span><span>92</span></div>
+          </article>
+
+          <article class="page" data-sec="4.4.6">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.4.6 The Email at Midnight</h3>
+            <div class="page-body">
+              <p>The shortlist was to arrive by email on a Tuesday, and nobody knew the hour, so we checked our inboxes the way people check a boiling pot of milk &mdash; constantly, and with growing superstition. The whole day passed on silent. Then, well past midnight, the subject line appeared, and I read it standing up without noticing I had stood: congratulations, your team has qualified for the International Grand Finale in Kuala Lumpur, Malaysia.</p>
+              <p>The hostel corridor at midnight hosted our celebration, which means it was mostly whispered screaming and one careful lap of the corridor. Calls home followed immediately. My father's first question was practical, as his questions always are: who is paying? The organisers were &mdash; flights, stay, everything. My mother finished that phone call and informed the neighbours before I had finished the sentence, and by morning the whole colony knew I was going foreign.</p>
+              <p>An email can change a life as quietly as a poster can. The boy who once read a hand-made notice between lectures was now reading a selection letter for a finale in another country. We replied in our most formal, over-polite English, then sat in the lab grinning at blank screens for an hour. The streak had carried us somewhere no bus could reach. The finale itself waited in a country we had never seen.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.4.6</span><span>93</span></div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ==================== CHAPTER 4 · SUB-CHAPTER 4.5 ==================== -->
+      <section class="chapter" id="ch45" data-ch="4.5" data-title="Malaysia Grand Finale" data-range="4.5.1&ndash;4.5.6" data-pages="94&ndash;99">
+
+        <div class="opening-page">
+          <div class="opening-image">
+            <img src="images/4.5.png" alt="Chapter 4.5">
+          </div>
+          <div class="opening-body">
+            <span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span>
+            <h3 class="sec-title">4.5 My Last Hackathon</h3>
+            <p>Sometimes life's biggest opportunities arrive without warning. I was mid-badminton rally when my phone buzzed &mdash; a notification. I checked it and froze. An invitation to the IEEE YESIST12 Grand Finals in Malaysia. Selected from over 10,000 entries &mdash; as a solo participant.</p>
+            <p>I shouted, dropped my racket, and sprinted. And I wasn't going alone &mdash; I was taking my dad. Our first international flight together. His smile, wide and proud, said everything words couldn't.</p>
+            <p>There, I stepped onto a global stage. I met innovators like Rajja from Pakistan, Kennedy from Kenya, and Aditya, Animesh, Sakshitha from India. We weren't just competitors &mdash; we became collaborators. We didn't win a trophy. But we brought back something greater: memories of a first flight, friendships across the world, and the quiet pride of carrying our nation's name forward.</p>
+            <div class="folio"><span class="sec-ref">4.5</span><span>17</span></div>
+          </div>
+        </div>
+
+        <div class="ch-head">
+          <div>
+            <span class="ch-eyebrow">Chapter 4 &mdash; The Hackathon Journey &middot; Sub-chapter 4.5</span>
+            <h2 class="ch-title">Two flights and a finale</h2>
+            <span class="ch-meta">New pages 4.5.1&ndash;4.5.6 &middot; lands on book pages 94&ndash;99 &middot; continues 4.5 Malaysia Grand Finale</span>
+          </div>
+        </div>
+
+        <div class="pages">
+
+          <article class="page" data-sec="4.5.1">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.5.1 The Passport Photograph</h3>
+            <div class="page-body">
+              <p>I made my first passport in eleven days, a speed the passport office itself seemed to find amusing. Forms, photocopies, a police visit that my uncle pre-briefed like a wedding meeting, and then the photograph, where an officer instructed me sternly not to smile. The result is a face so serious that every immigration officer since has double-checked it against my actual face. That small navy booklet instantly became the most expensive piece of paper our family had ever owned.</p>
+              <p>My father came along to the passport office, partly to help and mostly to see. He filled every form himself, in handwriting more careful than mine, and asked the officer twice whether the passport was valid for one trip or for many. Nobody in our family had ever needed one. Watching him hold the booklet, I understood we were not just travelling to a hackathon. We were breaking a pattern that had run for generations.</p>
+              <p>In middle-class homes, a passport is not a document; it is permission. Permission to believe that the world beyond the railway station is reachable without a film story. That booklet sat on my study table for the following weeks like an entry ticket I was terrified of losing, and I read my own name on it more times than I will admit to anyone. It was the first object I had ever owned that pointed outward.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.5.1</span><span>94</span></div>
+          </article>
+
+          <article class="page" data-sec="4.5.2">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.5.2 The First Boarding Pass</h3>
+            <div class="page-body">
+              <p>The airport, for four students from small-town colleges, was an exam hall whose syllabus nobody had shared with us. We printed boarding passes twice each, just in case. At security, a teammate's power bank earned a twenty-minute lecture. At the gate, we learnt that boarding begins when the screen says so, not when your anxiety says so. We moved through that terminal like a film shoot with too many retakes, and loved every minute of it.</p>
+              <p>At immigration, the officer asked the purpose of my visit, and I said, hackathon, and the word came out prouder than any word I had said to any official in my life. Then came the window seat, the takeoff, and the first cloud I ever saw from above. The team slept. I watched the ground turn into a map and the sea turn into velvet, and somewhere over the water I laughed alone like a man in a movie.</p>
+              <p>My mother had packed parathas for the flight, wrapped in foil, as if no airline on earth served food. I ate one over the clouds and thought about the notice board that started everything. Distance, I decided somewhere over the Bay of Bengal, is mostly a rumour told by people who have not travelled it. The rumour was ending for us that day, and the finale had not even begun.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.5.2</span><span>95</span></div>
+          </article>
+
+          <article class="page" data-sec="4.5.3">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.5.3 Twin Towers From the Taxi</h3>
+            <div class="page-body">
+              <p>Kuala Lumpur announced itself with heat, humidity and a language our ears needed a day to file correctly. Then, between two perfectly ordinary buildings, the Petronas Towers simply appeared &mdash; taller than every poster had prepared us for &mdash; and four phones rose from four taxi windows at the same time. We also discovered that cars here keep to the left, which produced one scream per turn and equipped all of us with first-day memories before we had even checked in.</p>
+              <p>The venue was a proper international hall: lanyards of a new design, registration desks with country names, volunteers who said terima kasih and patiently taught us to answer with the same. Our table waited with power sockets our plugs did not fit, so a small adapter became the first purchase of the trip and the reason our project survived. We located the prayer room, the food court and the schedule board, and slowly the foreign hall began to feel thoughtfully built.</p>
+              <p>Travel teaches detail the way no textbook manages. Every sign, queue and meal was a small lecture in how other lives are arranged, and each lecture made our small city feel less like the centre of the world and more like a beloved address on it. That evening, from the hostel window, we watched the towers light up against a purple sky, and one of us said quietly what all four were thinking: this is actually happening.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.5.3</span><span>96</span></div>
+          </article>
+
+          <article class="page" data-sec="4.5.4">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.5.4 The Hall With Twenty Flags</h3>
+            <div class="page-body">
+              <p>The finale hall sorted itself the way our very first hackathon once had &mdash; veterans and us &mdash; except now the veterans wore flags. Teams from Indonesia, Vietnam, Bangladesh, Sri Lanka, Nigeria and the Malaysian hosts filled the room with accents, laptops covered in stickers we had never seen, and one robot that moved as if it had personal opinions. Our badges said India in letters two centimetres tall, and we wore that small word like a national jersey.</p>
+              <p>Language surprised us pleasantly. English worked everywhere, but the true common tongue of the hall was the one from our own college labs &mdash; deadlines, bugs and demo fear. A Nigerian team traded us stickers; an Indonesian team asked how we had trained our demo to fit exactly five minutes. Everyone was tired in the same timezone, and by the first lunch we had borrowed two chargers and paid the loans back in laughter.</p>
+              <p>The hall also delivered my honest level-check: we were not the best team in that building, and the realisation arrived not as an insult but as a map. Every border you cross, I learnt, rewrites your scale. Our project &mdash; born from a family's bad night in a hospital corridor back home &mdash; now carried a small flag into every conversation, and a flag, I discovered, makes you build more carefully than any judge ever could.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.5.4</span><span>97</span></div>
+          </article>
+
+          <article class="page" data-sec="4.5.5">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.5.5 Five Minutes for India</h3>
+            <div class="page-body">
+              <p>Finale day dressed the hall like a ceremony: giant screens, a countdown clock, judges from industries and universities of several countries. Our slot sat after lunch, which every speaker knows is the graveyard shift of pitching. We had rehearsed in the hotel corridor until the housekeeping staff could hum our opening line. Then our quietest teammate &mdash; the same species of quiet hero from every team I have ever known &mdash; did what our constitution demanded: he let the demo speak first.</p>
+              <p>The pitch held to the rule that had survived every hall before this one: rehearse the flow, never the sentences. The offline mode ran live, right there, with the internet deliberately off, and the front row leaned forward &mdash; proof that judges across all borders lean the same way when a product actually works. Questions came from three directions and were answered by three different voices, because all of us knew the build. We walked off that stage lighter than we had climbed onto it.</p>
+              <p>At the closing ceremony they called our name for third place, and the section of the hall wearing our flag applauded the way strangers do when a story deserves it. A trophy that was not first, from a jury that had never heard of our college, in a country that was not ours. In the group photo from that evening, every one of us is trying to look calm and failing completely.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.5.5</span><span>98</span></div>
+          </article>
+
+          <article class="page" data-sec="4.5.6">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.5.6 Coming Home Taller</h3>
+            <div class="page-body">
+              <p>Our last evening in Malaysia belonged not to the competition but to the towers. We joined the fountain crowd like we had every right to stand there, bought keychains and chocolates with careful rupee arithmetic, and took the photograph every tourist takes and no tourist regrets. The towers stayed lit above a city that had judged our work kindly, and we stood there long after the show ended, not talking much, because the trip had already become memory.</p>
+              <p>The flight home ran the first one in reverse: clouds below, parathas finished this time, teammates sleeping in the pattern of people who earned it. At the arrivals gate stood my father, one neighbour, and a borrowed camera &mdash; in our colony, that is the complete state honour. The photograph from that night shows a garland, a suitcase and a boy who left as a student and returned looking, somehow, like an ambassador.</p>
+              <p>Something in us stayed permanently rearranged by those few days. Foreign was no longer a dream word; it had a face now, a food court, a timezone we had survived. The trophy shelf at home received its most unusual guest, and I understood that the finale had done its largest work quietly: it had stretched what we believed was allowed to happen to people like us. Maps, once stretched, never fully fold back.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.5.6</span><span>99</span></div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ==================== CHAPTER 4 · SUB-CHAPTER 4.6 ==================== -->
+      <section class="chapter" id="ch46" data-ch="4.6" data-title="Lessons From the Arena" data-range="4.6.1&ndash;4.6.6" data-pages="100&ndash;105">
+
+        <div class="opening-page">
+          <div class="opening-image">
+            <img src="images/4.6.png" alt="Chapter 4.6">
+          </div>
+          <div class="opening-body">
+            <span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span>
+            <h3 class="sec-title">4.6 Important Lessons of Life</h3>
+            <p>Hackathons aren't just about winning. They're about growing, learning, failing, rising, and discovering stronger versions of ourselves. With every project, I earn something new. With every challenge, I gain experience. With every collaboration, I grow. With every setback, I understand my passion to innovate even more deeply.</p>
+            <p>And remember this: In the future, you might not get an internship or a job immediately. But that never defines your true knowledge, your abilities, or your value. Every person has a different journey. Every story unfolds at its own pace. Your mindset shapes your path. Your thoughts shape what you attract.</p>
+            <p>Rise and fall come in every life &mdash; but losses aren't signs of weakness. They are reminders that every ending carries the seed of a new beginning. So think positively, work with passion, and trust the process. Because the best things in life arrive when you stay hopeful and never stop learning.</p>
+            <div class="folio"><span class="sec-ref">4.6</span><span>18</span></div>
+          </div>
+        </div>
+
+        <div class="ch-head">
+          <div>
+            <span class="ch-eyebrow">Chapter 4 &mdash; The Hackathon Journey &middot; Sub-chapter 4.6</span>
+            <h2 class="ch-title">Everything the arena left me</h2>
+            <span class="ch-meta">New pages 4.6.1&ndash;4.6.6 &middot; lands on book pages 100&ndash;105 &middot; continues 4.6 Lessons From the Arena</span>
+          </div>
+        </div>
+
+        <div class="pages">
+
+          <article class="page" data-sec="4.6.1">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.6.1 The Degree the Arena Gave</h3>
+            <div class="page-body">
+              <p>People ask what hackathons actually teach, since no marksheet records them. My first answer is always deadline engineering. Every event hands you an impossible clock, and each event trains the same reflex: shrink the ocean to a glass, sort the work into must build, should build and only if time smiles, then drink the glass completely. A university spreads its syllabus across years. The arena concentrates a whole education into thirty-six hours.</p>
+              <p>The second skill has no name in any prospectus: finishing. Most students complete assignments; very few complete things. A hackathon ends with a demonstration in front of strangers whether you are ready or not, and that forced ending, repeated across events, builds a muscle no classroom can order online. In later years I watched brilliant people fail at good ideas for one reason only &mdash; they never learnt to stop polishing and start shipping.</p>
+              <p>My degree certificate carries a university's name and I am proud of it. But when the hard days of my working life arrived, the skills that actually reported for duty were the arena's: scoping, sequencing, testing early, freezing the last hour. If the arena ever issued degrees, I suspect the convocation would be held at three in the morning, with a one-line degree citation: this one finishes things.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.6.1</span><span>100</span></div>
+          </article>
+
+          <article class="page" data-sec="4.6.2">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.6.2 The Teammate Algorithm</h3>
+            <div class="page-body">
+              <p>The arena's second syllabus was people. On the first day of any team, commitment outranks skill &mdash; the mechanical boy taught me that before he could write a database. Skill can be built overnight before an event; hunger cannot be downloaded at all. Having judged many events since, I can now diagnose a doomed team from the door by one symptom: somewhere in it, someone keeps asking yaar, why are we doing this?</p>
+              <p>The arena also taught me team size honestly. Tantra proved that two people with full trust can outrun five with committees. The national finale proved that three voices who each know the build will always out-pitch one memorised speech. My test for every team since has stayed the same: how little does this team need to explain itself? The best ones communicate in nods, shared notepads and single-word warnings about plural letters.</p>
+              <p>Everything I later understood about hiring, founding and collaborating was seeded in those halls. A team is a small machine for converting trust into work, and hackathons assemble that machine under a timer, which is the only honest test. The boy who carried three laptops without complaint, the partner who felt the bug before I confessed it, the self-appointed head of snacks &mdash; they all taught me one final rule: choose people by how they behave at hour twenty, not hour one.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.6.2</span><span>101</span></div>
+          </article>
+
+          <article class="page" data-sec="4.6.3">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.6.3 The Syllabus of Losing</h3>
+            <div class="page-body">
+              <p>The arena's hardest subject was losing, and nobody could get an exemption. We lost to a theme we had ignored, to a demo that crashed live on a stage while ours sat finished in our bag, to teams with better slides and thinner products. Every loss carried its own tuition fee, and I kept the receipts &mdash; that chart paper ledger on the hostel wall, which later became a notebook, which later still became a habit that outlived the notebook.</p>
+              <p>Losing well, I learnt, is itself a discipline with steps. Feel it fully for one evening; pretending the prize did not matter poisons the lesson. Then the post-mortem, in writing, while the sting is still honest. Then one new rule onto the wall, so the same failure cannot invoice you twice. What quietly ruins teams is not losing &mdash; it is losing without paperwork and entering the next hall as the exact same team.</p>
+              <p>Years later that ledger became my best teaching material. Every junior I trained received the same sentence: the arena charges in losses, and it does not print receipts unless you keep them. My worst days now compound like savings. Some difficult project goes smoothly, some deadline dissolves instead of exploding, and I know precisely which lost evening funded that calm. Failure, documented, is the only investment that never asks for more capital.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.6.3</span><span>102</span></div>
+          </article>
+
+          <article class="page" data-sec="4.6.4">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.6.4 The Family Called the Circuit</h3>
+            <div class="page-body">
+              <p>Somewhere between the first notice board and the Malaysian finale, the hackathon circuit stopped being a list of events and became a family. The judge who remembered our project across two cities. The organiser who printed stay hydrated and take breaks on a schedule sheet. The volunteer who refilled water bottles at three in the morning like a nurse on rounds. The rival team that lent us a charger and gained three permanent friends.</p>
+              <p>The circuit ran on an economy of favours that nobody ever audited. Borrowed chargers, shared templates, honest warnings about a common bug, a senior team's two free minutes that saved us a week. We repaid those debts forward without bookkeeping, and years later strangers were still settling them on our behalf. Professional networks built on profiles go quiet; the ones built on borrowed chargers at midnight do not disconnect.</p>
+              <p>That family turned out to be the real grand prize of the whole chapter. Judges became mentors, organisers became references, and rivals became the first people I congratulated and the first I called when I was stuck. If you ever want a professional network, do not build a profile &mdash; build things in rooms full of people who also stayed up all night. The hall forgets your score. The hall never forgets how you behaved in it.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.6.4</span><span>103</span></div>
+          </article>
+
+          <article class="page" data-sec="4.6.5">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.6.5 The Poster on the Other Side</h3>
+            <div class="page-body">
+              <p>In the final year, the circle closed in the most satisfying way possible: we organised a hackathon of our own. I designed the poster personally, printed it, and pinned it on the same department notice board that had once handed me a career &mdash; between a workshop notice and, I promise you, another lost ID card appeal. I stepped back and looked at it from a student's distance, the exact distance I had once read it from.</p>
+              <p>We ran the event the way the best ones had treated us: welcome kits with lanyards, a schedule sheet that printed stay hydrated and take breaks in exactly the same spot, mentors who actually sat at tables. For first-timers we handed down the three-day syllabus gift &mdash; one framework, one database, one design tool &mdash; and taught them the frozen last hour before they learnt it by disaster. Months later, one of those teams won an event of their own, and the news arrived like interest on an old deposit.</p>
+              <p>The senior who pinned the first poster never learned my name; I pinned mine for juniors whose names I will also never know. That, I finally understand, is how a campus stays alive &mdash; not through circulars, but through anonymous hands pinning invitations year after year. Every arena eventually pays you back, and the currency is always the same one: somebody else's beginning.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.6.5</span><span>104</span></div>
+          </article>
+
+          <article class="page" data-sec="4.6.6">
+            <div class="page-top"><span class="eyebrow">Chapter 4 &middot; The Hackathon Journey</span></div>
+            <h3 class="sec-title">4.6.6 The Chapter That Built Me</h3>
+            <div class="page-body">
+              <p>If you asked me to compress this whole chapter into one line, it would be this: a poster became a passport. Between that grey notice board and the Malaysian finale lie the entire arithmetic of my student years &mdash; the three-day syllabuses, the six-hour sprints, the one lakh that took a full minute to make sense, the losses that invoiced us, the corridors at three in the morning, the flights, the flags, the corridor rehearsals that housekeeping overheard.</p>
+              <p>The trophies sit on a shelf, and dust visits them regularly, as dust does. What actually still runs is the operating system the arena installed: calm inside a deadline, a demo handed to the judge instead of a speech, a problem statement read like a contract, a checklist wall in every room I have worked in since, and a permanent allergy to teams that need to explain themselves too much. No certificate lists any of this. Every employer has noticed it.</p>
+              <p>The hackathon years ended the way all student years end &mdash; suddenly, in the middle of something else. But every large, unreasonable thing I have attempted since begins exactly the way that first one did: read the poster twice, find your people, make a small list, and start before you feel ready. The boy at the notice board had no idea what he was registering for. I now believe that is precisely how every good chapter begins.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">4.6.6</span><span>105</span></div>
+          </article>
+
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      The book still ends with &ldquo;To Be Continued . . . .&rdquo; &mdash; these pages slot in before it.<br>
+      Written to match the original voice: simple English, no emojis, a little Hinglish where it belongs.
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script>
+      (function () {
+        "use strict";
+        var toast = document.getElementById("toast");
+        var toastTimer = null;
+        function showToast(msg) {
+          toast.textContent = msg;
+          toast.classList.add("show");
+          clearTimeout(toastTimer);
+          toastTimer = setTimeout(function () { toast.classList.remove("show"); }, 2000);
+        }
+
+        document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+        document.addEventListener('copy', function(e) { e.preventDefault(); });
+
+        var pages = Array.prototype.slice.call(document.querySelectorAll(".page"));
+        var currentPageIndex = 0;
+        var isFullScreen = false;
+        var isScrolling = false;
+        var scrollTimeout = null;
+
+        var navHtml = '<div class="mobile-bottom-nav">' +
+          '<button id="btnPrevPage">Back Page</button>' +
+          '<button id="btnFullScreen">Full Screen</button>' +
+          '<button id="btnNextPage">Next Page</button>' +
+        '</div>';
+        document.body.insertAdjacentHTML('beforeend', navHtml);
+
+        var btnPrev = document.getElementById("btnPrevPage");
+        var btnNext = document.getElementById("btnNextPage");
+        var btnFull = document.getElementById("btnFullScreen");
+
+        function updateNav() {
+          btnPrev.disabled = currentPageIndex <= 0;
+          btnNext.disabled = currentPageIndex >= pages.length - 1;
+        }
+
+        function syncCurrentPage() {
+          if (isFullScreen || isScrolling || pages.length === 0) return;
+          var minDiff = Infinity;
+          var bestIdx = 0;
+          pages.forEach(function(p, i) {
+            var rect = p.getBoundingClientRect();
+            var diff = Math.abs(rect.top);
+            if (diff < minDiff) { minDiff = diff; bestIdx = i; }
+          });
+          currentPageIndex = bestIdx;
+          updateNav();
+        }
+
+        window.addEventListener('scroll', function() { syncCurrentPage(); });
+
+        btnPrev.addEventListener("click", function() {
+          if (currentPageIndex > 0) {
+            if (isFullScreen) {
+              pages[currentPageIndex].style.display = 'none';
+              pages[currentPageIndex].classList.remove('mobile-fullscreen-page');
+            }
+            currentPageIndex--;
+            if (isFullScreen) {
+              pages[currentPageIndex].style.display = '';
+              pages[currentPageIndex].classList.add('mobile-fullscreen-page');
+              pages[currentPageIndex].scrollTop = 0;
+            } else {
+              isScrolling = true;
+              pages[currentPageIndex].scrollIntoView({behavior: "smooth", block: "start"});
+              clearTimeout(scrollTimeout);
+              scrollTimeout = setTimeout(function(){ isScrolling = false; syncCurrentPage(); }, 800);
+            }
+            updateNav();
+          }
+        });
+
+        btnNext.addEventListener("click", function() {
+          if (currentPageIndex < pages.length - 1) {
+            if (isFullScreen) {
+              pages[currentPageIndex].style.display = 'none';
+              pages[currentPageIndex].classList.remove('mobile-fullscreen-page');
+            }
+            currentPageIndex++;
+            if (isFullScreen) {
+              pages[currentPageIndex].style.display = '';
+              pages[currentPageIndex].classList.add('mobile-fullscreen-page');
+              pages[currentPageIndex].scrollTop = 0;
+            } else {
+              isScrolling = true;
+              pages[currentPageIndex].scrollIntoView({behavior: "smooth", block: "start"});
+              clearTimeout(scrollTimeout);
+              scrollTimeout = setTimeout(function(){ isScrolling = false; syncCurrentPage(); }, 800);
+            }
+            updateNav();
+          }
+        });
+
+        btnFull.addEventListener("click", function() {
+          isFullScreen = !isFullScreen;
+          if (isFullScreen) {
+            btnFull.textContent = "Exit Full";
+            pages.forEach(function(p, i) {
+              if (i !== currentPageIndex) p.style.display = 'none';
+              else {
+                p.style.display = '';
+                p.classList.add('mobile-fullscreen-page');
+                p.scrollTop = 0;
+              }
+            });
+            document.body.style.overflow = 'hidden';
+          } else {
+            btnFull.textContent = "Full Screen";
+            pages.forEach(function(p) {
+              p.style.display = '';
+              p.classList.remove('mobile-fullscreen-page');
+            });
+            document.body.style.overflow = '';
+            pages[currentPageIndex].scrollIntoView({block: "start"});
+          }
+        });
+        syncCurrentPage();
+
+        var tabs = document.querySelectorAll(".tab");
+        function setActive(id) {
+          tabs.forEach(function (t) {
+            t.classList.toggle("active", t.getAttribute("href") === "#" + id);
+          });
+        }
+        if ("IntersectionObserver" in window) {
+          var spy = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              if (e.isIntersecting) setActive(e.target.id);
+            });
+          }, { rootMargin: "-35% 0px -55% 0px", threshold: 0 });
+          document.querySelectorAll(".chapter").forEach(function (s) { spy.observe(s); });
+        }
+        tabs.forEach(function (t) {
+          t.addEventListener("click", function (ev) {
+            ev.preventDefault();
+            var target = document.querySelector(t.getAttribute("href"));
+            if (target) {
+              var smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+              target.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
+            }
+          });
+        });
+      })();
+    </script>
+
+  </div>
+
+  <div style="text-align:center; padding: 40px 20px 60px; background: var(--desk);">
+    <p style="color: var(--desk-muted); font-family: var(--mono, monospace); font-size: 13px; margin-bottom: 16px; letter-spacing: .08em; text-transform: uppercase;">You&rsquo;ve finished Chapter 4</p>
+    <a href="chapter5_extension.html" style="display:inline-block; background: var(--amber, #c8922a); color: #1a1208; font-family: var(--mono, monospace); font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; padding: 14px 32px; border-radius: 6px; text-decoration: none; transition: opacity .2s;">Next: Chapter 5 &rarr;</a>
+  </div>
+
+  <script>
+    if (localStorage.getItem("cwd_unlocked") !== "1") {
+      alert("Please purchase the book to read this chapter.");
+      window.location.href = "index.html#get";
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,795 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Hello, Destiny — Chapter 3 Extension</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
+  <style>
+    :root {
+      color-scheme: dark;
+      --desk: #171310;
+      --desk-2: #211c16;
+      --line: rgba(233, 222, 201, .14);
+      --desk-text: #dcd4c3;
+      --desk-muted: #9a9080;
+      --amber-bright: #d9a054;
+      --green: #8fbe92;
+      --paper: #f8f3e7;
+      --paper-2: #f1eada;
+      --ink: #372f23;
+      --ink-soft: #5c5344;
+      --amber: #a56e28;
+      --paper-edge: rgba(55, 45, 32, .16);
+    }
+
+    * { box-sizing: border-box }
+    html { scroll-behavior: smooth }
+
+    body {
+      margin: 0;
+      padding: 0 20px 64px;
+      background: var(--desk);
+      color: var(--desk-text);
+      font-family: "Newsreader", Georgia, serif;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    ::selection { background: #a56e28; color: #f8f3e7 }
+    .mono { font-family: "JetBrains Mono", monospace }
+
+    .shell { max-width: 1180px; margin: 0 auto }
+
+    .mast {
+      display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
+      gap: 16px 28px; padding-block: 44px 20px;
+    }
+
+    .brand-code {
+      font-family: "JetBrains Mono", monospace;
+      font-size: clamp(17px, 2.6vw, 22px);
+      font-weight: 600; color: var(--desk-text); letter-spacing: .01em;
+    }
+    .brand-code .kw { color: var(--amber-bright) }
+    .brand-code .str { color: var(--green) }
+
+    .btn {
+      font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .14em;
+      border-radius: 4px; cursor: pointer; padding: 9px 14px;
+      transition: background .15s ease, color .15s ease, border-color .15s ease;
+    }
+    .btn-dark {
+      background: transparent; color: var(--desk-text);
+      border: 1px solid rgba(233, 222, 201, .3);
+    }
+    .btn-dark:hover { background: var(--paper); border-color: var(--paper); color: var(--ink) }
+
+    .tabs {
+      position: sticky; top: 0; z-index: 30;
+      margin-inline: -20px; padding-inline: 20px;
+      display: flex; gap: 4px; align-items: center;
+      background: rgba(23, 19, 16, .94);
+      border-bottom: 1px solid var(--line);
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none }
+
+    .tab {
+      flex: 0 0 auto;
+      font-family: "JetBrains Mono", monospace; font-size: 11.5px; font-weight: 500;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--desk-muted); text-decoration: none;
+      padding: 13px 13px 11px; border-bottom: 2px solid transparent;
+      white-space: nowrap;
+    }
+    .tab:hover { color: var(--desk-text) }
+    .tab.active { color: var(--desk-text); border-bottom-color: var(--amber-bright) }
+    .tab .tno { color: var(--amber-bright); margin-right: 6px; font-weight: 600 }
+
+    .chapter { scroll-margin-top: 64px; padding-top: 44px }
+
+    .ch-head {
+      display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
+      gap: 14px 28px; margin-bottom: 22px;
+    }
+
+    .ch-eyebrow {
+      font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .22em; color: var(--amber-bright);
+      display: block; margin-bottom: 10px;
+    }
+
+    .ch-title {
+      margin: 0;
+      font-family: "Fraunces", Georgia, serif; font-weight: 600;
+      font-size: clamp(26px, 3.6vw, 34px); line-height: 1.15; color: var(--paper);
+      text-wrap: balance;
+    }
+
+    .ch-meta {
+      display: block; margin-top: 8px;
+      font-family: "JetBrains Mono", monospace; font-size: 11.5px;
+      color: var(--desk-muted); letter-spacing: .04em;
+    }
+
+    .pages { display: grid; grid-template-columns: 1fr; gap: 22px; align-items: start }
+    @media (min-width:900px) { .pages { grid-template-columns: repeat(2, 1fr) } }
+
+    .page {
+      background: linear-gradient(180deg, var(--paper), var(--paper-2));
+      border: 1px solid var(--paper-edge);
+      border-radius: 6px;
+      padding: 24px 26px 16px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, .32);
+      color: var(--ink);
+    }
+
+    .page-top {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; margin-bottom: 12px;
+    }
+
+    .eyebrow {
+      font-family: "JetBrains Mono", monospace; font-size: 10.5px; font-weight: 500;
+      text-transform: uppercase; letter-spacing: .2em; color: var(--amber);
+    }
+
+    .sec-title {
+      margin: 2px 0 14px;
+      font-family: "JetBrains Mono", monospace; font-weight: 600; font-size: 14.5px;
+      text-transform: uppercase; letter-spacing: .13em; line-height: 1.7; color: var(--ink);
+      text-wrap: balance;
+    }
+
+    .page-body p {
+      margin: 0; font-size: 16.5px; line-height: 1.68; color: var(--ink);
+      font-family: "Newsreader", Georgia, serif;
+    }
+    .page-body p + p { margin-top: 13px }
+    .page-body p:first-child::first-letter {
+      font-family: "Fraunces", Georgia, serif; font-weight: 600;
+      float: left; font-size: 3.05em; line-height: .86;
+      padding: 2px 9px 0 0; color: var(--amber);
+    }
+
+    .folio {
+      margin-top: 18px; padding-top: 10px;
+      border-top: 1px dashed rgba(55, 45, 32, .22);
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-family: "JetBrains Mono", monospace; font-size: 11px;
+      letter-spacing: .14em; color: var(--amber);
+    }
+    .folio .sec-ref { text-transform: uppercase; letter-spacing: .16em }
+
+    .opening-page {
+      background: linear-gradient(180deg, var(--paper), var(--paper-2));
+      border: 1px solid var(--paper-edge);
+      border-radius: 6px;
+      padding: 0;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, .4);
+      color: var(--ink);
+      overflow: hidden;
+      margin-bottom: 26px;
+    }
+
+    .opening-page .opening-image {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #e8dfcc;
+      min-height: 180px;
+      padding: 20px 0;
+    }
+
+    .opening-page .opening-image img {
+      width: 100%;
+      max-width: 760px;
+      max-height: 460px;
+      object-fit: contain;
+      display: block;
+      border-radius: 4px;
+      box-shadow: 0 8px 24px rgba(55, 45, 32, 0.2);
+    }
+
+    .opening-page .opening-image .img-placeholder {
+      padding: 60px 20px;
+      text-align: center;
+      color: var(--ink-soft);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      border: 2px dashed rgba(55, 45, 32, .25);
+      margin: 20px;
+      border-radius: 4px;
+    }
+
+    .opening-page .opening-body {
+      padding: 24px 26px 16px;
+    }
+
+    .opening-page .opening-body .eyebrow {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .opening-page .opening-body .sec-title {
+      font-size: 15px;
+    }
+
+    .opening-page .opening-body p {
+      margin: 0;
+      font-size: 16.5px;
+      line-height: 1.68;
+      color: var(--ink);
+      font-family: "Newsreader", Georgia, serif;
+    }
+
+    .opening-page .opening-body p + p { margin-top: 13px }
+
+    .opening-page .opening-body p:first-child::first-letter {
+      font-family: "Fraunces", Georgia, serif; font-weight: 600;
+      float: left; font-size: 3.05em; line-height: .86;
+      padding: 2px 9px 0 0; color: var(--amber);
+    }
+
+    .foot {
+      margin-top: 56px; padding-top: 22px;
+      border-top: 1px solid var(--line);
+      font-size: 14.5px; font-style: italic; color: var(--desk-muted);
+      text-align: center; line-height: 1.7;
+    }
+
+    .toast {
+      position: fixed; left: 50%; bottom: 26px; transform: translate(-50%, 14px);
+      background: #242a20; border: 1px solid #3e5c3a; color: #cfe3c9;
+      font-family: "JetBrains Mono", monospace; font-size: 12px; letter-spacing: .06em;
+      padding: 11px 18px; border-radius: 6px;
+      opacity: 0; pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+      z-index: 50; max-width: calc(100vw - 32px);
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0) }
+
+    :focus-visible { outline: 2px solid var(--amber-bright); outline-offset: 2px }
+
+    @media (prefers-reduced-motion:reduce) {
+      html { scroll-behavior: auto }
+      .btn, .toast { transition: none }
+    }
+
+    .mobile-bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--desk);
+      border-top: 1px solid var(--line);
+      z-index: 100;
+      padding: 10px 16px;
+      padding-bottom: calc(10px + env(safe-area-inset-bottom));
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .mobile-bottom-nav button {
+      background: var(--paper-2); color: var(--ink);
+      border: none; border-radius: 4px;
+      padding: 12px 10px;
+      font-family: var(--mono, monospace); font-size: 11.5px; font-weight: 700;
+      flex: 1; text-transform: uppercase; letter-spacing: .05em;
+      cursor: pointer;
+    }
+    .mobile-bottom-nav button:disabled { opacity: 0.5 }
+
+    .mobile-fullscreen-page {
+      position: fixed !important;
+      top: 0 !important; left: 0 !important; right: 0 !important;
+      bottom: 60px !important;
+      z-index: 99 !important;
+      margin: 0 !important; border-radius: 0 !important;
+      overflow-y: auto !important;
+      padding-bottom: 40px !important;
+    }
+
+    @media (max-width: 768px) {
+      .mobile-bottom-nav { display: flex }
+      body { padding-bottom: 70px }
+    }
+
+    @media (max-width:560px) {
+      .mast { padding-block: 30px 14px }
+      .page { padding: 20px 20px 14px }
+      .page-body p { font-size: 16px }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+
+    <header class="mast">
+      <div>
+        <span class="brand-code"><span class="kw">printf</span>(<span class="str">&ldquo;Hello, Destiny&rdquo;</span>);</span>
+      </div>
+      <a href="index.html#contents" class="btn btn-dark" style="text-decoration:none;">&#8592; Back to Contents</a>
+    </header>
+
+    <nav class="tabs" id="tabs" aria-label="Chapter 3 sub-chapters">
+      <a class="tab" href="#ch31"><span class="tno">3.1</span>Vacations</a>
+      <a class="tab" href="#ch32"><span class="tno">3.2</span>Results</a>
+      <a class="tab" href="#ch33"><span class="tno">3.3</span>Philosophy</a>
+    </nav>
+
+    <main>
+
+      <!-- ==================== CHAPTER 3 · SUB-CHAPTER 3.1 ==================== -->
+      <section class="chapter" id="ch31" data-ch="3.1" data-title="Vacation Highs" data-range="3.1.1&ndash;3.1.6" data-pages="52&ndash;57">
+
+        <!-- ===== Opening page: 3.1 Vacation Highs ===== -->
+        <div class="opening-page">
+          <div class="opening-image">
+            <img src="images/3.1.png" alt="Chapter 3.1">
+          </div>
+          <div class="opening-body">
+            <span class="eyebrow">Chapter 3 &middot; Results, Vacations &amp; Life Lessons</span>
+            <h3 class="sec-title">3.1 Vacation Highs</h3>
+            <p>The end of exams meant one thing &mdash; home time! Officially, we had 15 days of break. But being true mass bunk champions, our vacations stretched to a full 30. Our unity wasn't just in study groups, it was in strategically extending holidays.</p>
+            <p>Just as we settled into the comfort of home &mdash; sleeping in, home-cooked meals, zero alarms &mdash; the bombshell would drop. A single WhatsApp notification: "Results declared." Everything froze. Dinner half-eaten, shows paused, phones gripped tight with sweaty hands.</p>
+            <p>We all became prayer experts in that moment: "Please, just let my CGPA stay above 7!" My screen loaded first: 8.5! The wave of relief was instant &mdash; pure joy. But the group chat exploded next. Some celebrated, some groaned, a few got KTs.</p>
+            <div class="folio"><span class="sec-ref">3.1</span><span>12</span></div>
+          </div>
+        </div>
+
+        <div class="ch-head">
+          <div>
+            <span class="ch-eyebrow">Chapter 3 &mdash; Results, Vacations &amp; Life Lessons &middot; Sub-chapter 3.1</span>
+            <h2 class="ch-title">The days that belonged to us</h2>
+            <span class="ch-meta">New pages 3.1.1&ndash;3.1.6 &middot; lands on book pages 52&ndash;57 &middot; continues 3.1 Vacation Highs</span>
+          </div>
+        </div>
+
+        <div class="pages">
+
+          <article class="page" data-sec="3.1.1">
+            <div class="page-top"><span class="eyebrow">Chapter 3 &middot; Results, Vacations &amp; Life Lessons</span></div>
+            <h3 class="sec-title">3.1.1 The Official Fifteen</h3>
+            <div class="page-body">
+              <p>The college calendar gave us fifteen days of vacation. The batch read the notice like lawyers studying a contract and found the fine print: fifteen was merely an opening offer. Somebody calculated that attendance duties had ended on a Friday, practicals were already done, and the reopening date was negotiable in spirit. Within one hour, fifteen had grown to thirty, and nobody in the hostel called it lying. We called it strategic extension.</p>
+              <p>The extension needed unity, and unity we had. One friend's return ticket was booked late, so everybody's tickets were booked late. One boy's father asked him to come home early, so six fathers were informed that exams end "around that time only." Our group chat ran the schedule like an airline: return dates quoted with full confidence, then revised with zero shame. The college never learnt that half the batch had quietly merged fifteen and thirty into one long festival.</p>
+              <p>Looking back, those extra days were not stolen from the college; they were recovered from fear. We had spent a semester owing sleep, owing family, owing ourselves. Vacation highs taste best when you fight for them a little. The official fifteen was a number. The thirty we actually lived was a small victory of friendship over paperwork, and I still defend it as our first real lesson in negotiation.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">3.1.1</span><span>52</span></div>
+          </article>
+
+          <article class="page" data-sec="3.1.2">
+            <div class="page-top"><span class="eyebrow">Chapter 3 &middot; Results, Vacations &amp; Life Lessons</span></div>
+            <h3 class="sec-title">3.1.2 The Ride Home</h3>
+            <div class="page-body">
+              <p>The last exam ended with one sound I still hear: forty phones texting home at once &mdash; done, coming. Then the great migration began. Hostel bags doubled in weight overnight, because every one of them now carried a semester of dirty clothes and the specific pride of a finished paper. The railway platform looked like festival season, except every passenger was grinning, and nobody had a return date worth mentioning.</p>
+              <p>The journey home was a science of comfort. Window seats were fought for with polite threats. Somebody's mother had packed food for twelve when the compartment held six, so strangers ate with us and blessed us all. We talked the entire way about everything except studies, because studies had been officially evicted for the holidays. At my station my father stood with the scooter, and I felt ten years old in the best possible way.</p>
+              <p>I understand now why students love going home more than any trip. It is not the food or the bed, though both are excellent. It is being seen as a person instead of a roll number. For those few weeks nobody asked about my CGPA, my attendance or my plans. I was simply the boy who had come back, and that plain welcome refilled something the whole semester had drained.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">3.1.2</span><span>53</span></div>
+          </article>
+
+          <article class="page" data-sec="3.1.3">
+            <div class="page-top"><span class="eyebrow">Chapter 3 &middot; Results, Vacations &amp; Life Lessons</span></div>
+            <h3 class="sec-title">3.1.3 The Zero-Alarm Mornings</h3>
+            <div class="page-body">
+              <p>Vacation mornings followed one official policy: no alarm allowed. In the hostel, alarms were practically a religion; at home, my mother enforced a kinder law. You woke when sunlight and smell agreed on it &mdash; usually the smell of parathas doing the deciding. For the first week my body kept trying to attend lectures that did not exist. By the second week even my conscience had quietly submitted its leave application.</p>
+              <p>Days at home ran on a timetable made of small pleasures. Newspaper with tea, held longer than any lecture. Lunch eaten slowly, without checking the watch even once. An afternoon nap so deep it felt illegal. In the hostel, time was divided into periods and deadlines; at home, time behaved like a river instead of a race. I did nothing for hours at a stretch and somehow felt productive by evening.</p>
+              <p>Those mornings taught me what rest actually is. Rest is not sleeping more; it is the absence of being needed on a schedule. I returned to college that term calmer, funnier and somehow sharper, and the credit goes entirely to zero alarms. Since then I protect a few such mornings every month, even in a busy working life. The body remembers how to hurry. It forgets, without practice, how to be slow.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">3.1.3</span><span>54</span></div>
+          </article>
+
+          <article class="page" data-sec="3.1.4">
+            <div class="page-top"><span class="eyebrow">Chapter 3 &middot; Results, Vacations &amp; Life Lessons</span></div>
+            <h3 class="sec-title">3.1.4 The Old Bench Reunion</h3>
+            <div class="page-body">
+              <p>Vacations also brought back the school gang, and we met at the same chai stall with the same broken bench &mdash; upgraded engineers on both sides now. Everyone had stories. One had survived a mechanical workshop, one had fallen in love with electronics, and I had discovered that nobody outside college understands what a computer science student actually does. We compared hostels, mess food and professors like trading cards.</p>
+              <p>What struck me most was that nothing needed explaining. With college friends I had to give background before every story. With the school gang, one word was enough &mdash; that teacher, that shop, that summer &mdash; and the whole bench was already laughing. Old friendship is a compression algorithm. Years of shared memory let us send entire conversations in single words, and both sides still received the complete file.</p>
+              <p>We also noticed, honestly, how much we had changed. Opinions had grown, cities had bent our accents, and one friend now began every second sentence with the word fundamentally. But the bench treated us exactly as before and accepted no promotions. That week reminded me why I was doing engineering at all &mdash; not for the marks, but for the person those marks were supposed to become. The bench kept me honest.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">3.1.4</span><span>55</span></div>
+          </article>
+
+          <article class="page" data-sec="3.1.5">
+            <div class="page-top"><span class="eyebrow">Chapter 3 &middot; Results, Vacations &amp; Life Lessons</span></div>
+            <h3 class="sec-title">3.1.5 The Family Tech Support</h3>
+            <div class="page-body">
+              <p>Every vacation included one compulsory appointment: relative tech support. The whole neighbourhood learnt that a computer engineer was in town, which was incorrect &mdash; I was a second-year student &mdash; but facts have never stopped a relative with a slow phone. I arrived home with one bag and left having serviced four phones, one printer, two laptops and a television that obeyed only me. Word of mouth is powerful when the product is free.</p>
+              <p>The comedy was that half these machines had no real fault. "Beta, it hangs," the uncle announced gravely, and then the phone behaved perfectly for twenty minutes in my hands. I learnt diplomacy there &mdash; nod seriously, restart quietly, accept the credit &mdash; and I learnt that the fee was always food: extra sweets, extra affection, one aunty declaring to the whole street that her nephew fixes computers. No college certificate ever paid that well.</p>
+              <p>Behind the jokes, those repair visits were my first training in customer service. Real users, vague complaints, no logs, and happiness measured in sweets. Years later, working with actual clients, I recognised the syllabus instantly. A good engineer explains slowly, promises carefully and fixes the small things first. I learnt all three in drawing rooms, between samosas, while uncles narrated the phone's entire tragic history before letting me touch it.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">3.1.5</span><span>56</span></div>
+          </article>
+
+          <article class="page" data-sec="3.1.6">
+            <div class="page-top"><span class="eyebrow">Chapter 3 &middot; Results, Vacations &amp; Life Lessons</span></div>
+            <h3 class="sec-title">3.1.6 The Last Home Evening</h3>
+            <div class="page-body">
+              <p>Vacations ended the same way every time: one evening before the train, mother cooking like it was a national emergency. Five tiffins packed for a four-day journey. Father checking my ticket twice, then a third time, in case the railway had changed its mind. My bag gained its final weight that night &mdash; home food, and one jar of pickle that survived the entire semester like a loyal soldier.</p>
+              <p>I never slept properly on the last night. Part of me was excited for the hostel, the gang, the next semester's nonsense; the other part was already missing a house I was still sitting inside. Leaving home is the strangest maths &mdash; you leave one place full and homesick at the very same time. The scooter ride to the station was always quiet. Neither of us was ever good at that goodbye.</p>
+              <p>Now I know that evening was teaching me the rhythm of a life: leaving well is half of returning well. The tiffins, the double-checked ticket, the quiet goodbye &mdash; none of it was small. It was the fuel for the next semester. Every good vacation ends twice &mdash; once at the platform, once in your head. The second one takes longer, and honestly, I never wanted it to be quick.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">3.1.6</span><span>57</span></div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ==================== CHAPTER 3 · SUB-CHAPTER 3.2 ==================== -->
+      <section class="chapter" id="ch32" data-ch="3.2" data-title="Result Panic" data-range="3.2.1&ndash;3.2.6" data-pages="58&ndash;63">
+
+        <!-- ===== Opening page: 3.2 Result Panic ===== -->
+        <div class="opening-page">
+          <div class="opening-image">
+            <img src="images/3.2.png" alt="Chapter 3.2">
+          </div>
+          <div class="opening-body">
+            <span class="eyebrow">Chapter 3 &middot; Results, Vacations &amp; Life Lessons</span>
+            <h3 class="sec-title">3.2 Result Panic</h3>
+            <p>The bombshell would drop mid-dinner: "Results declared." Everything froze. Dinner half-eaten, shows paused, phones gripped tight with sweaty hands. We all became prayer experts in that moment: "Please, just let my CGPA stay above 7!"</p>
+            <p>My screen loaded first: 8.5! The wave of relief was instant &mdash; pure joy. But the group chat exploded next. Some celebrated, some groaned, a few got KTs. My friends with backlogs were strangely calm: "Relax, it's not my first rodeo!"</p>
+            <p>Meanwhile, I was playing motivational speaker: "Next sem, we got this!" That's the emotional cocktail of engineering &mdash; freedom, panic, triumph, and friendship, all blended into one unforgettable ride.</p>
+            <div class="folio"><span class="sec-ref">3.2</span><span>12</span></div>
+          </div>
+        </div>
+
+        <div class="ch-head">
+          <div>
+            <span class="ch-eyebrow">Chapter 3 &mdash; Results, Vacations &amp; Life Lessons &middot; Sub-chapter 3.2</span>
+            <h2 class="ch-title">The day the number arrived</h2>
+            <span class="ch-meta">New pages 3.2.1&ndash;3.2.6 &middot; lands on book pages 58&ndash;63 &middot; continues 3.2 Result Panic</span>
+          </div>
+        </div>
+
+        <div class="pages">
+
+          <article class="page" data-sec="3.2.1">
+            <div class="page-top"><span class="eyebrow">Chapter 3 &middot; Results, Vacations &amp; Life Lessons</span></div>
+            <h3 class="sec-title">3.2.1 The Bombshell Notification</h3>
+            <div class="page-body">
+              <p>Vacations carried one hidden timer nobody could switch off. Mine went off mid-dinner in second year: one buzz, one forward from a classmate &mdash; results declared. The dal spoon stopped mid-air. The television was paused mid-sentence. Within thirty seconds every phone in that house was lit, and I sat like a statue holding mine with both hands, as if it could transmit courage through the screen.</p>
+              <p>The five minutes after that message are identical across the country. Dinner freezes. Shows pause. Hands sweat on the phone. Everybody whispers the same prayer with personal edits: please, just keep it above seven. Nobody says aloud the thing they actually fear. Meanwhile the result website takes its own time, because thousands of students hit refresh in the same second, and servers are not known for kindness under pressure.</p>
+              <p>I have faced bigger results since &mdash; jobs, stages, verdicts of various kinds &mdash; and none of them matched those five minutes. A result day is the only day your entire year is compressed into one number while you watch. Panic is a fair response to that. The number was coming either way. The only thing we ever controlled was who sat beside us for the wait, and mine did.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">3.2.1</span><span>58</span></div>
+          </article>
+
+          <article class="page" data-sec="3.2.2">
+            <div class="page-top"><span class="eyebrow">Chapter 3 &middot; Results, Vacations &amp; Life Lessons</span></div>
+            <h3 class="sec-title">3.2.2 The Loading Screen</h3>
+            <div class="page-body">
+              <p>The result website had one personality trait: it never loaded for the desperate. Our family developed full refresh rituals &mdash; F5 on the laptop, a second browser on the phone, mobile data swapped for WiFi, and one uncle advising me to clear the cache like it was a home remedy. The spinner went round and round, and somewhere behind it my year was being read out to strangers faster than to me.</p>
+              <p>When my page finally opened, the world narrowed to one line. Eight point five. The first feeling was not joy; it was suspicion. I refreshed again to confirm the number actually belonged to me. Only on the third loading did the breath I had held since dinner finally release, and my mother, who had been pretending to fold clothes in the same room for an hour, made a sound I had not heard since my school days.</p>
+              <p>That spinner taught me patience better than any speech about patience. You cannot refresh fate faster. The page opens when it opens, and worrying only wears out your thumb. Now, before anything big in life, I remember the loading screen: prepare the question properly, then let the answer arrive at its own speed. Some numbers need time. So do the people waiting for them.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">3.2.2</span><span>59</span></div>
+          </article>
+
+          <article class="page" data-sec="3.2.3">
+            <div class="page-top"><span class="eyebrow">Chapter 3 &middot; Results, Vacations &amp; Life Lessons</span></div>
+            <h3 class="sec-title">3.2.3 The Verdict Night</h3>
+            <div class="page-body">
+              <p>Within an hour the class group turned into a stock exchange. Numbers flew like share prices: one friend up, one friend down, one sideways and confused. Celebrations, groans, and the worst signal of all &mdash; silence. We learnt that day that a silent member on result night is not relaxing. He is calculating whether the subject he fears most has actually fallen.</p>
+              <p>Reading that flood of messages, I saw something no seminar ever showed me: same syllabus, same teachers, same paper &mdash; completely different outcomes. Luck of the question, health of that week, mood of that morning, even handwriting had a vote. Result day reveals how much randomness rides along with effort, and pretending otherwise is how students quietly break their own hearts.</p>
+              <p>But the chat also did what our chats always did: it refused to let anyone sit alone with a bad number. Congratulations travelled to the top, courage travelled to the bottom, and one boy who had failed received eleven messages of "attempt again, we are here" before he could even type a sad face. A result divides marks. Friends, on a good day, refuse to divide the batch.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">3.2.3</span><span>60</span></div>
+          </article>
+
+          <article class="page" data-sec="3.2.4">
+            <div class="page-top"><span class="eyebrow">Chapter 3 &middot; Results, Vacations &amp; Life Lessons</span></div>
+            <h3 class="sec-title">3.2.4 The First Backlog</h3>
+            <div class="page-body">
+              <p>That same vacation, a close friend failed a subject for the first time. We planned counselling speeches and walked around him on eggshells. Then we found him at the chai stall, already two sips in, entirely calm. "One paper, yaar," he said. "Not the end of the movie." Every prepared speech dissolved into laughter, and honestly, into relief.</p>
+              <p>What impressed me more was the next part. He told his parents himself that same evening, before the marksheet could become neighbourhood horror cinema. The conversation was tense but shorter than he had feared, and he said later that waiting had been worse than failing, and hiding it would have cost him a whole month of peace. Truth, delivered early, is a smaller parcel than truth caught late.</p>
+              <p>He cleared that paper in the next attempt without drama, and the KT shrank into a footnote of his degree. But the calm of that week became our batch's template for bad news. A backlog is a postponed exam, not a postponed life. The student who fails one subject and keeps his smile has, in my book, passed a far bigger subject that semester.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">3.2.4</span><span>61</span></div>
+          </article>
+
+          <article class="page" data-sec="3.2.5">
+            <div class="page-top"><span class="eyebrow">Chapter 3 &middot; Results, Vacations &amp; Life Lessons</span></div>
+            <h3 class="sec-title">3.2.5 The Marksheet Post-Mortem</h3>
+            <div class="page-body">
+              <p>Every result day ended the same way: marksheets opened side by side like case files, hunting one particular mystery &mdash; internal marks. How did I get fourteen out of twenty-five in the subject I knew best? The column refused all explanation. We accused the attendance, the viva, one suspicious assignment, and finally the universe itself.</p>
+              <p>The post-mortem had its absurd highlights too. One friend scored his highest in the subject he famously slept through, and his lowest in the one he loved. We built theories, retired them, built better ones. In the end we accepted the truth of that column: some numbers carry their reasons to the grave. We named it the black box and moved on with our lives.</p>
+              <p>Strangely, that ritual trained me for the adult world. Appraisals, feedback, reviews &mdash; they all have black boxes too. I learnt to read them the way we read those marksheets: take what is true, ignore what is noise, fix what is fixable, and never build your identity on one unexplained column of somebody else's spreadsheet. The number is information. It is not a biography.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">3.2.5</span><span>62</span></div>
+          </article>
+
+          <article class="page" data-sec="3.2.6">
+            <div class="page-top"><span class="eyebrow">Chapter 3 &middot; Results, Vacations &amp; Life Lessons</span></div>
+            <h3 class="sec-title">3.2.6 The Morning After</h3>
+            <div class="page-body">
+              <p>By the next morning, result day had shrunk to its correct size. The highest scorer of the group was made to treat everyone &mdash; that law is older than the college itself. The lowest scorer chose the shop, as compensation. Chai was ordered, sweets were demanded, and the previous night's prayers were converted into jokes with remarkable speed.</p>
+              <p>Then the batch did what batches do best: turned panic into promises. Next sem, we got this &mdash; and plans were drafted with the seriousness of an international treaty. Timetables drawn, library seats booked, one friend joining a gym on pure emotion. Most of those plans died within ten days, and that was never the point. The point was hearing the whole batch agree out loud that we were still in this together.</p>
+              <p>Result panic, I finally understood, was never really about marks. It was about not knowing where you stand with your own future. The morning after cures it, because friendship answers the real question: you stand exactly here, with us. Numbers revise every semester. That address never changes &mdash; and if you have such an address, no result page can ever make you homeless.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">3.2.6</span><span>63</span></div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ==================== CHAPTER 3 · SUB-CHAPTER 3.3 ==================== -->
+      <section class="chapter" id="ch33" data-ch="3.3" data-title="Motivation & Life Philosophy" data-range="3.3.1&ndash;3.3.6" data-pages="64&ndash;69">
+
+        <!-- ===== Opening page: 3.3 Motivation & Life Philosophy ===== -->
+        <div class="opening-page">
+          <div class="opening-image">
+            <img src="images/3.3.png" alt="Chapter 3.3">
+          </div>
+          <div class="opening-body">
+            <span class="eyebrow">Chapter 5 &middot; Healthy Habits, Healthier Mind</span>
+            <h3 class="sec-title">3.3 Motivation &amp; Life Philosophy</h3>
+            <p>I love playing badminton with my friends &mdash; it just clears my mind. Every game is fun, full of laughs, and somehow all stress disappears. And after that, just sitting together with pizza or burgers, chatting and joking &mdash; it turns a normal day into a memory I'll never forget.</p>
+            <p>I go on midnight walks sometimes, and it's crazy how peaceful it feels. Talking under streetlights, sharing thoughts &mdash; it makes problems feel smaller. And working out with my gym buddy? It's not just about muscles. It's about having someone who keeps you going, in life and in fitness.</p>
+            <p>Night scooty rides are the best &mdash; wind in your face, city lights passing by, pure freedom. And jamming in my room with friends, singing randomly &mdash; it's the kind of happiness that fills you up completely. "Jahan dosti ho, wahan har pal khaas ho jaata hai."</p>
+            <div class="folio"><span class="sec-ref">3.3</span><span>20</span></div>
+          </div>
+        </div>
+
+        <div class="ch-head">
+          <div>
+            <span class="ch-eyebrow">Chapter 3 &mdash; Results, Vacations &amp; Life Lessons &middot; Sub-chapter 3.3</span>
+            <h2 class="ch-title">The philosophy we earned</h2>
+            <span class="ch-meta">New pages 3.3.1&ndash;3.3.6 &middot; lands on book pages 64&ndash;69 &middot; continues 3.3 Motivation &amp; Life Philosophy</span>
+          </div>
+        </div>
+
+        <div class="pages">
+
+          <article class="page" data-sec="3.3.1">
+            <div class="page-top"><span class="eyebrow">Chapter 3 &middot; Results, Vacations &amp; Life Lessons</span></div>
+            <h3 class="sec-title">3.3.1 The Motivation Myth</h3>
+            <div class="page-body">
+              <p>I spent two years waiting for motivation like it was a bus with a fixed timetable. It came occasionally &mdash; a video, a topper's speech, one relative's sharp comparison &mdash; and always left by morning. On the days it did not come, nothing happened at all. One ordinary Tuesday, after another video failed to move me, I finally wrote the sentence that changed my student life: motivation is a visitor, not a resident.</p>
+              <p>So I stopped decorating the guest room and built a routine instead. Same desk, same hour, one page of work before touching the phone. The rule was embarrassingly small: begin badly, but begin. Motivation, I discovered, usually arrives ten minutes after the work starts &mdash; like that one friend who is always late, but always comes, and always stays till the end.</p>
+              <p>Students still ask me how to stay motivated, and I give them my mother's kitchen logic: don't wait to feel like cooking; start chopping, and the feeling follows the knife. Feeling is a result, not a requirement. The students who look the most disciplined are not feeling it more than you. They have simply stopped waiting for the feeling before opening the book.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">3.3.1</span><span>64</span></div>
+          </article>
+
+          <article class="page" data-sec="3.3.2">
+            <div class="page-top"><span class="eyebrow">Chapter 3 &middot; Results, Vacations &amp; Life Lessons</span></div>
+            <h3 class="sec-title">3.3.2 The Two Drawers</h3>
+            <div class="page-body">
+              <p>Result seasons and deadline seasons taught me to sort worries the way my father sorted his tools: into two drawers. Drawer one, mine to fix &mdash; my preparation, my sleep, my honesty, my next attempt. Drawer two, not mine &mdash; the paper setter's mood, the interviewer's taste, the cutoff, the server, the market, the trend of the month.</p>
+              <p>Most of my student suffering came from keeping other people's drawers in my own room. I lost sleep over cutoffs I could not move and opinions I could not edit. The night I physically wrote my worries into two columns, half of them moved to the second drawer, and my shoulders dropped an inch the same evening. The bag was the same. The carrying changed.</p>
+              <p>The discipline is in the visiting hours: drawer two may be opened once a day, like a letter box. I still run this drill before anything big &mdash; sort, act on what is mine, close the rest, sleep. A calm mind is not a mind without worries. It is a well-sorted one, and the sorting takes ten minutes and costs nothing.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">3.3.2</span><span>65</span></div>
+          </article>
+
+          <article class="page" data-sec="3.3.3">
+            <div class="page-top"><span class="eyebrow">Chapter 3 &middot; Results, Vacations &amp; Life Lessons</span></div>
+            <h3 class="sec-title">3.3.3 The Slow Season</h3>
+            <div class="page-body">
+              <p>Third year had a stretch where nothing moved: marks flat, projects stuck, and every friend visibly getting somewhere. I judged my entire life from that one window and did not like the view. My teacher caught me sulking near the staff room and handed me the line I now gift to every stuck student: you are a movie, not a photograph.</p>
+              <p>She said growth is edited out of ordinary days the way grass growing is edited out of a timelapse &mdash; invisible on Tuesday, obvious by spring. A flat month is not a stopped life. It is usually the chapter where the groundwork happens off camera, without applause, while the story quietly loads its next scene.</p>
+              <p>After that talk I kept a tiny record: one line every evening about what I had tried. Months later, reading it back showed movement my memory had completely deleted. Since then I distrust single-frame judgements &mdash; of projects, of people, of myself. Everyone you meet is mid-scene. Give the film time; most good stories hide their turning point inside a quiet, boring chapter.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">3.3.3</span><span>66</span></div>
+          </article>
+
+          <article class="page" data-sec="3.3.4">
+            <div class="page-top"><span class="eyebrow">Chapter 3 &middot; Results, Vacations &amp; Life Lessons</span></div>
+            <h3 class="sec-title">3.3.4 The Wisdom Relay</h3>
+            <div class="page-body">
+              <p>Everything that saved me in college arrived free from somebody slightly older: the senior who explained the pattern of question papers, the cousin who warned me away from a bad company, the stranger on a platform who explained a form in two minutes. Nobody was paid. Nobody lost anything. This free advice economy runs the whole country, and I was one of its biggest borrowers.</p>
+              <p>By final year I had become a lender without noticing. Juniors asked me the same questions I once asked my seniors, and I caught myself answering in the exact same way &mdash; fully, honestly, with the chai on me. The debt I owed was being repaid to entirely different people, which I have since decided is the only correct way to repay it.</p>
+              <p>That relay is now my whole philosophy of learning: take the map from those ahead of you, hand it to those behind you, and improve it slightly in transit. Knowledge hoarded shrinks; knowledge passed around grows. If somebody once carried you for a stretch of your road, the cheapest and truest gratitude is to carry somebody else for theirs.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">3.3.4</span><span>67</span></div>
+          </article>
+
+          <article class="page" data-sec="3.3.5">
+            <div class="page-top"><span class="eyebrow">Chapter 3 &middot; Results, Vacations &amp; Life Lessons</span></div>
+            <h3 class="sec-title">3.3.5 The Next Page Rule</h3>
+            <div class="page-body">
+              <p>My generation treats every result like a final verdict: this exam decides everything, this interview decides everything, this rejection ends the story. I believed it too, until I had collected enough endings to notice a pattern. Not one of them was final. Every door that closed on me turned out, on later reading, to be a page break &mdash; never the back cover.</p>
+              <p>The trick I use on bad days is small and strange. After any bad news, I force myself to write the first line of the next page: one sentence, what tomorrow looks like. Not a plan. Not positivity. One sentence. It is impossible to write that line and stay frozen, because the act of writing it quietly assumes that you continue.</p>
+              <p>Hope, I have decided after some field research, is not a feeling. It is a practice, like brushing your teeth: done on schedule, whether or not you believe in it that particular morning. The bad result, the empty inbox, the lost internship &mdash; they are scenes, and scenes end. The only final pages are the ones we refuse to turn. Turn them slowly if you must. Turn them anyway.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">3.3.5</span><span>68</span></div>
+          </article>
+
+          <article class="page" data-sec="3.3.6">
+            <div class="page-top"><span class="eyebrow">Chapter 3 &middot; Results, Vacations &amp; Life Lessons</span></div>
+            <h3 class="sec-title">3.3.6 The Person in Progress</h3>
+            <div class="page-body">
+              <p>When I look back at the boy from Chapter 1, fighting a missing semicolon at two in the morning, I barely recognise him &mdash; and that is the whole point. The degree was printed once. The person was compiled continuously. Every semester silently upgraded something no certificate ever mentioned: patience from waiting for results, courage from making the calls, humour from surviving my own disasters.</p>
+              <p>People ask what engineering taught me and expect subject names. The honest syllabus was different. Deadlines taught me my own speed. Failures taught me my own floor. Friendships taught me my own worth, on the days I could not see it myself. The marksheet was only the receipt. The actual purchase was me, and it shipped in installments across four years.</p>
+              <p>So if you are somewhere in the middle of your own story &mdash; the vacations, the panics, the philosophies, all of it &mdash; take this from a writer a few pages ahead of you: you are not becoming an engineer. You are becoming a person who happens to engineer. Keep compiling. The next chapter of this book begins the way all good turns begin: with one small, reckless yes.</p>
+            </div>
+            <div class="folio"><span class="sec-ref">3.3.6</span><span>69</span></div>
+          </article>
+
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      The book still ends with &ldquo;To Be Continued . . . .&rdquo; &mdash; these pages slot in before it.<br>
+      Written to match the original voice: simple English, no emojis, a little Hinglish where it belongs.
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script>
+      (function () {
+        "use strict";
+        var toast = document.getElementById("toast");
+        var toastTimer = null;
+        function showToast(msg) {
+          toast.textContent = msg;
+          toast.classList.add("show");
+          clearTimeout(toastTimer);
+          toastTimer = setTimeout(function () { toast.classList.remove("show"); }, 2000);
+        }
+
+        document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+        document.addEventListener('copy', function(e) { e.preventDefault(); });
+
+        var pages = Array.prototype.slice.call(document.querySelectorAll(".page"));
+        var currentPageIndex = 0;
+        var isFullScreen = false;
+        var isScrolling = false;
+        var scrollTimeout = null;
+
+        var navHtml = '<div class="mobile-bottom-nav">' +
+          '<button id="btnPrevPage">Back Page</button>' +
+          '<button id="btnFullScreen">Full Screen</button>' +
+          '<button id="btnNextPage">Next Page</button>' +
+        '</div>';
+        document.body.insertAdjacentHTML('beforeend', navHtml);
+
+        var btnPrev = document.getElementById("btnPrevPage");
+        var btnNext = document.getElementById("btnNextPage");
+        var btnFull = document.getElementById("btnFullScreen");
+
+        function updateNav() {
+          btnPrev.disabled = currentPageIndex <= 0;
+          btnNext.disabled = currentPageIndex >= pages.length - 1;
+        }
+
+        function syncCurrentPage() {
+          if (isFullScreen || isScrolling || pages.length === 0) return;
+          var minDiff = Infinity;
+          var bestIdx = 0;
+          pages.forEach(function(p, i) {
+            var rect = p.getBoundingClientRect();
+            var diff = Math.abs(rect.top);
+            if (diff < minDiff) { minDiff = diff; bestIdx = i; }
+          });
+          currentPageIndex = bestIdx;
+          updateNav();
+        }
+
+        window.addEventListener('scroll', function() { syncCurrentPage(); });
+
+        btnPrev.addEventListener("click", function() {
+          if (currentPageIndex > 0) {
+            if (isFullScreen) {
+              pages[currentPageIndex].style.display = 'none';
+              pages[currentPageIndex].classList.remove('mobile-fullscreen-page');
+            }
+            currentPageIndex--;
+            if (isFullScreen) {
+              pages[currentPageIndex].style.display = '';
+              pages[currentPageIndex].classList.add('mobile-fullscreen-page');
+              pages[currentPageIndex].scrollTop = 0;
+            } else {
+              isScrolling = true;
+              pages[currentPageIndex].scrollIntoView({behavior: "smooth", block: "start"});
+              clearTimeout(scrollTimeout);
+              scrollTimeout = setTimeout(function(){ isScrolling = false; syncCurrentPage(); }, 800);
+            }
+            updateNav();
+          }
+        });
+
+        btnNext.addEventListener("click", function() {
+          if (currentPageIndex < pages.length - 1) {
+            if (isFullScreen) {
+              pages[currentPageIndex].style.display = 'none';
+              pages[currentPageIndex].classList.remove('mobile-fullscreen-page');
+            }
+            currentPageIndex++;
+            if (isFullScreen) {
+              pages[currentPageIndex].style.display = '';
+              pages[currentPageIndex].classList.add('mobile-fullscreen-page');
+              pages[currentPageIndex].scrollTop = 0;
+            } else {
+              isScrolling = true;
+              pages[currentPageIndex].scrollIntoView({behavior: "smooth", block: "start"});
+              clearTimeout(scrollTimeout);
+              scrollTimeout = setTimeout(function(){ isScrolling = false; syncCurrentPage(); }, 800);
+            }
+            updateNav();
+          }
+        });
+
+        btnFull.addEventListener("click", function() {
+          isFullScreen = !isFullScreen;
+          if (isFullScreen) {
+            btnFull.textContent = "Exit Full";
+            pages.forEach(function(p, i) {
+              if (i !== currentPageIndex) p.style.display = 'none';
+              else {
+                p.style.display = '';
+                p.classList.add('mobile-fullscreen-page');
+                p.scrollTop = 0;
+              }
+            });
+            document.body.style.overflow = 'hidden';
+          } else {
+            btnFull.textContent = "Full Screen";
+            pages.forEach(function(p) {
+              p.style.display = '';
+              p.classList.remove('mobile-fullscreen-page');
+            });
+            document.body.style.overflow = '';
+            pages[currentPageIndex].scrollIntoView({block: "start"});
+          }
+        });
+        syncCurrentPage();
+
+        var tabs = document.querySelectorAll(".tab");
+        function setActive(id) {
+          tabs.forEach(function (t) {
+            t.classList.toggle("active", t.getAttribute("href") === "#" + id);
+          });
+        }
+        if ("IntersectionObserver" in window) {
+          var spy = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              if (e.isIntersecting) setActive(e.target.id);
+            });
+          }, { rootMargin: "-35% 0px -55% 0px", threshold: 0 });
+          document.querySelectorAll(".chapter").forEach(function (s) { spy.observe(s); });
+        }
+        tabs.forEach(function (t) {
+          t.addEventListener("click", function (ev) {
+            ev.preventDefault();
+            var target = document.querySelector(t.getAttribute("href"));
+            if (target) {
+              var smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+              target.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
+            }
+          });
+        });
+      })();
+    </script>
+
+  </div>
+
+  <div style="text-align:center; padding: 40px 20px 60px; background: var(--desk);">
+    <p style="color: var(--desk-muted); font-family: var(--mono, monospace); font-size: 13px; margin-bottom: 16px; letter-spacing: .08em; text-transform: uppercase;">You&rsquo;ve finished Chapter 3</p>
+    <a href="chapter4_extension.html" style="display:inline-block; background: var(--amber, #c8922a); color: #1a1208; font-family: var(--mono, monospace); font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; padding: 14px 32px; border-radius: 6px; text-decoration: none; transition: opacity .2s;">Next: Chapter 4 &rarr;</a>
+  </div>
+
+  <script>
+    if (localStorage.getItem("cwd_unlocked") !== "1") {
+      alert("Please purchase the book to read this chapter.");
+      window.location.href = "index.html#get";
+    }
+  </script>
+</body>
+
+</html>

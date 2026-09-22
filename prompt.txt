@@ -1,0 +1,57 @@
+You are the author of "Code with Destiny" and a web developer.
+
+TASK: Build chapter4_extension.html — 6 new book pages for each sub-chapter of Chapter 4.
+
+STEP 1 — READ (do not read the PDF):
+- extracted_book.txt → full book, study the author's voice
+- chapter1_extension.html → the exact HTML/CSS/JS shell you must reuse
+
+STEP 2 — VOICE RULES:
+- First-person, simple English, nostalgic, slightly humorous
+- Very little Hinglish only where natural
+- NO emojis
+- Each page = 3 paragraphs (60-90 words each)
+- Never repeat an idea from Chapters 1, 2, or 3
+
+STEP 3 — CONTENT:
+- Chapter 4 has 6 sub-chapters: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6
+- 6 pages per sub-chapter = 36 pages total
+- Section numbers: 4.1.1 to 4.6.6
+- Folio page numbers: 70 to 105
+- Themes (do not drift):
+  * 4.1 = Hackathon Hustle
+  * 4.2 = Tantra Hackathon (6-Hour Sprint)
+  * 4.3 = Lakhpati Banne Ka Din
+  * 4.4 = 20 Hackathons, 9 Wins
+  * 4.5 = A Message From Malaysia
+  * 4.6 = Important Lesson of Life
+- Each page needs: short title, 3 paragraphs, folio at bottom
+
+STEP 4 — HTML RULES:
+- Copy the ENTIRE shell from chapter1_extension.html byte-for-byte:
+  <head>, <style>, <script>, <header>, <footer>, <div class="toast">
+- Update only: brand-sub text, howto text, tab labels/links (#ch41 to #ch46),
+  copyAll button text, and the chapter sections themselves.
+- Structure per sub-chapter:
+  <section class="chapter" id="ch41" data-ch="4.1" data-title="Hackathon Hustle" data-range="4.1.1–4.1.6" data-pages="70–75">
+- Structure per page:
+  <article class="page" data-sec="4.1.1"> with .page-top, .sec-title, .page-body (3 <p>), .folio
+- Keep all buttons: "Copy page", "Copy chapter — 6 pages", "Copy all 36 pages"
+- Tabs: SIX tabs (4.1, 4.2, 4.3, 4.4, 4.5, 4.6)
+- The tab bar must scroll horizontally on small screens (already handled by existing CSS)
+
+STEP 5 — EXECUTION (VERY IMPORTANT):
+1. Write ONLY sub-chapter 4.1 (6 pages) into a COMPLETE valid chapter4_extension.html
+2. Save the file.
+3. STOP and say: "Saved. 4.1 done. Say continue."
+4. Wait for me to type "continue" before doing 4.2. Same for 4.3, 4.4, 4.5, 4.6.
+5. Never rewrite earlier sub-chapters, only append.
+6. Since there are 6 sub-chapters, do not rush. One at a time.
+
+STEP 6 — CRITICAL:
+- Write directly to chapter4_extension.html, not in chat
+- Never output partial HTML snippets
+- The file must always be a complete, valid, working HTML document
+- If you run out of context or API credits, save what you have and tell me which sub-chapter you stopped at. I will resume later.
+
+Start now. Write chapter4_extension.html with sub-chapter 4.1 (6 pages).
